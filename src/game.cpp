@@ -144,20 +144,20 @@ void CGame::Render()
 
 	//DrawBackGround(bgImg, 0, 0, screenWidth, screenHeight);
 		
-	Iw2DDrawImage(m_Layer1, CIwFVec2(layerLocs.at(0).x, layerLocs.at(0).y));
-	Iw2DDrawImage(m_Layer2, CIwFVec2(layerLocs.at(1).x, layerLocs.at(1).y));
-	Iw2DDrawImage(m_Layer3, CIwFVec2(layerLocs.at(2).x, layerLocs.at(2).y));
+	Iw2DDrawImage(m_Layer1, CIwSVec2(layerLocs.at(0).x, layerLocs.at(0).y));
+	Iw2DDrawImage(m_Layer2, CIwSVec2(layerLocs.at(1).x, layerLocs.at(1).y));
+	Iw2DDrawImage(m_Layer3, CIwSVec2(layerLocs.at(2).x, layerLocs.at(2).y));
 
 	m_Pig->Draw(); // The last drawn element will be on top
 
 	// Draw message (centered and automatically word wrapped)
-	Iw2DDrawString("This is some pointless text", CIwFVec2(-225,-150), CIwFVec2((int16)screenWidth, (int16)screenHeight),
+	Iw2DDrawString("This is some pointless text", CIwSVec2(-225,-150), CIwSVec2((int16)screenWidth, (int16)screenHeight),
 		IW_2D_FONT_ALIGN_CENTRE, IW_2D_FONT_ALIGN_CENTRE);
 
 	for (size_t i = 0; i < m_Sprites.size(); i++)
 		m_Sprites.at(i)->Draw();
 
-	Iw2DDrawImage(m_Layer4, CIwFVec2(layerLocs.at(3).x, layerLocs.at(3).y));
+	Iw2DDrawImage(m_Layer4, CIwSVec2(layerLocs.at(3).x, layerLocs.at(3).y));
     // show the surface
     Iw2DSurfaceShow();
 }
@@ -171,5 +171,5 @@ void CGame::DrawBackGround(CIw2DImage* img, int x0, int y0, int w, int h)
 	// Draw textured tiles
 	for (int x = x0; x < w; x+= img_width)
 		for (int y = y0; y < h; y+= img_height)
-			Iw2DDrawImage(img, CIwFVec2(x, y));
+			Iw2DDrawImage(img, CIwSVec2(x, y));
 }

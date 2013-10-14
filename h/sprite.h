@@ -42,7 +42,7 @@ private:
 		CIwSvec2 takes in a 16bit bit signed integer (int16)
 		CIwFVec2 takes in floating point numbers (float)
 	*/
-	CIwFVec2 m_FrameSize;
+	CIwSVec2 m_FrameSize;
 	CIwSVec2 m_FrameCount;
 	CIw2DImage* m_Image;
 };

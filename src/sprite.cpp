@@ -68,19 +68,19 @@ void Sprite::Update(float deltaTime)
 
 void Sprite::Draw() 
 {
-	CIwFVec2 drawPos(m_Position.x, m_Position.y);
+	CIwSVec2 drawPos(m_Position.x, m_Position.y);
 	drawPos -=m_Center;
 
 	if (m_Angle != 0)
 	{
-		CIwFMat2D rotMatrix;
-		rotMatrix.SetRot(m_Angle, CIwFVec2((int32)m_Position.x, (int32)m_Position.y));
+		CIwMat2D rotMatrix;
+		rotMatrix.SetRot(m_Angle, CIwVec2((int32)m_Position.x, (int32)m_Position.y));
 		Iw2DSetTransformMatrix(rotMatrix);
 	}
 
 	if (m_Animated) 
 	{
-		CIwFVec2 offset(((int)m_CurrentFrame % m_FrameCount.x) * m_FrameSize.x, ((int)m_CurrentFrame / m_FrameCount.x) * m_FrameSize.y);
+		CIwSVec2 offset(((int)m_CurrentFrame % m_FrameCount.x) * m_FrameSize.x, ((int)m_CurrentFrame / m_FrameCount.x) * m_FrameSize.y);
 		Iw2DDrawImageRegion(m_Image, drawPos, offset, m_FrameSize);
 	} 
 	else
@@ -90,6 +90,6 @@ void Sprite::Draw()
 
 	if (m_Angle != 0)
 	{
-		Iw2DSetTransformMatrix(CIwFMat2D::g_Identity);
+		Iw2DSetTransformMatrix(CIwMat2D::g_Identity);
 	}
 }
