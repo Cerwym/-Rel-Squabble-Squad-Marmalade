@@ -1,0 +1,42 @@
+#!/usr/bin/env mkb
+
+# files specifies all files to build
+files
+{
+    ["src"]
+    (src)
+    main.cpp
+    game.cpp 
+	sprite.cpp
+    (h)
+    game.h
+    sprite.h
+}
+
+assets
+{
+	(data)
+
+	(data-ram/data-gles1, data)
+	sprites.group.bin
+}
+
+includepaths
+{
+    h
+}
+
+subprojects
+{
+    iw2d
+	iwresmanager
+}
+
+# Settings to configure the deployment process
+deployments
+{
+	name="SpriteTest"
+	caption="Team FireExit - Impact"
+
+	
+}

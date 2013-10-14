@@ -1,0 +1,34 @@
+ResGroupResources:
+	CIwTexture (0x3521f539)
+		"pig" (0xb889d45)
+		Size: 30436
+	CIwTexture (0x3521f539)
+		"guide" (0xf88d053)
+		Size: 30036
+	CIwTexture (0x3521f539)
+		"fireball" (0x41d83186)
+		Size: 40036
+	CIwTexture (0x3521f539)
+		"background" (0x677e1785)
+		Size: 17188
+	CIwTexture (0x3521f539)
+		"layer1" (0xaeb87f3)
+		Size: 1843236
+	CIwTexture (0x3521f539)
+		"layer2" (0xaeb87f4)
+		Size: 1843236
+	CIwTexture (0x3521f539)
+		"layer3" (0xaeb87f5)
+		Size: 1843236
+	CIwTexture (0x3521f539)
+		"layer4" (0xaeb87f6)
+		Size: 1843236
+	ResList 'CIwTexture' pos:38 size:7490650
+
+	CIwGxFont (0xa68776be)
+		"font_small" (0x9f7e37f4)
+		Size: 18053
+	ResList 'CIwGxFont' pos:7490688 size:18063
+
+ResGroupResources: Wrote 7508717 bytes to CIwResGroup "Sprites"
+
