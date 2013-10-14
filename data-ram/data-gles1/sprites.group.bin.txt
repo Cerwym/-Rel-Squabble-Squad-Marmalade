@@ -12,6 +12,12 @@ ResGroupResources:
 		"background" (0x677e1785)
 		Size: 17188
 	CIwTexture (0x3521f539)
+		"touchscreenMoveL" (0xb035cb6b)
+		Size: 2132
+	CIwTexture (0x3521f539)
+		"touchscreenMoveR" (0xb035cb71)
+		Size: 2132
+	CIwTexture (0x3521f539)
 		"layer1" (0xaeb87f3)
 		Size: 1843236
 	CIwTexture (0x3521f539)
@@ -23,12 +29,12 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
 		Size: 1843236
-	ResList 'CIwTexture' pos:38 size:7490650
+	ResList 'CIwTexture' pos:38 size:7494914
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:7490688 size:18063
+	ResList 'CIwGxFont' pos:7494952 size:18063
 
-ResGroupResources: Wrote 7508717 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 7512981 bytes to CIwResGroup "Sprites"
 

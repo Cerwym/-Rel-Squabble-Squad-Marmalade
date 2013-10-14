@@ -5,10 +5,11 @@ CIwResGroup
 		"./guide.png"
 		"./fireball.png"
 		"./textures/background.png"
+		"./textures/touchscreenMoveL.bmp"
+		"./textures/touchscreenMoveR.bmp"
 		"./background/layer1.png"
 		"./background/layer2.png"
 		"./background/layer3.png"
 		"./background/layer4.png"
-
 		fonts/font_small.gxfont
 } 

@@ -13,6 +13,7 @@
  */
 
 #include <vector>
+#include <iostream> // cout
 #include "s3e.h"
 #include "IwGx.h"
 #include "Iw2D.h"
@@ -36,6 +37,10 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	m_Layer2 = Iw2DCreateImageResource("layer2");
 	m_Layer3 = Iw2DCreateImageResource("layer3");
 	m_Layer4 = Iw2DCreateImageResource("layer4");
+
+	// Load gui buttons in, 0 = left arrow, 1 right arrow
+	guiButtons[0] = Iw2DCreateImageResource("touchscreenMoveL");
+	guiButtons[1] = Iw2DCreateImageResource("touchscreenMoveR");
 
 	for (int i = 0; i < 9; i++)
 	{
@@ -72,6 +77,9 @@ CGame::~CGame()
 			delete m_Sprites.at(i);
 			m_Sprites.erase(m_Sprites.begin() + i);
 		}
+
+	for (int i = 0; i < 2; i++)
+		delete guiButtons[i];
 
 	if (bgImg != NULL)
 		delete bgImg;
@@ -110,11 +118,37 @@ void CGame::Update()
 
 	m_CountUpdates++;
 
-    // Move the sprite to the position of a touch event, gradually
+	// Input
     if( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN )
     {
-        CIwFVec2 target((float)s3ePointerGetX(), (float)s3ePointerGetY());
-        m_Position += (target - m_Position) * 5 * dtSecs;
+        
+		int x = s3ePointerGetX() * 3 / screenWidth;
+		int y = s3ePointerGetY() * 4 / screenHeight;
+
+		std::cout << "Pointer @ x:" << x << " y:" << y << std::endl;
+		
+		if (x == 0 && y == 3)
+		{ //Pressed the left button
+			m_Position.x -=5;
+			layerLocs.at(0).x += 0.25;
+			layerLocs.at(1).x += 0.5;
+			layerLocs.at(2).x += 0.75;
+			layerLocs.at(3).x += 0.75;
+		}
+		else if (x == 2 && y == 3)
+		{//Pressed the right button
+			m_Position.x +=5;
+			layerLocs.at(0).x -= 0.25;
+			layerLocs.at(1).x -= 0.5;
+			layerLocs.at(2).x -= 0.75;
+			layerLocs.at(3).x -= 0.75;
+		}
+		else // Resample the position of the touch event as no 'button' was pressed
+		{
+			// Move the sprite to the position of a touch event, gradually
+			CIwFVec2 target((float)s3ePointerGetX(), (float)s3ePointerGetY());
+			m_Position += (target - m_Position) * 5 * dtSecs;
+		}
 		m_Pig->SetPosition(m_Position);
 	}
 
@@ -129,11 +163,6 @@ void CGame::Update()
 			m_Sprites.erase(m_Sprites.begin() + i);			
 		}
 	}
-
-	layerLocs.at(0).x -= 0.25;
-	layerLocs.at(1).x -= 0.5;
-	layerLocs.at(2).x -= 0.75;
-	layerLocs.at(3).x -= 0.75;
 }
 
 
@@ -156,6 +185,8 @@ void CGame::Render()
 
 	for (size_t i = 0; i < m_Sprites.size(); i++)
 		m_Sprites.at(i)->Draw();
+	
+	DrawTouchButtons();
 
 	Iw2DDrawImage(m_Layer4, CIwSVec2(layerLocs.at(3).x, layerLocs.at(3).y));
     // show the surface
@@ -172,4 +203,25 @@ void CGame::DrawBackGround(CIw2DImage* img, int x0, int y0, int w, int h)
 	for (int x = x0; x < w; x+= img_width)
 		for (int y = y0; y < h; y+= img_height)
 			Iw2DDrawImage(img, CIwSVec2(x, y));
+}
+
+void CGame::DrawTouchButtons()
+{
+	int size = MIN(screenWidth/3, screenHeight/4) - 8;
+	if (size < 64)
+		size = 32;
+	else
+		size = 64;
+
+	Iw2DSetColour(0xff646464);
+	Iw2DSetAlphaMode(IW_2D_ALPHA_ADD);
+	DrawSpriteCentered(guiButtons[0], size/2, screenHeight-size/2, size); // Left side
+	DrawSpriteCentered(guiButtons[1], screenWidth-size/2, screenHeight-size/2, size);
+	Iw2DSetAlphaMode(IW_2D_ALPHA_NONE);
+	Iw2DSetColour(0xffffffff);
+}
+
+void CGame::DrawSpriteCentered(CIw2DImage* img, int x, int y, int size)
+{
+	Iw2DDrawImage(img, CIwSVec2(x, y) - CIwSVec2(size/2, size/2), CIwSVec2(size, size));
 }

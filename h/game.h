@@ -31,6 +31,11 @@ public:
 
 	void DrawBackGround(CIw2DImage* img, int x0, int y0, int w, int h);
 
+protected:
+	void DrawTouchButtons();
+	// Draw a sprite, centered at the specified position with a given size
+	void DrawSpriteCentered(CIw2DImage*, int, int, int);
+
 private:
     CIwFVec2 m_Position;
     CIwSVec2 m_Size;
@@ -57,6 +62,7 @@ private:
 	CIw2DImage* m_Layer2;
 	CIw2DImage* m_Layer3;
 	CIw2DImage* m_Layer4;
+	CIw2DImage* guiButtons[2];
 
 	std::vector<CIwFVec2> layerLocs;
 
