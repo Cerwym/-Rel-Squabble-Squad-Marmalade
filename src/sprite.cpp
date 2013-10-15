@@ -25,6 +25,11 @@ inline float Sprite::GetWidth()
 	return m_Image->GetWidth();
 }
 
+CIwFVec2 Sprite::LerpTo(CIwFVec2 end, float scalar)
+{
+	return (m_Position + (end - m_Position) * scalar);
+
+}
 
 void Sprite::Testfunc()
 {
@@ -51,6 +56,7 @@ bool Sprite::isColliding(Sprite* other)
 	// if a bounding box collision occurs, check for per-pixel collision.
 	// possibly use mageneta as the test?
 }
+
 void Sprite::Update(float deltaTime)
 {
 	// update animation
@@ -64,7 +70,6 @@ void Sprite::Update(float deltaTime)
 	// update position
 	m_Position += m_MovSpeed * deltaTime;
 }
-
 
 void Sprite::Draw() 
 {

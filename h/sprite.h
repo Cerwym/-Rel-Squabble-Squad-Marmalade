@@ -11,6 +11,7 @@ public:
 	inline CIwFVec2 GetPosition() { return m_Position; }
 	inline void SetPosition(CIwFVec2 position) { m_Position = position; }
 	inline void SetMovSpeed(CIwFVec2 speed) { m_MovSpeed = speed; }
+	CIwFVec2 LerpTo(CIwFVec2 end, float scalar);
 
 	void SetMaterial();
 

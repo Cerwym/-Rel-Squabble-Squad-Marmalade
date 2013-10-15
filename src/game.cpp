@@ -121,7 +121,7 @@ void CGame::Update()
 	// Input
     if( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN )
     {
-        
+        std::cout << "Pointer @ x:" << s3ePointerGetX() << " y:" << s3ePointerGetY() << std::endl;
 		int x = s3ePointerGetX() * 3 / screenWidth;
 		int y = s3ePointerGetY() * 4 / screenHeight;
 
@@ -143,13 +143,17 @@ void CGame::Update()
 			layerLocs.at(2).x -= 0.75;
 			layerLocs.at(3).x -= 0.75;
 		}
-		else // Resample the position of the touch event as no 'button' was pressed
+		else // Re sample the position of the touch event as no 'button' was pressed
 		{
 			// Move the sprite to the position of a touch event, gradually
 			CIwFVec2 target((float)s3ePointerGetX(), (float)s3ePointerGetY());
-			m_Position += (target - m_Position) * 5 * dtSecs;
+			//m_Position += (target - m_Position) * 5 * dtSecs;
+
+			
 		}
-		m_Pig->SetPosition(m_Position);
+		//m_Pig->SetPosition(m_Position);
+
+		m_Pig->SetPosition(m_Pig->LerpTo(CIwFVec2(480, 320), 0.005f));
 	}
 
 	m_Pig->Update(dtSecs);
