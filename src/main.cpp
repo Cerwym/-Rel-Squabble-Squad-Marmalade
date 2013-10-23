@@ -13,6 +13,7 @@
 #include "s3e.h"
 #include "Iw2D.h"
 #include "game.h"
+#include "camera.h"
 
 // updates per second
 #define UPS 60
@@ -33,6 +34,7 @@ int main()
 
     // create game object
     CGame* pGame = new CGame;
+	Camera* camera = new Camera();
 
     int currentUpdate = GetUpdateFrame();
     int nextUpdate = currentUpdate;
@@ -75,6 +77,7 @@ int main()
 
     // clear up game object
     delete pGame;
+	delete camera;
 
 	Iw2DTerminate();
 

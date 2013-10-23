@@ -8,9 +8,15 @@ files
     main.cpp
     game.cpp 
 	sprite.cpp
+	spritemanager.cpp
+	camera.cpp
+	gamescene.cpp
     (h)
     game.h
     sprite.h
+	spritemanager.h
+	camera.h
+	gamescene.h
 }
 
 assets
@@ -37,6 +43,4 @@ deployments
 {
 	name="SpriteTest"
 	caption="Team FireExit - Impact"
-
-	
 }

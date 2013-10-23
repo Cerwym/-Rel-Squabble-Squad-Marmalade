@@ -1,8 +1,9 @@
 CIwResGroup 
 { 
 	name "Sprites" 
-		"./pig.png" 
-		"./guide.png"
+		"./characters/dave.png"
+		"./characters/mandy.png"
+		"./characters/nigel.png"
 		"./fireball.png"
 		"./textures/background.png"
 		"./textures/touchscreenMoveL.bmp"

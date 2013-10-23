@@ -1,12 +1,12 @@
-#include <math.h>
-#include <IwMaterial.h>
-#include "Iw2D.h"
 #include "sprite.h"
+#include <iostream>
 
 Sprite::Sprite(const char* image): m_Center(0,0), m_Position(0,0),m_MovSpeed(0,0),
 m_Angle(0),m_Animated(false)
 {
 	m_Image = Iw2DCreateImageResource(image);
+	m_yVel = 0;
+	TEMP_ISFALLING = false;
 }
 
 
@@ -25,16 +25,6 @@ inline float Sprite::GetWidth()
 	return m_Image->GetWidth();
 }
 
-CIwFVec2 Sprite::LerpTo(CIwFVec2 end, float scalar)
-{
-	return (m_Position + (end - m_Position) * scalar);
-
-}
-
-void Sprite::Testfunc()
-{
-}
-
 void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 {
 	m_Animated = animated;
@@ -48,13 +38,13 @@ void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 	}
 }
 
-bool Sprite::isColliding(Sprite* other)
+bool Sprite::isColliding(Sprite* const other)
 {
 	return (abs(m_Position.x - other->GetPosition().x) * 2 < (m_Image->GetWidth() + other->GetWidth()))
-		&& (abs(m_Position.y - other->GetPosition().y) * 2 <(m_Image->GetHeight() + m_Image->GetHeight()));
+		&& (abs(m_Position.y - other->GetPosition().y) * 2 <(m_Image->GetHeight() + other->GetHeight()));
 	
 	// if a bounding box collision occurs, check for per-pixel collision.
-	// possibly use mageneta as the test?
+	// possibly use magenta as the test?
 }
 
 void Sprite::Update(float deltaTime)
@@ -68,7 +58,21 @@ void Sprite::Update(float deltaTime)
 	}
 
 	// update position
+		
 	m_Position += m_MovSpeed * deltaTime;
+
+	// Update gravity
+	if ((m_Position.y < 320) && TEMP_ISFALLING == true) // and has jumped
+	{
+		m_yVel += GRAVITY;
+		m_Position.y += m_yVel;
+		if (TEMP_ISFALLING >= 320)
+			TEMP_ISFALLING = false;
+	}
+
+	//if jumped, inverse yvel
+
+
 }
 
 void Sprite::Draw() 
@@ -97,4 +101,9 @@ void Sprite::Draw()
 	{
 		Iw2DSetTransformMatrix(CIwMat2D::g_Identity);
 	}
+}
+
+void Sprite::Debug_PrintPos()
+{
+	std::cout << "Pos x : " << m_Position.x << " y : " << m_Position.y << std::endl;
 }

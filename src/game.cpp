@@ -30,8 +30,17 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	// The background image does NOT take from Sprite:: as the drawing method is different
 	bgImg = Iw2DCreateImageResource("background"); 
 
-	m_Pig = new Sprite("fireball");
-	m_Pig->SetCenter(CIwSVec2(50,50));
+	// Dave (big), Nigel (small), Mandy (girl)
+	characters[0] = new Sprite("dave");
+	characters[0]->SetCenter(CIwSVec2(50,50));
+
+	characters[1] = new Sprite("nigel");
+	characters[1]->SetCenter(CIwSVec2(20,24));
+	characters[1]->SetPosition(CIwFVec2(24, 100));
+
+	characters[2] = new Sprite("mandy");
+	characters[2]->SetCenter(CIwSVec2(20,34));
+	characters[2]->SetPosition(CIwFVec2(64, 150));
 
 	m_Layer1 = Iw2DCreateImageResource("layer1");
 	m_Layer2 = Iw2DCreateImageResource("layer2");
@@ -63,19 +72,22 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 
 	m_Font = Iw2DCreateFontResource("font_small");
 	Iw2DSetFont(m_Font);
+
+	TEMP_charIndex = 0;
+	TEMP_isThrowing = false;
 }
 
 
 CGame::~CGame()
 {
-	if (m_Pig != NULL)
-		delete m_Pig;
+	for (int i = 0; i < 3; i++)
+		delete characters[i];
 
 	for (size_t i = 0; i < m_Sprites.size(); i++)
 		if (m_Sprites.at(i) != NULL)
 		{
 			delete m_Sprites.at(i);
-			m_Sprites.erase(m_Sprites.begin() + i);
+			//m_Sprites.erase(m_Sprites.begin() + i);
 		}
 
 	for (int i = 0; i < 2; i++)
@@ -119,53 +131,96 @@ void CGame::Update()
 	m_CountUpdates++;
 
 	// Input
-    if( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN )
+
+	// if state != last state
+	s3ePointerState currState, lastState;
+
+    if( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN  )
     {
-        std::cout << "Pointer @ x:" << s3ePointerGetX() << " y:" << s3ePointerGetY() << std::endl;
-		int x = s3ePointerGetX() * 3 / screenWidth;
-		int y = s3ePointerGetY() * 4 / screenHeight;
+			std::cout << "Pointer @ x:" << s3ePointerGetX() << " y:" << s3ePointerGetY() << std::endl;
+			int x = s3ePointerGetX() * 3 / screenWidth;
+			int y = s3ePointerGetY() * 4 / screenHeight;
 
-		std::cout << "Pointer @ x:" << x << " y:" << y << std::endl;
+			std::cout << "Pointer @ x:" << x << " y:" << y << std::endl;
 		
-		if (x == 0 && y == 3)
-		{ //Pressed the left button
-			m_Position.x -=5;
-			layerLocs.at(0).x += 0.25;
-			layerLocs.at(1).x += 0.5;
-			layerLocs.at(2).x += 0.75;
-			layerLocs.at(3).x += 0.75;
-		}
-		else if (x == 2 && y == 3)
-		{//Pressed the right button
-			m_Position.x +=5;
-			layerLocs.at(0).x -= 0.25;
-			layerLocs.at(1).x -= 0.5;
-			layerLocs.at(2).x -= 0.75;
-			layerLocs.at(3).x -= 0.75;
-		}
-		else // Re sample the position of the touch event as no 'button' was pressed
-		{
-			// Move the sprite to the position of a touch event, gradually
-			CIwFVec2 target((float)s3ePointerGetX(), (float)s3ePointerGetY());
-			//m_Position += (target - m_Position) * 5 * dtSecs;
+			if (x == 0 && y == 3)
+			{ 
+				//Pressed the left button
+				//m_Position.x -=5;
+				layerLocs.at(0).x += 0.25;
+				layerLocs.at(1).x += 0.5;
+				layerLocs.at(2).x += 0.75;
+				layerLocs.at(3).x += 0.75;
+				//characters[0]->SetPosition(m_Position);
 
-			
-		}
-		//m_Pig->SetPosition(m_Position);
+				TEMP_charIndex-=1;
+				if (TEMP_charIndex < 0)
+					TEMP_charIndex = 2;
+			}
+			else if (x == 2 && y == 3)
+			{
+				//Pressed the right button
+				//m_Position.x +=5;
+				layerLocs.at(0).x -= 0.25;
+				layerLocs.at(1).x -= 0.5;
+				layerLocs.at(2).x -= 0.75;
+				layerLocs.at(3).x -= 0.75;
+				//characters[0]->SetPosition(m_Position);
 
-		m_Pig->SetPosition(m_Pig->LerpTo(CIwFVec2(480, 320), 0.005f));
+				TEMP_charIndex+=1;
+				if (TEMP_charIndex >= 3)
+					TEMP_charIndex = 0;
+			}
+			else // Re sample the position of the touch event as no 'button' was pressed
+			{
+				if (TEMP_isThrowing == false)
+				{
+					// Move the sprite to the position of a touch event, gradually
+					CIwFVec2 target((float)s3ePointerGetX(), (float)s3ePointerGetY());
+					characters[TEMP_charIndex]->SetPosition(characters[TEMP_charIndex]->LerpTo(target, 0.05f));
+					//m_Position += (target - m_Position) * 5 * dtSecs;
+				}
+				else
+				{
+					TEMP_target = CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY());
+				}
+			}
 	}
 
-	m_Pig->Update(dtSecs);
+	// fix this shit
+
+	// check if pointer is released and set flags to false???!?!?!?!?!
+	else//( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_UP )
+	{
+		if (TEMP_isThrowing == true)
+		{
+			characters[1]->SetPosition(characters[1]->LerpTo(TEMP_target, 0.05f));
+			characters[1]->TEMP_ISFALLING = true;
+			
+			if (characters[1]->GetPosition() == TEMP_target)
+				TEMP_isThrowing = false;
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+		characters[i]->Update(dtSecs);
+
+	//characters[0]->Debug_PrintPos();
 
 	// loop over all the pig sprites and see if the hero pig collides
 	for (size_t i = 0; i < m_Sprites.size(); i++)
 	{
-		if (m_Pig->isColliding(m_Sprites.at(i)))
+		if (characters[0]->isColliding(m_Sprites.at(i)))
 		{
 			delete m_Sprites.at(i);
 			m_Sprites.erase(m_Sprites.begin() + i);			
 		}
+	}
+
+	if ( (characters[0]->isColliding(characters[1])) && TEMP_isThrowing == false)
+	{
+		TEMP_isThrowing = true;
+		std::cout << "Running collide" << std::endl;
 	}
 }
 
@@ -181,7 +236,8 @@ void CGame::Render()
 	Iw2DDrawImage(m_Layer2, CIwSVec2(layerLocs.at(1).x, layerLocs.at(1).y));
 	Iw2DDrawImage(m_Layer3, CIwSVec2(layerLocs.at(2).x, layerLocs.at(2).y));
 
-	m_Pig->Draw(); // The last drawn element will be on top
+	for (int i = 0;  i <3; i++)
+		characters[i]->Draw();
 
 	// Draw message (centered and automatically word wrapped)
 	Iw2DDrawString("This is some pointless text", CIwSVec2(-225,-150), CIwSVec2((int16)screenWidth, (int16)screenHeight),
