@@ -31,8 +31,6 @@ private:
 	Sprite *m_Dave;
 	Sprite *m_Target;
 
-	CIw2DImage* bgImg;
-
 	uint64 m_LastUpdate;
 
 	int m_TimeToOneSec;

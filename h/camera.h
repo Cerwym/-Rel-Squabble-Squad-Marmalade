@@ -3,7 +3,6 @@
 
 #include "Iw2D.h"
 
-// pete you're a fucking moron -> 2D
 class Camera
 {
 public:
@@ -25,8 +24,6 @@ public:
 		m_Position += m;
 		SetPosition(m_Position);
 	}
-	
-
 
 	inline CIwMat2D GetTranslation(){return m_Transform;}
 
@@ -35,13 +32,10 @@ public:
 private:
 
 	// The position of the camera in relation to the world view
-
-	
 	CIwSVec2 m_Position;
 	CIwFVec2 viewPort;
 	float camSpeed;
 	CIwMat2D m_Transform;
-
 
 };
 

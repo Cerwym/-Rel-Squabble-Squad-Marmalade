@@ -27,20 +27,20 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	IwResManagerInit();
 	IwGetResManager()->LoadGroup("sprites.group");
 
-	// The background image does NOT take from Sprite:: as the drawing method is different
-	bgImg = Iw2DCreateImageResource("background"); 
-
 	// Dave (big), Nigel (small), Mandy (girl)
 	characters[0] = new Sprite("dave");
 	characters[0]->SetCenter(CIwSVec2(50,50));
+	characters[0]->BuildCollision("characters\\dave.png");
 
 	characters[1] = new Sprite("nigel");
 	characters[1]->SetCenter(CIwSVec2(20,24));
 	characters[1]->SetPosition(CIwFVec2(24, 100));
+	characters[1]->BuildCollision("characters\\nigel.png");
 
 	characters[2] = new Sprite("mandy");
 	characters[2]->SetCenter(CIwSVec2(20,34));
 	characters[2]->SetPosition(CIwFVec2(64, 150));
+	characters[2]->BuildCollision("characters\\mandy.png");
 
 	m_Layer1 = Iw2DCreateImageResource("layer1");
 	m_Layer2 = Iw2DCreateImageResource("layer2");
@@ -83,9 +83,6 @@ CGame::~CGame()
 
 	for (int i = 0; i < 2; i++)
 		delete guiButtons[i];
-
-	if (bgImg != NULL)
-		delete bgImg;
 
 	if (m_Font != NULL)
 		delete m_Font;
@@ -133,6 +130,9 @@ void CGame::Update()
     if( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN  )
     {
 			std::cout << "Pointer @ x:" << s3ePointerGetX() << " y:" << s3ePointerGetY() << std::endl;
+			if (characters[TEMP_charIndex]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
+				std::cout << "Clicked collision";
+
 			int x = s3ePointerGetX() * 3 / screenWidth;
 			int y = s3ePointerGetY() * 4 / screenHeight;
 
@@ -140,37 +140,12 @@ void CGame::Update()
 		
 			if (x == 0 && y == 3)
 			{ 
-				//Pressed the left button
-				//m_Position.x -=5;
-				/*layerLocs.at(0).x += 0.25;
-				layerLocs.at(1).x += 0.5;
-				layerLocs.at(2).x += 0.75;
-				layerLocs.at(3).x += 0.75;*/
 				characters[TEMP_charIndex]->MoveBy(CIwSVec2(-10, 0));
-				m_Cam->MoveBy(CIwSVec2(10, 0));
-				//characters[0]->SetPosition(m_Position);
-				/*
-				TEMP_charIndex-=1;
-				if (TEMP_charIndex < 0)
-					TEMP_charIndex = 2;
-					*/
 			}
 			else if (x == 2 && y == 3)
 			{
-				//Pressed the right button
-				//m_Position.x +=5;
-				/*layerLocs.at(0).x -= 0.25;
-				layerLocs.at(1).x -= 0.5;
-				layerLocs.at(2).x -= 0.75;
-				layerLocs.at(3).x -= 0.75;*/
 				characters[TEMP_charIndex]->MoveBy(CIwSVec2(10, 0));
 				m_Cam->MoveBy(CIwSVec2(-10, 0));
-				//characters[0]->SetPosition(m_Position);
-				/*
-				TEMP_charIndex+=1;
-				if (TEMP_charIndex >= 3)
-					TEMP_charIndex = 0;
-					*/
 			}
 			else if ((x == 2 && y == 0) && TEMP_charIndex == 2)
 			{
@@ -211,7 +186,7 @@ void CGame::Update()
 	for (int i = 0; i < 3; i++)
 		characters[i]->Update(dtSecs);
 
-	if ( (characters[0]->isColliding(characters[1])) && TEMP_isThrowing == false)
+	if ( (characters[0]->isColliding(characters[1]->GetPosition())) && TEMP_isThrowing == false)
 	{
 		TEMP_isThrowing = true;
 		std::cout << "Running collide" << std::endl;
@@ -225,8 +200,6 @@ void CGame::Render()
 {
     Iw2DSurfaceClear(0xff000000);
 
-	//DrawBackGround(bgImg, 0, 0, screenWidth, screenHeight);
-		
 	Iw2DDrawImage(m_Layer1, CIwSVec2(layerLocs.at(0).x, layerLocs.at(0).y));
 	Iw2DDrawImage(m_Layer2, CIwSVec2(layerLocs.at(1).x, layerLocs.at(1).y));
 	Iw2DDrawImage(m_Layer3, CIwSVec2(layerLocs.at(2).x, layerLocs.at(2).y));
@@ -248,18 +221,6 @@ void CGame::Render()
 	DrawTouchButtons();
 
     Iw2DSurfaceShow();
-}
-
-void CGame::DrawBackGround(CIw2DImage* img, int x0, int y0, int w, int h)
-{
-	// Get size of image
-	int img_width = img->GetWidth();
-	int img_height = img->GetHeight();
-
-	// Draw textured tiles
-	for (int x = x0; x < w; x+= img_width)
-		for (int y = y0; y < h; y+= img_height)
-			Iw2DDrawImage(img, CIwSVec2(x, y));
 }
 
 void CGame::DrawTouchButtons()

@@ -11,7 +11,7 @@
 class Sprite
 {
 public:
-	Sprite(const char* image);
+	Sprite(const char* fname);
 	~Sprite();
 	
 	inline void SetCenter(const CIwSVec2& center) { m_Center = center; }
@@ -23,21 +23,22 @@ public:
 	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar)
 	{
 		return (m_Position + (end - m_Position) * scalar);
-	}
+	}	
 
+	void BuildCollision(const char* fname);
 	void SetMaterial();
 
 	inline iwangle GetRotation() { return m_Angle; }
 	inline void SetRotation(const iwangle& angle) { m_Angle = angle; }
 
-	inline float GetHeight(){return m_Image->GetHeight();}
-	inline float GetWidth(){return m_Image->GetWidth();}
+	inline float GetHeight(){return m_Height;}
+	inline float GetWidth(){return m_Width;}
 	
 	void SetAnimated(const bool animated, float speed, CIwFVec2 frameCount = CIwFVec2());
 	void Update(const float deltaTime);
 	void Draw();
 	void Jump();
-	bool isColliding(Sprite* const);
+	bool isColliding(const CIwFVec2& other);
 
 	void Debug_PrintPos();
 
@@ -46,7 +47,6 @@ public:
 	bool TEMP_LANDEDJUMP;
 
 protected:
-	
 
 private:
 	CIwFVec2 m_Center; // The centre of the image to rotate around
@@ -58,6 +58,7 @@ private:
 	float m_AnimSpeed;
 	float m_CurrentFrame;
 	float m_yVel;
+	float m_Width, m_Height;
 	float TEMP_BEFOREJUMPY;
 	int TEMP_BOUNCECOUNT;
 	/* 
@@ -68,6 +69,7 @@ private:
 	CIwSVec2 m_FrameSize;
 	CIwSVec2 m_FrameCount;
 	CIw2DImage* m_Image;
+	CIwImage m_CollisionMap; // 8bit version of the image's alpha channel.
 
 };
 
