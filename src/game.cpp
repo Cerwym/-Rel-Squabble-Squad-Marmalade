@@ -141,6 +141,7 @@ void CGame::Update()
 			if (x == 0 && y == 3)
 			{ 
 				characters[TEMP_charIndex]->MoveBy(CIwSVec2(-10, 0));
+				m_Cam->MoveBy(CIwSVec2(10,0));
 			}
 			else if (x == 2 && y == 3)
 			{

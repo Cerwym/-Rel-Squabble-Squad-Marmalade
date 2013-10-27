@@ -28,8 +28,6 @@ protected:
 private:
     CIwFVec2 m_Position;
     CIwSVec2 m_Size;
-	Sprite *m_Dave;
-	Sprite *m_Target;
 
 	uint64 m_LastUpdate;
 
