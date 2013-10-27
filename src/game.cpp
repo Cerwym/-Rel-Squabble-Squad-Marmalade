@@ -46,18 +46,11 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	m_Layer2 = Iw2DCreateImageResource("layer2");
 	m_Layer3 = Iw2DCreateImageResource("layer3");
 	m_Layer4 = Iw2DCreateImageResource("layer4");
+	m_Floor = Iw2DCreateImageResource("floor");
 
 	// Load gui buttons in, 0 = left arrow, 1 right arrow
 	guiButtons[0] = Iw2DCreateImageResource("touchscreenMoveL");
 	guiButtons[1] = Iw2DCreateImageResource("touchscreenMoveR");
-
-	for (int i = 0; i < 9; i++)
-	{
-		Sprite *tSprite = new Sprite("fireball");
-		tSprite->SetCenter(CIwSVec2(50,50));
-		tSprite->SetPosition(CIwFVec2( (i*20) +50, (i*20) + 50));
-		m_Sprites.push_back(tSprite);
-	}
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -75,6 +68,11 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 
 	TEMP_charIndex = 0;
 	TEMP_isThrowing = false;
+
+	m_Cam = new Camera;
+	m_Cam->SetPosition(CIwSVec2(0, 0));
+	m_Cam->Position = CIwSVec2(0, 0);
+
 }
 
 
@@ -82,13 +80,6 @@ CGame::~CGame()
 {
 	for (int i = 0; i < 3; i++)
 		delete characters[i];
-
-	for (size_t i = 0; i < m_Sprites.size(); i++)
-		if (m_Sprites.at(i) != NULL)
-		{
-			delete m_Sprites.at(i);
-			//m_Sprites.erase(m_Sprites.begin() + i);
-		}
 
 	for (int i = 0; i < 2; i++)
 		delete guiButtons[i];
@@ -108,6 +99,10 @@ CGame::~CGame()
 	if (m_Layer4 != NULL)
 		delete m_Layer4;
 
+	if (m_Floor != NULL)
+		delete m_Floor;
+
+	delete m_Cam;
 	IwResManagerTerminate();
 }
 
@@ -133,7 +128,7 @@ void CGame::Update()
 	// Input
 
 	// if state != last state
-	s3ePointerState currState, lastState;
+	//s3ePointerState currState, lastState;
 
     if( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN  )
     {
@@ -147,37 +142,50 @@ void CGame::Update()
 			{ 
 				//Pressed the left button
 				//m_Position.x -=5;
-				layerLocs.at(0).x += 0.25;
+				/*layerLocs.at(0).x += 0.25;
 				layerLocs.at(1).x += 0.5;
 				layerLocs.at(2).x += 0.75;
-				layerLocs.at(3).x += 0.75;
+				layerLocs.at(3).x += 0.75;*/
+				characters[TEMP_charIndex]->MoveBy(CIwSVec2(-10, 0));
+				m_Cam->MoveBy(CIwSVec2(10, 0));
 				//characters[0]->SetPosition(m_Position);
-
+				/*
 				TEMP_charIndex-=1;
 				if (TEMP_charIndex < 0)
 					TEMP_charIndex = 2;
+					*/
 			}
 			else if (x == 2 && y == 3)
 			{
 				//Pressed the right button
 				//m_Position.x +=5;
-				layerLocs.at(0).x -= 0.25;
+				/*layerLocs.at(0).x -= 0.25;
 				layerLocs.at(1).x -= 0.5;
 				layerLocs.at(2).x -= 0.75;
-				layerLocs.at(3).x -= 0.75;
+				layerLocs.at(3).x -= 0.75;*/
+				characters[TEMP_charIndex]->MoveBy(CIwSVec2(10, 0));
+				m_Cam->MoveBy(CIwSVec2(-10, 0));
 				//characters[0]->SetPosition(m_Position);
-
+				/*
 				TEMP_charIndex+=1;
 				if (TEMP_charIndex >= 3)
 					TEMP_charIndex = 0;
+					*/
+			}
+			else if ((x == 2 && y == 0) && TEMP_charIndex == 2)
+			{
+				std::cout << "Started to jump" << std::endl;
+					characters[2]->TEMP_JUSTJUMPED = true;
+
 			}
 			else // Re sample the position of the touch event as no 'button' was pressed
 			{
 				if (TEMP_isThrowing == false)
 				{
 					// Move the sprite to the position of a touch event, gradually
-					CIwFVec2 target((float)s3ePointerGetX(), (float)s3ePointerGetY());
-					characters[TEMP_charIndex]->SetPosition(characters[TEMP_charIndex]->LerpTo(target, 0.05f));
+					//CIwFVec2 target(static_cast<float>(s3ePointerGetX()), (float)s3ePointerGetY());
+					//target += CIwFVec2(static_cast<float>(m_Cam->Position.x), static_cast<float>(m_Cam->Position.y));
+					//characters[TEMP_charIndex]->SetPosition(characters[TEMP_charIndex]->LerpTo(target, 0.05f));
 					//m_Position += (target - m_Position) * 5 * dtSecs;
 				}
 				else
@@ -187,8 +195,6 @@ void CGame::Update()
 			}
 	}
 
-	// fix this shit
-
 	// check if pointer is released and set flags to false???!?!?!?!?!
 	else//( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_UP )
 	{
@@ -197,7 +203,7 @@ void CGame::Update()
 			characters[1]->SetPosition(characters[1]->LerpTo(TEMP_target, 0.05f));
 			characters[1]->TEMP_ISFALLING = true;
 			
-			if (characters[1]->GetPosition() == TEMP_target)
+			if (characters[1]->GetPosition().y <= 300) // change this to if it has hit a collidable surface
 				TEMP_isThrowing = false;
 		}
 	}
@@ -205,29 +211,18 @@ void CGame::Update()
 	for (int i = 0; i < 3; i++)
 		characters[i]->Update(dtSecs);
 
-	//characters[0]->Debug_PrintPos();
-
-	// loop over all the pig sprites and see if the hero pig collides
-	for (size_t i = 0; i < m_Sprites.size(); i++)
-	{
-		if (characters[0]->isColliding(m_Sprites.at(i)))
-		{
-			delete m_Sprites.at(i);
-			m_Sprites.erase(m_Sprites.begin() + i);			
-		}
-	}
-
 	if ( (characters[0]->isColliding(characters[1])) && TEMP_isThrowing == false)
 	{
 		TEMP_isThrowing = true;
 		std::cout << "Running collide" << std::endl;
 	}
+
+//	m_Cam->Update(dtSecs);
 }
 
 
 void CGame::Render()
 {
-    // for example, clear to black (the order of components is ABGR)
     Iw2DSurfaceClear(0xff000000);
 
 	//DrawBackGround(bgImg, 0, 0, screenWidth, screenHeight);
@@ -235,21 +230,23 @@ void CGame::Render()
 	Iw2DDrawImage(m_Layer1, CIwSVec2(layerLocs.at(0).x, layerLocs.at(0).y));
 	Iw2DDrawImage(m_Layer2, CIwSVec2(layerLocs.at(1).x, layerLocs.at(1).y));
 	Iw2DDrawImage(m_Layer3, CIwSVec2(layerLocs.at(2).x, layerLocs.at(2).y));
+	Iw2DDrawImage(m_Floor, CIwSVec2(0,-120));
 
 	for (int i = 0;  i <3; i++)
+	{
+		if (i == TEMP_charIndex)
+		{
+			//CIwSVec2 test = CIwSVec2(static_cast<int16>(characters[i]->GetPosition().x), static_cast<int16>(characters[i]->GetPosition().y));
+
+			//m_Cam->Position = test;
+		}
+
 		characters[i]->Draw();
-
-	// Draw message (centered and automatically word wrapped)
-	Iw2DDrawString("This is some pointless text", CIwSVec2(-225,-150), CIwSVec2((int16)screenWidth, (int16)screenHeight),
-		IW_2D_FONT_ALIGN_CENTRE, IW_2D_FONT_ALIGN_CENTRE);
-
-	for (size_t i = 0; i < m_Sprites.size(); i++)
-		m_Sprites.at(i)->Draw();
+		
+	}
 	
 	DrawTouchButtons();
 
-	Iw2DDrawImage(m_Layer4, CIwSVec2(layerLocs.at(3).x, layerLocs.at(3).y));
-    // show the surface
     Iw2DSurfaceShow();
 }
 

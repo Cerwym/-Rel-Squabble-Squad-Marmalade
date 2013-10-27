@@ -14,6 +14,7 @@
 #include "Iw2D.h"
 #include "game.h"
 #include "camera.h"
+#include "IwGx.h"
 
 // updates per second
 #define UPS 60
@@ -38,6 +39,8 @@ int main()
 
     int currentUpdate = GetUpdateFrame();
     int nextUpdate = currentUpdate;
+
+	IwGxInit();
 
     // to exit correctly, applications should poll for quit requests
 	while(!s3eDeviceCheckQuitRequest())
@@ -65,6 +68,8 @@ int main()
         */
         // render the results
         pGame->Render();
+
+		
 
 		// if an application uses polling input the application 
         // must call update once per frame

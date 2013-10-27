@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "sprite.h"
+#include "camera.h"
 
 class CGame
 {
@@ -40,8 +41,6 @@ private:
 
 	int screenWidth;
 	int screenHeight;
-	
-	std::vector<Sprite*> m_Sprites;
 
 	CIw2DFont* m_Font;
 
@@ -50,6 +49,7 @@ private:
 	CIw2DImage* m_Layer2;
 	CIw2DImage* m_Layer3;
 	CIw2DImage* m_Layer4;
+	CIw2DImage* m_Floor;
 	CIw2DImage* guiButtons[2];
 
 	Sprite* characters[3];
@@ -59,6 +59,8 @@ private:
 	CIwFVec2 TEMP_target;
 
 	std::vector<CIwFVec2> layerLocs;
+
+	Camera* m_Cam;
 
 };
 
