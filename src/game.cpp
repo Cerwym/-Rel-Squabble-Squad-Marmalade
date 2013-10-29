@@ -46,13 +46,13 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	m_Portraits[0]->SetPosition(CIwFVec2(0,0));
 	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
 
-	m_Portraits[1] = new Sprite("mandy_port");
+	m_Portraits[1] = new Sprite("nigel_port");
 	m_Portraits[1]->SetPosition(CIwFVec2(50,0));
-	m_Portraits[1]->BuildCollision("portraits\\mandy_port.png");
+	m_Portraits[1]->BuildCollision("portraits\\nigel_port.png");
 
-	m_Portraits[2] = new Sprite("nigel_port");
+	m_Portraits[2] = new Sprite("mandy_port");
 	m_Portraits[2]->SetPosition(CIwFVec2(100,0));
-	m_Portraits[2]->BuildCollision("portraits\\nigel_port.png");
+	m_Portraits[2]->BuildCollision("portraits\\mandy_port.png");
 
 	m_Layer1 = Iw2DCreateImageResource("layer1");
 	m_Layer2 = Iw2DCreateImageResource("layer2");
@@ -153,10 +153,13 @@ void CGame::Update()
 			if (m_Portraits[i]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
 			{
 				if (TEMP_charIndex != i){
-					m_Cam->SetPosition(CIwSVec2(static_cast<int16>(characters[i]->GetPosition().x), static_cast<int16>(characters[i]->GetPosition().y)));
+					m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[i]->GetPosition().x), static_cast<int16>(-characters[i]->GetPosition().y)));
 					TEMP_charIndex = i;}
 				break;
 			}
+
+			if (characters[i]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
+				std::cout << "Clicked on " << i << std::endl;
 		}
 		std::cout << "Pointer @ x:" << s3ePointerGetX() << " y:" << s3ePointerGetY() << std::endl;
 		if (characters[TEMP_charIndex]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
@@ -227,7 +230,9 @@ void CGame::Update()
 		std::cout << "Running collide" << std::endl;
 	}*/
 
-//	m_Cam->Update(dtSecs);
+	m_Cam->Debug_PrintPosition();
+	characters[TEMP_charIndex]->Debug_PrintPos();
+
 }
 
 
@@ -242,13 +247,6 @@ void CGame::Render()
 
 	for (int i = 0;  i <3; i++)
 	{
-		if (i == TEMP_charIndex)
-		{
-			//CIwSVec2 test = CIwSVec2(static_cast<int16>(characters[i]->GetPosition().x), static_cast<int16>(characters[i]->GetPosition().y));
-
-			//m_Cam->Position = test;
-		}
-
 		characters[i]->Draw();
 		m_Portraits[i]->Draw(m_Cam->GetPosition());		
 	}

@@ -54,3 +54,8 @@ void Camera::Update()
 
 	*/
 }
+
+void Camera::Debug_PrintPosition()
+{
+	std::cout << "Camera's Position -> " << m_Position.x << "," << m_Position.y;
+}
