@@ -34,6 +34,12 @@ void Sprite::BuildCollision(const char* fname)
 	img.ConvertToImage(&m_CollisionMap);
 }
 
+// 
+void Sprite::BuildCollision(CIwImage img)
+{
+	m_CollisionMap = img;
+}
+
 void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 {
 	m_Animated = animated;
@@ -58,9 +64,14 @@ bool Sprite::isColliding(const CIwFVec2& other)
 		|| localPos.y < 0
 		|| localPos.x > (int32)m_CollisionMap.GetWidth()
 		|| localPos.y > (int32)m_CollisionMap.GetHeight())
+	{
+		TEMP_ISCOLLIDING = false;
 		return false;
+	}
 
-	return m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
+	bool t = m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
+	TEMP_ISCOLLIDING = t;
+	return t;
 }
 
 void Sprite::Update(float deltaTime)
@@ -78,11 +89,11 @@ void Sprite::Update(float deltaTime)
 	m_Position += m_MovSpeed * deltaTime;
 
 	// Update gravity
-	if ((m_Position.y < (320 - m_Height)) && TEMP_ISFALLING == true) // and has jumped
+	if ((!TEMP_ISCOLLIDING) && TEMP_ISFALLING == true) // and has jumped
 	{
 		m_yVel += GRAVITY;
 		m_Position.y += m_yVel;
-		if (m_Position.y + m_Height >= 320)
+		if (TEMP_ISCOLLIDING)
 		{
 			std::cout << "I'm supposed to have stopped" << std::endl;
 			TEMP_ISFALLING = false;
@@ -145,7 +156,23 @@ void Sprite::Draw()
 	{
 		//Iw2DSetTransformMatrix(CIwMat2D::g_Identity);
 	}
+}
 
+// Give the camera's position to keep the sprites on screen
+void Sprite::Draw(CIwSVec2& camPos) 
+{
+	CIwSVec2 drawPos(m_Position.x - camPos.x , m_Position.y - camPos.y);
+	drawPos -=m_Center;
+
+	if (m_Animated) 
+	{
+		CIwSVec2 offset(((int)m_CurrentFrame % m_FrameCount.x) * m_FrameSize.x, ((int)m_CurrentFrame / m_FrameCount.x) * m_FrameSize.y);
+		Iw2DDrawImageRegion(m_Image, drawPos, offset, m_FrameSize);
+	} 
+	else
+	{
+		Iw2DDrawImage(m_Image, drawPos);
+	}
 }
 
 void Sprite::Debug_PrintPos()

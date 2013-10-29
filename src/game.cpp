@@ -42,11 +42,25 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	characters[2]->SetPosition(CIwFVec2(64, 150));
 	characters[2]->BuildCollision("characters\\mandy.png");
 
+	m_Portraits[0] = new Sprite("dave_port");
+	m_Portraits[0]->SetPosition(CIwFVec2(0,0));
+	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
+
+	m_Portraits[1] = new Sprite("mandy_port");
+	m_Portraits[1]->SetPosition(CIwFVec2(50,0));
+	m_Portraits[1]->BuildCollision("portraits\\mandy_port.png");
+
+	m_Portraits[2] = new Sprite("nigel_port");
+	m_Portraits[2]->SetPosition(CIwFVec2(100,0));
+	m_Portraits[2]->BuildCollision("portraits\\nigel_port.png");
+
 	m_Layer1 = Iw2DCreateImageResource("layer1");
 	m_Layer2 = Iw2DCreateImageResource("layer2");
 	m_Layer3 = Iw2DCreateImageResource("layer3");
 	m_Layer4 = Iw2DCreateImageResource("layer4");
-	m_Floor = Iw2DCreateImageResource("floor");
+	m_Floor = new Sprite("floor");
+	m_Floor->SetPosition(CIwFVec2(0,0));
+	m_Floor->BuildCollision("background\\floor.png");
 
 	// Load gui buttons in, 0 = left arrow, 1 right arrow
 	guiButtons[0] = Iw2DCreateImageResource("touchscreenMoveL");
@@ -79,7 +93,10 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 CGame::~CGame()
 {
 	for (int i = 0; i < 3; i++)
+	{
 		delete characters[i];
+		delete m_Portraits[i];
+	}
 
 	for (int i = 0; i < 2; i++)
 		delete guiButtons[i];
@@ -129,46 +146,59 @@ void CGame::Update()
 
     if( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN  )
     {
-			std::cout << "Pointer @ x:" << s3ePointerGetX() << " y:" << s3ePointerGetY() << std::endl;
-			if (characters[TEMP_charIndex]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
-				std::cout << "Clicked collision";
 
-			int x = s3ePointerGetX() * 3 / screenWidth;
-			int y = s3ePointerGetY() * 4 / screenHeight;
+		// Check collision with the character portraits
+		for (int i = 0; i < 3; i++)
+		{
+			if (m_Portraits[i]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
+			{
+				if (TEMP_charIndex != i){
+					m_Cam->SetPosition(CIwSVec2(static_cast<int16>(characters[i]->GetPosition().x), static_cast<int16>(characters[i]->GetPosition().y)));
+					TEMP_charIndex = i;}
+				break;
+			}
+		}
+		std::cout << "Pointer @ x:" << s3ePointerGetX() << " y:" << s3ePointerGetY() << std::endl;
+		if (characters[TEMP_charIndex]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
+			std::cout << "Clicked collision";
 
-			std::cout << "Pointer @ x:" << x << " y:" << y << std::endl;
+		int x = s3ePointerGetX() * 3 / screenWidth;
+		int y = s3ePointerGetY() * 4 / screenHeight;
+
+		std::cout << "Pointer @ x:" << x << " y:" << y << std::endl;
 		
-			if (x == 0 && y == 3)
-			{ 
-				characters[TEMP_charIndex]->MoveBy(CIwSVec2(-10, 0));
-				m_Cam->MoveBy(CIwSVec2(10,0));
-			}
-			else if (x == 2 && y == 3)
-			{
-				characters[TEMP_charIndex]->MoveBy(CIwSVec2(10, 0));
-				m_Cam->MoveBy(CIwSVec2(-10, 0));
-			}
-			else if ((x == 2 && y == 0) && TEMP_charIndex == 2)
-			{
-				std::cout << "Started to jump" << std::endl;
-					characters[2]->TEMP_JUSTJUMPED = true;
+		if (x == 0 && y == 3)
+		{ 
+			characters[TEMP_charIndex]->MoveBy(CIwSVec2(-10, 0));
+			m_Cam->MoveBy(CIwSVec2(10,0));
+		}
+		else
+			if (x == 2 && y == 3)
+		{
+			characters[TEMP_charIndex]->MoveBy(CIwSVec2(10, 0));
+			m_Cam->MoveBy(CIwSVec2(-10, 0));
+		}
+		else if ((x == 2 && y == 0) && TEMP_charIndex == 2)
+		{
+			std::cout << "Started to jump" << std::endl;
+			characters[2]->TEMP_JUSTJUMPED = true;
 
-			}
-			else // Re sample the position of the touch event as no 'button' was pressed
+		}
+		else // Re sample the position of the touch event as no 'button' was pressed
+		{
+			if (TEMP_isThrowing == false)
 			{
-				if (TEMP_isThrowing == false)
-				{
-					// Move the sprite to the position of a touch event, gradually
-					//CIwFVec2 target(static_cast<float>(s3ePointerGetX()), (float)s3ePointerGetY());
-					//target += CIwFVec2(static_cast<float>(m_Cam->Position.x), static_cast<float>(m_Cam->Position.y));
-					//characters[TEMP_charIndex]->SetPosition(characters[TEMP_charIndex]->LerpTo(target, 0.05f));
-					//m_Position += (target - m_Position) * 5 * dtSecs;
-				}
-				else
-				{
-					TEMP_target = CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY());
-				}
+				// Move the sprite to the position of a touch event, gradually
+				//CIwFVec2 target(static_cast<float>(s3ePointerGetX()), (float)s3ePointerGetY());
+				//target += CIwFVec2(static_cast<float>(m_Cam->Position.x), static_cast<float>(m_Cam->Position.y));
+				//characters[TEMP_charIndex]->SetPosition(characters[TEMP_charIndex]->LerpTo(target, 0.05f));
+				//m_Position += (target - m_Position) * 5 * dtSecs;
 			}
+			else
+			{
+				TEMP_target = CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY());
+			}
+		}
 	}
 
 	// check if pointer is released and set flags to false???!?!?!?!?!
@@ -185,13 +215,17 @@ void CGame::Update()
 	}
 
 	for (int i = 0; i < 3; i++)
-		characters[i]->Update(dtSecs);
+	{
+		//characters[i]->Update(dtSecs);
+		if (characters[i]->isColliding(m_Floor->GetPosition()))
+			std::cout << "Stopped";
+	}
 
-	if ( (characters[0]->isColliding(characters[1]->GetPosition())) && TEMP_isThrowing == false)
+	/*if ( (characters[0]->isColliding(characters[1]->GetPosition())) && TEMP_isThrowing == false)
 	{
 		TEMP_isThrowing = true;
 		std::cout << "Running collide" << std::endl;
-	}
+	}*/
 
 //	m_Cam->Update(dtSecs);
 }
@@ -204,7 +238,7 @@ void CGame::Render()
 	Iw2DDrawImage(m_Layer1, CIwSVec2(layerLocs.at(0).x, layerLocs.at(0).y));
 	Iw2DDrawImage(m_Layer2, CIwSVec2(layerLocs.at(1).x, layerLocs.at(1).y));
 	Iw2DDrawImage(m_Layer3, CIwSVec2(layerLocs.at(2).x, layerLocs.at(2).y));
-	Iw2DDrawImage(m_Floor, CIwSVec2(0,-120));
+	m_Floor->Draw();
 
 	for (int i = 0;  i <3; i++)
 	{
@@ -216,7 +250,7 @@ void CGame::Render()
 		}
 
 		characters[i]->Draw();
-		
+		m_Portraits[i]->Draw(m_Cam->GetPosition());		
 	}
 	
 	DrawTouchButtons();
@@ -234,8 +268,8 @@ void CGame::DrawTouchButtons()
 
 	Iw2DSetColour(0xff646464);
 	Iw2DSetAlphaMode(IW_2D_ALPHA_ADD);
-	DrawSpriteCentered(guiButtons[0], size/2, screenHeight-size/2, size); // Left side
-	DrawSpriteCentered(guiButtons[1], screenWidth-size/2, screenHeight-size/2, size);
+	DrawSpriteCentered(guiButtons[0], size/2 - m_Cam->GetPosition().x, screenHeight-size/2 - m_Cam->GetPosition().y, size); // Left side
+	DrawSpriteCentered(guiButtons[1], screenWidth-size/2 - m_Cam->GetPosition().x, screenHeight-size/2 - m_Cam->GetPosition().y, size);
 	Iw2DSetAlphaMode(IW_2D_ALPHA_NONE);
 	Iw2DSetColour(0xffffffff);
 }

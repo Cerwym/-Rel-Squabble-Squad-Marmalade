@@ -45,10 +45,12 @@ private:
 	CIw2DImage* m_Layer2;
 	CIw2DImage* m_Layer3;
 	CIw2DImage* m_Layer4;
-	CIw2DImage* m_Floor;
+	//CIw2DImage* m_Floor;
 	CIw2DImage* guiButtons[2];
 
 	Sprite* characters[3];
+	Sprite* m_Portraits[3];
+	Sprite* m_Floor;
 
 	int TEMP_charIndex;
 	bool TEMP_isThrowing;

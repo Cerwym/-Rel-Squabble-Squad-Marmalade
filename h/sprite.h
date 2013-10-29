@@ -26,6 +26,8 @@ public:
 	}	
 
 	void BuildCollision(const char* fname);
+	void BuildCollision(CIwImage img);
+	CIwImage GetCollisionMap() const {return m_CollisionMap;}
 	void SetMaterial();
 
 	inline iwangle GetRotation() { return m_Angle; }
@@ -37,6 +39,7 @@ public:
 	void SetAnimated(const bool animated, float speed, CIwFVec2 frameCount = CIwFVec2());
 	void Update(const float deltaTime);
 	void Draw();
+	void Draw(CIwSVec2& camPos);
 	void Jump();
 	bool isColliding(const CIwFVec2& other);
 
@@ -60,6 +63,7 @@ private:
 	float m_yVel;
 	float m_Width, m_Height;
 	float TEMP_BEFOREJUMPY;
+	bool TEMP_ISCOLLIDING;
 	int TEMP_BOUNCECOUNT;
 	/* 
 		The difference between CIWsVec2 and CIwFVec2
