@@ -17,6 +17,7 @@ public:
 		CIwMat2D test = CIwMat2D::g_Identity;
 		test.SetTrans(m_Position);
 		Iw2DSetTransformMatrix(test);
+		m_Transform = test;
 	}
 
 	void MoveBy(const CIwSVec2& m)
