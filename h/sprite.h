@@ -54,7 +54,7 @@ public:
 protected:
 
 private:
-	CIwFVec2 m_Center; // The centre of the image to rotate around
+	CIwFVec2 m_Center; // The center of the image to rotate around
 	CIwFVec2 m_Position; // Screen position
 	CIwFVec2 m_MovSpeed;
 	

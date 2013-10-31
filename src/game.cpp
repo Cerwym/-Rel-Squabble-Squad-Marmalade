@@ -29,16 +29,17 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 
 	// Dave (big), Nigel (small), Mandy (girl)
 	characters[0] = new Sprite("dave");
-	characters[0]->SetCenter(CIwSVec2(50,50));
+	characters[0]->SetCenter(CIwSVec2(characters[0]->GetWidth(), characters[0]->GetHeight()));
+	characters[0]->SetPosition(CIwFVec2(0,0));
 	characters[0]->BuildCollision("characters\\dave.png");
 
 	characters[1] = new Sprite("nigel");
-	characters[1]->SetCenter(CIwSVec2(20,24));
+	characters[1]->SetCenter(CIwSVec2(characters[1]->GetWidth(), characters[1]->GetHeight()));
 	characters[1]->SetPosition(CIwFVec2(24, 100));
 	characters[1]->BuildCollision("characters\\nigel.png");
 
 	characters[2] = new Sprite("mandy");
-	characters[2]->SetCenter(CIwSVec2(20,34));
+	characters[2]->SetCenter(CIwSVec2(characters[2]->GetWidth(), characters[2]->GetHeight()));
 	characters[2]->SetPosition(CIwFVec2(64, 150));
 	characters[2]->BuildCollision("characters\\mandy.png");
 
@@ -58,10 +59,6 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	m_Layer2 = Iw2DCreateImageResource("layer2");
 	m_Layer3 = Iw2DCreateImageResource("layer3");
 	m_Layer4 = Iw2DCreateImageResource("layer4");
-	
-	m_Floor = new Sprite("floor");
-	//m_Floor->SetPosition(CIwFVec2(0,0));
-	m_Floor->BuildCollision("background\\floor.png");
 
 	// Load gui buttons in, 0 = left arrow, 1 right arrow
 	guiButtons[0] = Iw2DCreateImageResource("touchscreenMoveL");
@@ -71,6 +68,14 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	{
 		layerLocs.push_back(CIwFVec2(0,0));
 	}
+
+	n_guiButtons[0] = new Sprite("touchScreenMoveL");
+	n_guiButtons[0]->SetPosition(CIwFVec2(0, 260));
+	n_guiButtons[0]->BuildCollision("textures\\touchScreenMoveL.bmp");
+
+	n_guiButtons[1] = new Sprite("touchScreenMoveR");
+	n_guiButtons[1]->SetPosition(CIwFVec2(414, 260));
+	n_guiButtons[1]->BuildCollision("textures\\touchScreenMoveR.bmp");
 
 	// I want to put this in a class, will do later
 	m_LastUpdate = s3eTimerGetMs();
@@ -83,12 +88,14 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 
 	TEMP_charIndex = 0;
 	TEMP_isThrowing = false;
+	TEMP_canThrow = false;
 
 	m_Cam = new Camera;
 	m_Cam->SetPosition(CIwSVec2(0, 0));
 	m_Cam->Position = CIwSVec2(0, 0);
 	
 	m_Level = new TileMap("levels\\levelproto.txt");
+	m_MouseClicked = false;
 }
 
 
@@ -101,7 +108,7 @@ CGame::~CGame()
 	}
 
 	for (int i = 0; i < 2; i++)
-		delete guiButtons[i];
+		delete n_guiButtons[i];
 
 	if (m_Font != NULL)
 		delete m_Font;
@@ -143,10 +150,7 @@ void CGame::Update()
 
 	// Input
 
-	// if state != last state
-	//s3ePointerState currState, lastState;
-
-    if( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN  )
+    if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
     {
 		for (int i = 0; i < 3; i++)
 		{
@@ -156,73 +160,49 @@ void CGame::Update()
 				if (TEMP_charIndex != i)
 				{
 					m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[i]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[i]->GetPosition().y + (screenHeight - characters[i]->GetHeight()))));
-					TEMP_charIndex = i;
+					//TEMP_charIndex = i;
 				}
 				if (characters[i]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
 					std::cout << "clicked" << std::endl;
 			}
 
-			characters[i]->Debug_PrintPos();
-
-			// mat2d inv = matrix.inverse(camera.mat2d)
-			//CIwMat2D invView = m_Cam->GetTranslation().GetInverse();
-			// vector 2 pos = vec.transform(pointerpos, invmatrix)
 			if (characters[i]->isColliding(CIwFVec2(s3ePointerGetX() - m_Cam->GetPosition().x , s3ePointerGetY() - m_Cam->GetPosition().y )))
 				std::cout << "Clicked on " << i << std::endl;
 		}
 
-		int x = s3ePointerGetX() * 3 / screenWidth;
-		int y = s3ePointerGetY() * 4 / screenHeight;
+		// Check if Nigel can be thrown, if he can, check to see if the player has pressed on Nigel, if he has, then begin throwing.
+		if (TEMP_canThrow)
+			TEMP_isThrowing = characters[1]->isColliding(CIwFVec2(s3ePointerGetX() - m_Cam->GetPosition().x, s3ePointerGetY() - m_Cam->GetPosition().y ));
 
-		//std::cout << "Pointer @ x:" << x << " y:" << y << std::endl;
-		
-		if (x == 0 && y == 3)
-		{ 
-			characters[TEMP_charIndex]->MoveBy(CIwSVec2(-10, 0));
-			//m_Floor->MoveBy(CIwSVec2(10, 0));
-			m_Cam->MoveBy(CIwSVec2(10,0));
+		if (!TEMP_isThrowing)
+		{
+			if (n_guiButtons[0]->isColliding((CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))) // Left Arrow Button
+			{
+				characters[TEMP_charIndex]->MoveBy(CIwSVec2(-10, 0));
+				m_Cam->MoveBy(CIwSVec2(10,0));
+			}
+
+			if (n_guiButtons[1]->isColliding((CIwFVec2(s3ePointerGetX(), s3ePointerGetY()))))
+			{
+				characters[TEMP_charIndex]->MoveBy(CIwSVec2(10, 0));
+				m_Cam->MoveBy(CIwSVec2(-10, 0));
+			}
 		}
 		else
-			if (x == 2 && y == 3)
 		{
-			characters[TEMP_charIndex]->MoveBy(CIwSVec2(10, 0));
-			//m_Floor->MoveBy(CIwSVec2(-10,0));
-			m_Cam->MoveBy(CIwSVec2(-10, 0));
+			TEMP_target = CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY());
 		}
-		else if ((x == 2 && y == 0) && TEMP_charIndex == 2)
-		{
-			std::cout << "Started to jump" << std::endl;
-			characters[2]->TEMP_JUSTJUMPED = true;
-
-		}
-		else // Re sample the position of the touch event as no 'button' was pressed
-		{
-			if (TEMP_isThrowing == false)
-			{
-				// Move the sprite to the position of a touch event, gradually
-				//CIwFVec2 target(static_cast<float>(s3ePointerGetX()), (float)s3ePointerGetY());
-				//target += CIwFVec2(static_cast<float>(m_Cam->Position.x), static_cast<float>(m_Cam->Position.y));
-				//characters[TEMP_charIndex]->SetPosition(characters[TEMP_charIndex]->LerpTo(target, 0.05f));
-				//m_Position += (target - m_Position) * 5 * dtSecs;
-			}
-			else
-			{
-				TEMP_target = CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY());
-			}
-		}
+		m_MouseClicked = true;
 	}
+	if (s3ePointerGetState(S3E_POINTER_BUTTON_LEFTMOUSE) == 4)
+		m_MouseClicked = false;
 
-	// check if pointer is released and set flags to false???!?!?!?!?!
-	else//( s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_UP )
+
+
+	if (TEMP_isThrowing == true)
 	{
-		if (TEMP_isThrowing == true)
-		{
-			characters[1]->SetPosition(characters[1]->LerpTo(TEMP_target, 0.05f));
-			characters[1]->TEMP_ISFALLING = true;
-			
-			if (characters[1]->GetPosition().y <= 300) // change this to if it has hit a collidable surface
-				TEMP_isThrowing = false;
-		}
+		characters[1]->SetPosition(characters[1]->LerpTo(TEMP_target, 0.05f));
+		characters[1]->TEMP_ISFALLING = true;
 	}
 
 	for (int i = 0; i < 3; i++)
@@ -234,19 +214,24 @@ void CGame::Update()
 			Sprite* t = m_Level->GetMap().at(j);
 			if (characters[i]->isColliding(t->GetPosition()))
 				characters[i]->TEMP_ISCOLLIDING = true;
+
+			if (characters[1]->isColliding(t->GetPosition()))
+				TEMP_isThrowing = false;
 		}
 	}
 
-	//m_Floor->Debug_PrintPos();
-	/*if ( (characters[0]->isColliding(characters[1]->GetPosition())) && TEMP_isThrowing == false)
-	{
-		TEMP_isThrowing = true;
-		std::cout << "Running collide" << std::endl;
-	}*/
+	// If Dave is colliding with Nigel, then make it so
+	TEMP_canThrow = characters[0]->isColliding((characters[1]->GetPosition()));
 
 	m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().y + (screenHeight - characters[TEMP_charIndex]->GetHeight()))));
 }
 
+void CGame::DrawText()
+{
+	// Draw Nigel's Position
+	// Draw Mandy's Position
+	// Draw 
+}
 
 void CGame::Render()
 {
@@ -255,7 +240,6 @@ void CGame::Render()
 	Iw2DDrawImage(m_Layer1, CIwSVec2(layerLocs.at(0).x, layerLocs.at(0).y));
 	Iw2DDrawImage(m_Layer2, CIwSVec2(layerLocs.at(1).x, layerLocs.at(1).y));
 	Iw2DDrawImage(m_Layer3, CIwSVec2(layerLocs.at(2).x, layerLocs.at(2).y));
-	//m_Floor->Draw();
 	m_Level->Draw();
 
 	for (int i = 0;  i <3; i++)
@@ -264,7 +248,10 @@ void CGame::Render()
 		m_Portraits[i]->Draw(m_Cam->GetPosition());		
 	}
 	
-	DrawTouchButtons();
+	//DrawTouchButtons();
+
+	for (int i = 0; i < 2; i++)
+		n_guiButtons[i]->Draw(m_Cam->GetPosition());
 
     Iw2DSurfaceShow();
 }

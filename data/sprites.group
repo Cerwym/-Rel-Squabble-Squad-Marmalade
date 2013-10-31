@@ -9,6 +9,7 @@ CIwResGroup
 		"./portraits/nigel_port.png"
 		"./textures/background.png"
 		"./tiles/m_floor.png"
+		"./tiles/elevator.png"
 		"./textures/touchscreenMoveL.bmp"
 		"./textures/touchscreenMoveR.bmp"
 		"./background/layer1.png"

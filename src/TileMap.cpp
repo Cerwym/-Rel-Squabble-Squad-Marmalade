@@ -11,6 +11,7 @@ TileMap::TileMap(const char* lvlFile)
 	string line;
 	int y = 0;
 	char buff[1024];
+	//char* buff = new char[1024];
 
 	if ((!infile.bad()) || (infile != NULL))
 	{
@@ -30,7 +31,15 @@ TileMap::TileMap(const char* lvlFile)
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 
-						cout << "Sprite is at -> " << t->GetWidth() * x << "," << t->GetHeight() * y  << endl;
+						//cout << "Sprite is at -> " << t->GetWidth() * x << "," << t->GetHeight() * y  << endl;
+					}
+
+					if (buff[x] == 'E')
+					{
+						Sprite* t = new Sprite("elevator");
+						t->BuildCollision("tiles\\elevator.png");
+						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						m_Map.push_back(t);
 					}
 				}
 			}
@@ -40,7 +49,7 @@ TileMap::TileMap(const char* lvlFile)
 		infile.close();
 	}
 
-	//delete [] buff;
+	//delete buff;
 }
 
 void TileMap::Draw() // make it aware of cam, if not on screen, don't draw

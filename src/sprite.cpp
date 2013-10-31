@@ -73,14 +73,10 @@ bool Sprite::isColliding(const CIwFVec2& other)
 		|| localPos.x > (int32)m_CollisionMap.GetWidth()
 		|| localPos.y > (int32)m_CollisionMap.GetHeight())
 	{
-		//TEMP_ISCOLLIDING = false;
 		return false;
 	}
 
-	bool t = m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
-	//std::cout << "Texel = " << m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] << std::endl;
-	//TEMP_ISCOLLIDING = t;
-	return t;
+	return m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
 }
 
 bool Sprite::isColliding(Sprite* other)
@@ -100,14 +96,10 @@ bool Sprite::isColliding(Sprite* other)
 		|| localPos.x > (int32)m_CollisionMap.GetWidth()
 		|| localPos.y > (int32)m_CollisionMap.GetHeight())
 	{
-		//TEMP_ISCOLLIDING = false;
 		return false;
 	}
 
-	bool t = m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
-	//TEMP_ISCOLLIDING = t;
-	return t;
-
+	return m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
 }
 
 void Sprite::Update(float deltaTime)
@@ -161,13 +153,14 @@ void Sprite::Update(float deltaTime)
 		}
 	}
 
-	//std::cout << "Velocity is " << m_yVel << std::endl;
+	if (TEMP_ISCOLLIDING)
+		TEMP_ISFALLING = false;
 }
 
 void Sprite::Draw() 
 {
-	CIwSVec2 drawPos(m_Position.x , m_Position.y);
-	drawPos -=m_Center;
+	CIwSVec2 drawPos(m_Position.x, m_Position.y);
+	//drawPos -=m_Center;
 
 	if (m_Angle != 0)
 	{

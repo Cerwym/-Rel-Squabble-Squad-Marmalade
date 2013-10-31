@@ -25,6 +25,7 @@ protected:
 	void DrawTouchButtons();
 	// Draw a sprite, centered at the specified position with a given size
 	void DrawSpriteCentered(CIw2DImage*, int, int, int);
+	void DrawText();
 
 private:
     CIwFVec2 m_Position;
@@ -39,6 +40,8 @@ private:
 	int screenWidth;
 	int screenHeight;
 
+	bool m_MouseClicked;
+
 	CIw2DFont* m_Font;
 
 	// Temporary stuff
@@ -48,6 +51,7 @@ private:
 	CIw2DImage* m_Layer4;
 	//CIw2DImage* m_Floor;
 	CIw2DImage* guiButtons[2];
+	Sprite* n_guiButtons[2];
 
 	Sprite* characters[3];
 	Sprite* m_Portraits[3];
@@ -55,6 +59,7 @@ private:
 
 	int TEMP_charIndex;
 	bool TEMP_isThrowing;
+	bool TEMP_canThrow;
 	CIwFVec2 TEMP_target;
 
 	std::vector<CIwFVec2> layerLocs;
