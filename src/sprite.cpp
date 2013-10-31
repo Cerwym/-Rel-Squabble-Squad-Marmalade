@@ -12,9 +12,11 @@ m_Angle(0),m_Animated(false)
 	m_Width = m_Image->GetWidth();
 	m_Height = m_Image->GetWidth();
 	m_yVel = 0;
+	m_Name = name;
 	TEMP_ISFALLING = true;
 	TEMP_JUSTJUMPED = false;
 	TEMP_LANDEDJUMP = true;
+	TEMP_ISCOLLIDING = false;
 }
 
 
@@ -58,20 +60,54 @@ bool Sprite::isColliding(const CIwFVec2& other)
 {
 	IW_CALLSTACK("Sprite::isColliding");
 
-	CIwSVec2 localPos = CIwSVec2(static_cast<int>(other.x), static_cast<int>(other.y)) - CIwSVec2(static_cast<int>(m_Position.x), static_cast<int>(m_Position.y));
+	// convert to local coordinate space
+	CIwSVec2 localPos = CIwSVec2
+		(static_cast<int16>(other.x), static_cast<int16>(other.y)) -
+		CIwSVec2(static_cast<int16>(m_Position.x), static_cast<int16>(m_Position.y));
+	
+
+	//std::cout << "localPos->" << localPos.x << "," << localPos.y << std::endl; 
 
 	if(localPos.x < 0
 		|| localPos.y < 0
 		|| localPos.x > (int32)m_CollisionMap.GetWidth()
 		|| localPos.y > (int32)m_CollisionMap.GetHeight())
 	{
-		TEMP_ISCOLLIDING = false;
+		//TEMP_ISCOLLIDING = false;
 		return false;
 	}
 
 	bool t = m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
-	TEMP_ISCOLLIDING = t;
+	//std::cout << "Texel = " << m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] << std::endl;
+	//TEMP_ISCOLLIDING = t;
 	return t;
+}
+
+bool Sprite::isColliding(Sprite* other)
+{
+	IW_CALLSTACK("Sprite::isColliding");
+
+	// convert to local coordinate space
+	CIwSVec2 localPos = CIwSVec2
+		(static_cast<int16>(other->GetPosition().x), static_cast<int16>(other->GetPosition().y)) -
+		CIwSVec2(static_cast<int16>(-m_Position.x), static_cast<int16>(-m_Position.y));
+
+
+	//std::cout << "localPos->" << localPos.x << "," << localPos.y << std::endl; 
+
+	if(localPos.x < 0
+		|| localPos.y < 0
+		|| localPos.x > (int32)m_CollisionMap.GetWidth()
+		|| localPos.y > (int32)m_CollisionMap.GetHeight())
+	{
+		//TEMP_ISCOLLIDING = false;
+		return false;
+	}
+
+	bool t = m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
+	//TEMP_ISCOLLIDING = t;
+	return t;
+
 }
 
 void Sprite::Update(float deltaTime)
@@ -86,17 +122,16 @@ void Sprite::Update(float deltaTime)
 
 	// update position
 		
-	m_Position += m_MovSpeed * deltaTime;
+	//m_Position += m_MovSpeed * deltaTime;
 
 	// Update gravity
-	if ((!TEMP_ISCOLLIDING) && TEMP_ISFALLING == true) // and has jumped
+	if ((TEMP_ISCOLLIDING == false)) // and has jumped
 	{
 		m_yVel += GRAVITY;
 		m_Position.y += m_yVel;
-		if (TEMP_ISCOLLIDING)
+		if (TEMP_ISCOLLIDING == true)
 		{
 			std::cout << "I'm supposed to have stopped" << std::endl;
-			TEMP_ISFALLING = false;
 			m_yVel = 0;
 		}
 		

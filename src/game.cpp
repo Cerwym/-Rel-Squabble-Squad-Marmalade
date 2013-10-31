@@ -43,15 +43,15 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	characters[2]->BuildCollision("characters\\mandy.png");
 
 	m_Portraits[0] = new Sprite("dave_port");
-	m_Portraits[0]->SetPosition(CIwFVec2(0,0));
+	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
 	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
 
 	m_Portraits[1] = new Sprite("nigel_port");
-	m_Portraits[1]->SetPosition(CIwFVec2(50,0));
+	m_Portraits[1]->SetPosition(CIwFVec2(210,0));
 	m_Portraits[1]->BuildCollision("portraits\\nigel_port.png");
 
 	m_Portraits[2] = new Sprite("mandy_port");
-	m_Portraits[2]->SetPosition(CIwFVec2(100,0));
+	m_Portraits[2]->SetPosition(CIwFVec2(290,0));
 	m_Portraits[2]->BuildCollision("portraits\\mandy_port.png");
 
 	m_Layer1 = Iw2DCreateImageResource("layer1");
@@ -87,6 +87,8 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	m_Cam = new Camera;
 	m_Cam->SetPosition(CIwSVec2(0, 0));
 	m_Cam->Position = CIwSVec2(0, 0);
+	
+	m_Level = new TileMap("levels\\levelproto.txt");
 }
 
 
@@ -156,18 +158,18 @@ void CGame::Update()
 					m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[i]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[i]->GetPosition().y + (screenHeight - characters[i]->GetHeight()))));
 					TEMP_charIndex = i;
 				}
+				if (characters[i]->isColliding(CIwFVec2(s3ePointerGetX(), s3ePointerGetY())))
+					std::cout << "clicked" << std::endl;
 			}
 
 			characters[i]->Debug_PrintPos();
 
 			// mat2d inv = matrix.inverse(camera.mat2d)
-			CIwMat2D invView = m_Cam->GetTranslation().GetInverse();
+			//CIwMat2D invView = m_Cam->GetTranslation().GetInverse();
 			// vector 2 pos = vec.transform(pointerpos, invmatrix)
 			if (characters[i]->isColliding(CIwFVec2(s3ePointerGetX() - m_Cam->GetPosition().x , s3ePointerGetY() - m_Cam->GetPosition().y )))
 				std::cout << "Clicked on " << i << std::endl;
 		}
-
-		std::cout << "World pos -> " << s3ePointerGetX() - m_Cam->GetPosition().x << "," <<  s3ePointerGetY() - m_Cam->GetPosition().y << std::endl;
 
 		int x = s3ePointerGetX() * 3 / screenWidth;
 		int y = s3ePointerGetY() * 4 / screenHeight;
@@ -177,12 +179,14 @@ void CGame::Update()
 		if (x == 0 && y == 3)
 		{ 
 			characters[TEMP_charIndex]->MoveBy(CIwSVec2(-10, 0));
+			//m_Floor->MoveBy(CIwSVec2(10, 0));
 			m_Cam->MoveBy(CIwSVec2(10,0));
 		}
 		else
 			if (x == 2 && y == 3)
 		{
 			characters[TEMP_charIndex]->MoveBy(CIwSVec2(10, 0));
+			//m_Floor->MoveBy(CIwSVec2(-10,0));
 			m_Cam->MoveBy(CIwSVec2(-10, 0));
 		}
 		else if ((x == 2 && y == 0) && TEMP_charIndex == 2)
@@ -223,20 +227,24 @@ void CGame::Update()
 
 	for (int i = 0; i < 3; i++)
 	{
-		//characters[i]->Update(dtSecs);
-		if (characters[i]->isColliding(m_Floor->GetPosition()))
-			std::cout << "Stopped";
+		characters[i]->Update(dtSecs);
+
+		for (int j = 0; j < m_Level->GetMap().size(); j++)
+		{
+			Sprite* t = m_Level->GetMap().at(j);
+			if (characters[i]->isColliding(t->GetPosition()))
+				characters[i]->TEMP_ISCOLLIDING = true;
+		}
 	}
 
+	//m_Floor->Debug_PrintPos();
 	/*if ( (characters[0]->isColliding(characters[1]->GetPosition())) && TEMP_isThrowing == false)
 	{
 		TEMP_isThrowing = true;
 		std::cout << "Running collide" << std::endl;
 	}*/
 
-	//m_Cam->Debug_PrintPosition();
-	//characters[TEMP_charIndex]->Debug_PrintPos();
-
+	m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().y + (screenHeight - characters[TEMP_charIndex]->GetHeight()))));
 }
 
 
@@ -247,7 +255,8 @@ void CGame::Render()
 	Iw2DDrawImage(m_Layer1, CIwSVec2(layerLocs.at(0).x, layerLocs.at(0).y));
 	Iw2DDrawImage(m_Layer2, CIwSVec2(layerLocs.at(1).x, layerLocs.at(1).y));
 	Iw2DDrawImage(m_Layer3, CIwSVec2(layerLocs.at(2).x, layerLocs.at(2).y));
-	m_Floor->Draw();
+	//m_Floor->Draw();
+	m_Level->Draw();
 
 	for (int i = 0;  i <3; i++)
 	{

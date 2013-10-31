@@ -5,7 +5,7 @@
 #include "Iw2D.h"
 #include "camera.h"
 
-#define GRAVITY 0.678f
+#define GRAVITY 0.278f
 #define JUMP_HEIGHT 25.f
 
 class Sprite
@@ -42,12 +42,14 @@ public:
 	void Draw(CIwSVec2& camPos);
 	void Jump();
 	bool isColliding(const CIwFVec2& other);
+	bool isColliding(Sprite* other);
 
 	void Debug_PrintPos();
 
 	bool TEMP_ISFALLING;
 	bool TEMP_JUSTJUMPED;
 	bool TEMP_LANDEDJUMP;
+	bool TEMP_ISCOLLIDING;
 
 protected:
 
@@ -62,8 +64,8 @@ private:
 	float m_CurrentFrame;
 	float m_yVel;
 	float m_Width, m_Height;
+	const char* m_Name;
 	float TEMP_BEFOREJUMPY;
-	bool TEMP_ISCOLLIDING;
 	int TEMP_BOUNCECOUNT;
 	/* 
 		The difference between CIWsVec2 and CIwFVec2

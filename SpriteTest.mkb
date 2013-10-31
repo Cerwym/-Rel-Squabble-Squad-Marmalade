@@ -12,6 +12,7 @@ files
 	camera.cpp
 	gamescene.cpp
 	UI.cpp
+	TileMap.cpp
     (h)
     game.h
     sprite.h
@@ -19,6 +20,7 @@ files
 	camera.h
 	gamescene.h
 	UI.h
+	TileMap.h
 }
 
 assets

@@ -4,6 +4,7 @@
 #include <vector>
 #include "sprite.h"
 #include "camera.h"
+#include "TileMap.h"
 
 class CGame
 {
@@ -59,6 +60,7 @@ private:
 	std::vector<CIwFVec2> layerLocs;
 
 	Camera* m_Cam;
+	TileMap* m_Level;
 
 };
 

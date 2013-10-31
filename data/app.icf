@@ -17,8 +17,12 @@
 # S3E documentation for details.
 
 [S3E]
-MemSize=20485760
-MemSizeDebug=20485760
+MemSize=50485760
+MemSizeDebug=50485760
+
+#temporary fix
+[GX]
+DataCacheSize=500000
 
 #[Util]
 #MemoryBreakpoint=506
