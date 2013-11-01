@@ -152,14 +152,11 @@ void Sprite::Update(float deltaTime)
 			std::cout << "landed" << std::endl;
 		}
 	}
-
-	if (TEMP_ISCOLLIDING)
-		TEMP_ISFALLING = false;
 }
 
 void Sprite::Draw() 
 {
-	CIwSVec2 drawPos(m_Position.x, m_Position.y);
+	CIwSVec2 drawPos((int16)m_Position.x, (int16)m_Position.y);
 	//drawPos -=m_Center;
 
 	if (m_Angle != 0)
@@ -189,8 +186,8 @@ void Sprite::Draw()
 // Give the camera's position to keep the sprites on screen
 void Sprite::Draw(CIwSVec2& camPos) 
 {
-	CIwSVec2 drawPos(m_Position.x - camPos.x , m_Position.y - camPos.y);
-	drawPos -=m_Center;
+	CIwSVec2 drawPos((int16)m_Position.x - camPos.x , (int16)m_Position.y - camPos.y);
+	//drawPos -=m_Center;
 
 	if (m_Animated) 
 	{

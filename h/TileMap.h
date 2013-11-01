@@ -11,8 +11,10 @@ public:
 
 	void Draw();
 	std::vector<Sprite*> GetMap(){return m_Map;}
+	std::vector<Sprite*> GetObjects(){return m_Objects;}
 
 private:
 	std::vector<Sprite*> m_Map;
+	std::vector<Sprite*> m_Objects;
 };
 #endif

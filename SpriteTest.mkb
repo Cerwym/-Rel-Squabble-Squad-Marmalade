@@ -13,6 +13,7 @@ files
 	gamescene.cpp
 	UI.cpp
 	TileMap.cpp
+	utils.cpp
     (h)
     game.h
     sprite.h
@@ -21,6 +22,7 @@ files
 	gamescene.h
 	UI.h
 	TileMap.h
+	utils.h
 }
 
 assets

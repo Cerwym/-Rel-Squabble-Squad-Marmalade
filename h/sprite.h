@@ -2,6 +2,7 @@
 #define SPRITE_H
 
 #include <math.h>
+#include <iostream>
 #include "Iw2D.h"
 #include "camera.h"
 
@@ -22,7 +23,17 @@ public:
 	// past in a const reference to CIWVec2 instead of the class itself
 	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar)
 	{
-		return (m_Position + (end - m_Position) * scalar);
+		CIwFVec2 t = (m_Position + (end - m_Position) * scalar);
+		std::cout << "Lerp value ->" << t.x << "," << t.y << std::endl;
+		return t;
+	}	
+
+	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar, CIwSVec2& camPos)
+	{
+		CIwSVec2 c = CIwSVec2((int16)camPos.x, (int16)camPos.y);
+		CIwFVec2 t = ((m_Position - c) + (end - (m_Position) -c) * scalar);
+		std::cout << "Lerp value ->" << t.x << "," << t.y << std::endl;
+		return t;
 	}	
 
 	void BuildCollision(const char* fname);
