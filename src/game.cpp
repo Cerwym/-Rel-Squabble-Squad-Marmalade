@@ -39,16 +39,19 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
 	characters[0]->SetPosition(CIwFVec2(0,0));
 	characters[0]->BuildCollision("characters\\dave.png");
+	characters[0]->ShowColliderPos = true;
 
 	characters[1] = new Sprite("nigel");
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(CIwFVec2(24, 100));
 	characters[1]->BuildCollision("characters\\nigel.png");
+	characters[1]->ShowColliderPos = true;
 
 	characters[2] = new Sprite("mandy");
 	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
 	characters[2]->SetPosition(CIwFVec2(64, 150));
 	characters[2]->BuildCollision("characters\\mandy.png");
+	characters[2]->ShowColliderPos = true;
 
 	m_Portraits[0] = new Sprite("dave_port");
 	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
@@ -82,6 +85,7 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 
 	m_throwingTarget = new Sprite("nigel_port");
 	m_throwingTarget->BuildCollision("portraits\\nigel_port.png");
+	m_throwingTarget->ShowColliderPos = true;
 
 	// I want to put this in a class, will do later
 	m_LastUpdate = s3eTimerGetMs();
@@ -231,17 +235,22 @@ void CGame::Update()
 
 	if (TEMP_isThrowing)
 	{
-		characters[NIGEL]->SetPosition(characters[NIGEL]->LerpTo(CIwFVec2(m_throwingTarget->GetPosition().x - m_Cam->GetPosition().x, m_throwingTarget->GetPosition().y - m_Cam->GetPosition().y), 0.05f));
+		characters[NIGEL]->LerpTo(CIwFVec2(m_throwingTarget->GetPosition().x, m_throwingTarget->GetPosition().y), 0.05f);
 		characters[NIGEL]->TEMP_ISFALLING = false;
-		std::cout << "Should be lerping" << std::endl;
-		if (characters[NIGEL]->isColliding(m_throwingTarget->GetPosition()))
+		//Dirty fix, collision detection is not quite accurate
+		float xComp = m_throwingTarget->GetPosition().x - characters[NIGEL]->GetPosition().x;
+		float yComp = m_throwingTarget->GetPosition().y - characters[NIGEL]->GetPosition().y;
+		// greater than or equal to -0.005, and less than or equal to 0.005
+
+		std::cout << "Difference from 0 in x is " << xComp << "y is" << yComp << std::endl;
+		if ((xComp >= -2.05 && xComp <= 2.05) && yComp >= -2.05 && yComp <= 2.05)
 		{
 			std::cout << "Reached target" << std::endl;
 			m_canThrow = false;
+			TEMP_isThrowing = false;
 		}
 		//characters[NIGEL]->TEMP_ISCOLLIDING = false;
 	}
-
 	m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().y + (screenHeight - characters[TEMP_charIndex]->GetHeight()))));
 }
 

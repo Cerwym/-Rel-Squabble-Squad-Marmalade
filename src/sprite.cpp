@@ -10,13 +10,14 @@ m_Angle(0),m_Animated(false)
 	m_Image = Iw2DCreateImageResource(name);
 
 	m_Width = m_Image->GetWidth();
-	m_Height = m_Image->GetWidth();
+	m_Height = m_Image->GetHeight();
 	m_yVel = 0;
 	m_Name = name;
 	TEMP_ISFALLING = true;
 	TEMP_JUSTJUMPED = false;
 	TEMP_LANDEDJUMP = true;
 	TEMP_ISCOLLIDING = false;
+	ShowColliderPos = false;
 }
 
 
@@ -64,7 +65,6 @@ bool Sprite::isColliding(const CIwFVec2& other)
 	CIwSVec2 localPos = CIwSVec2
 		(static_cast<int16>(other.x), static_cast<int16>(other.y)) -
 		CIwSVec2(static_cast<int16>(m_Position.x), static_cast<int16>(m_Position.y));
-	
 
 	//std::cout << "localPos->" << localPos.x << "," << localPos.y << std::endl; 
 
@@ -75,6 +75,7 @@ bool Sprite::isColliding(const CIwFVec2& other)
 	{
 		return false;
 	}
+
 
 	return m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
 }

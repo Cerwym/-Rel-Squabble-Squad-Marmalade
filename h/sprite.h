@@ -25,6 +25,7 @@ public:
 	{
 		CIwFVec2 t = (m_Position + (end - m_Position) * scalar);
 		std::cout << "Lerp value ->" << t.x << "," << t.y << std::endl;
+		m_Position = t;
 		return t;
 	}	
 
@@ -56,6 +57,7 @@ public:
 	bool isColliding(Sprite* other);
 
 	void Debug_PrintPos();
+	bool ShowColliderPos;
 
 	bool TEMP_ISFALLING;
 	bool TEMP_JUSTJUMPED;
@@ -78,6 +80,7 @@ private:
 	const char* m_Name;
 	float TEMP_BEFOREJUMPY;
 	int TEMP_BOUNCECOUNT;
+	CIwSVec2 TEMP_colliderPos;
 	/* 
 		The difference between CIWsVec2 and CIwFVec2
 		CIwSvec2 takes in a 16bit bit signed integer (int16)
