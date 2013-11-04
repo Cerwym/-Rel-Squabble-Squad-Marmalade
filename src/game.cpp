@@ -240,16 +240,14 @@ void CGame::Update()
 		//Dirty fix, collision detection is not quite accurate
 		float xComp = m_throwingTarget->GetPosition().x - characters[NIGEL]->GetPosition().x;
 		float yComp = m_throwingTarget->GetPosition().y - characters[NIGEL]->GetPosition().y;
-		// greater than or equal to -0.005, and less than or equal to 0.005
-
-		std::cout << "Difference from 0 in x is " << xComp << "y is" << yComp << std::endl;
-		if ((xComp >= -2.05 && xComp <= 2.05) && yComp >= -2.05 && yComp <= 2.05)
+		if ((xComp >= -5.05 && xComp <= 5.05) && yComp >= -5.05 && yComp <= 5.05)
 		{
 			std::cout << "Reached target" << std::endl;
 			m_canThrow = false;
 			TEMP_isThrowing = false;
+			characters[NIGEL]->TEMP_ISFALLING = true;
+			characters[NIGEL]->TEMP_ISCOLLIDING = false;
 		}
-		//characters[NIGEL]->TEMP_ISCOLLIDING = false;
 	}
 	m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().y + (screenHeight - characters[TEMP_charIndex]->GetHeight()))));
 }

@@ -24,18 +24,9 @@ public:
 	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar)
 	{
 		CIwFVec2 t = (m_Position + (end - m_Position) * scalar);
-		std::cout << "Lerp value ->" << t.x << "," << t.y << std::endl;
 		m_Position = t;
 		return t;
-	}	
-
-	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar, CIwSVec2& camPos)
-	{
-		CIwSVec2 c = CIwSVec2((int16)camPos.x, (int16)camPos.y);
-		CIwFVec2 t = ((m_Position - c) + (end - (m_Position) -c) * scalar);
-		std::cout << "Lerp value ->" << t.x << "," << t.y << std::endl;
-		return t;
-	}	
+	}
 
 	void BuildCollision(const char* fname);
 	void BuildCollision(CIwImage img);
