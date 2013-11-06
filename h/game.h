@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "sprite.h"
+#include "GameObject.h"
 #include "camera.h"
 #include "TileMap.h"
 
@@ -26,6 +27,7 @@ protected:
 	// Draw a sprite, centered at the specified position with a given size
 	void DrawSpriteCentered(CIw2DImage*, int, int, int);
 	void DrawText(int16, int16);
+	void CheckInterations();
 
 private:
     CIwFVec2 m_Position;

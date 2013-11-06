@@ -14,6 +14,7 @@ files
 	UI.cpp
 	TileMap.cpp
 	utils.cpp
+	GameObject.cpp
     (h)
     game.h
     sprite.h
@@ -23,6 +24,7 @@ files
 	UI.h
 	TileMap.h
 	utils.h
+	GameObject.h
 }
 
 assets

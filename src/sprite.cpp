@@ -134,23 +134,23 @@ void Sprite::Update(float deltaTime)
 	if (TEMP_JUSTJUMPED == true && TEMP_LANDEDJUMP == true)
 	{
 		TEMP_BEFOREJUMPY = m_Position.y;
-		TEMP_JUSTJUMPED = false;
 		TEMP_LANDEDJUMP = false;
 	}
 
-	if (TEMP_JUSTJUMPED == true && TEMP_LANDEDJUMP == false)
+	if (TEMP_JUSTJUMPED == true)
 	{
 		m_yVel += GRAVITY;
 		m_Position.y -= m_yVel;
 		std::cout << "Still rising" << std::endl;
-		std::cout << "Pos is " << m_Position.y << std::endl;
-		if (m_Position.y <= (TEMP_BEFOREJUMPY - JUMP_HEIGHT)) // TEMP BEFORE Y IS THE PROBLEM.
+		std::cout << "old y value is " << TEMP_BEFOREJUMPY << std::endl;
+		if (m_Position.y <= (TEMP_BEFOREJUMPY - 128)) // TEMP BEFORE Y IS THE PROBLEM.
 		{
 			m_yVel = 0;
-			//TEMP_BEFOREJUMPY = m_Position.y;
+			TEMP_JUSTJUMPED = false;
 			TEMP_ISFALLING = true;
 			TEMP_LANDEDJUMP = true;
-			std::cout << "landed" << std::endl;
+			TEMP_ISCOLLIDING = false;
+			std::cout << "Finished Jumping" << std::endl;
 		}
 	}
 }

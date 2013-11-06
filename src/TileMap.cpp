@@ -15,6 +15,11 @@ TileMap::TileMap(const char* lvlFile)
 
 	if ((!infile.bad()) || (infile != NULL))
 	{
+		int bCount = 0;
+		int eCount = 0;
+		int dCount = 0;
+		int tCount = 0;
+
 		while(std::getline(infile, line) != NULL)
 		{
 			strncpy(buff, line.c_str(), sizeof(buff));
@@ -24,9 +29,51 @@ TileMap::TileMap(const char* lvlFile)
 			{
 				if( (buff[x] != '\r') || (buff[x] != '*'))
 				{
+					if (buff[x] == 'E')
+					{
+						eCount++;
+						GameObject* t = new GameObject("elevator", Elevator);
+						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
+						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						t->AddTag("Elevator_" + eCount);
+						m_Objects.push_back(t);
+					}
+
+					if (buff[x] == 'B')
+					{
+						bCount++;
+						GameObject* t = new GameObject("button", Button);
+						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
+						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						t->AddTag("Button_" + bCount);
+						m_Objects.push_back(t);
+					}
+					
+					if (buff[x] == 'D')
+					{
+						dCount++;
+						GameObject* t = new GameObject("door", Door);
+						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() / 2));
+						t->AddTag("Door" + dCount);
+						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						m_Objects.push_back(t);
+					}
+
+					if (buff[x] == 'T')
+					{
+						tCount++;
+						GameObject* t = new GameObject("terminal", Terminal);
+						t->BuildCollision("tiles\\terminal.png");
+						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() / 2));
+						t->AddTag("Terminal" + tCount);
+						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						m_Objects.push_back(t);
+					}
+
+
 					if (buff[x] == '9')
 					{
-						Sprite* t = new Sprite("m_floor");
+						GameObject* t = new GameObject("m_floor", Floor);
 						t->BuildCollision("tiles\\m_floor.png");
 						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
@@ -35,10 +82,9 @@ TileMap::TileMap(const char* lvlFile)
 						//cout << "Sprite is at -> " << t->GetWidth() * x << "," << t->GetHeight() * y  << endl;
 					}
 
-					if (buff[x] == 'E')
+					if (buff[x] == 'X')
 					{
-						Sprite* t = new Sprite("elevator");
-						t->BuildCollision("tiles\\elevator.png");
+						GameObject* t = new GameObject("exit", Exit);
 						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Objects.push_back(t);
@@ -52,6 +98,18 @@ TileMap::TileMap(const char* lvlFile)
 	}
 
 	//delete buff;
+	// Link up the GameObjects
+
+
+	AddRelationships();
+}
+
+// This is a "temporary" function, ideally I want to be able to create a level format with these definitions built in, but for now i have to hard code it in.
+void TileMap::AddRelationships()
+{
+	m_Objects.at(0)->AddChildObject(m_Objects.at(4)); // Add the first terminal to the first elevator
+
+	m_Objects.at(3)->AddChildObject(m_Objects.at(2)); 	// Add the first door to the first button
 }
 
 void TileMap::Draw() // make it aware of cam, if not on screen, don't draw
@@ -60,5 +118,7 @@ void TileMap::Draw() // make it aware of cam, if not on screen, don't draw
 		(*it)->Draw();
 
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
+	{
 		(*it)->Draw();	
+	}
 }

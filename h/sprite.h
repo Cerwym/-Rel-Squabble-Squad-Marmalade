@@ -19,7 +19,8 @@ public:
 	inline CIwFVec2 GetPosition() { return m_Position; }
 	inline void SetPosition(const CIwFVec2& position) { m_Position = position; }
 	inline void MoveBy(const CIwSVec2& position) { m_Position += CIwFVec2(static_cast<float>(position.x), static_cast<float>(position.y));}
-	inline void SetMovSpeed(const CIwFVec2& speed) { m_MovSpeed = speed; }
+	inline void SetMovSpeed(const
+		CIwFVec2& speed) { m_MovSpeed = speed; }
 	// past in a const reference to CIWVec2 instead of the class itself
 	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar)
 	{

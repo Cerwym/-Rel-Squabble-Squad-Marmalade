@@ -170,7 +170,9 @@ void CGame::Update()
 					TEMP_charIndex = i; // Set the character to be the element that was collided against
 				}
 				if (characters[i]->isColliding(CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY())))
-					std::cout << "clicked" << std::endl;
+				{
+					//
+				}
 			}
 		}
 
@@ -184,6 +186,15 @@ void CGame::Update()
 		{
 			characters[TEMP_charIndex]->MoveBy(CIwSVec2(10, 0));
 			m_Cam->MoveBy(CIwSVec2(-10, 0));
+		}
+
+
+		if (TEMP_charIndex == MANDY)
+		{
+			// if i = mandy && !colliding with a terminal ->jump
+			// if i = mandy && colliding with a terminal -> child->action
+			if (characters[MANDY]->isColliding((CIwFVec2(s3ePointerGetX() - (float)m_Cam->GetPosition().x , s3ePointerGetY() - (float)m_Cam->GetPosition().y ))))
+				characters[MANDY]->TEMP_JUSTJUMPED = true;
 		}
 
 		if (characters[DAVE]->isColliding(characters[NIGEL]->GetPosition()) && m_canThrow == false)
@@ -226,10 +237,6 @@ void CGame::Update()
 			if (!TEMP_isThrowing)
 				if (characters[NIGEL]->isColliding(t->GetPosition()))
 				characters[NIGEL]->TEMP_ISCOLLIDING = characters[NIGEL]->isColliding(t->GetPosition());
-
-			/*if (characters[i]->isColliding(t->GetPosition()))
-				characters[i]->TEMP_ISCOLLIDING = characters[i]->isColliding(t->GetPosition());*/
-
 		}
 	}
 
@@ -249,9 +256,32 @@ void CGame::Update()
 			characters[NIGEL]->TEMP_ISCOLLIDING = false;
 		}
 	}
+
+	CheckInterations();
+	
 	m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().y + (screenHeight - characters[TEMP_charIndex]->GetHeight()))));
 }
 
+void CGame::CheckInterations()
+{
+	for (size_t i = 0; i < m_Level->GetObjects().size(); i++)
+	{
+		GameObject *t = m_Level->GetObjects().at(i);
+		// Test collisons against the button type
+		if (t->GetType() == Button)
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				if (characters[i]->isColliding(t->GetPosition()))
+				{
+					std::cout << "Trying to move elevator" << std::endl;
+					t->Child()->MoveBy(CIwSVec2(-5, 0)); // change this, just using it to test
+					t->Child()->Debug_PrintPos();
+				}
+			}
+		}	
+	}
+}
 void CGame::DrawText(int16 x, int16 y)
 {
 	// Draw Nigel's Position

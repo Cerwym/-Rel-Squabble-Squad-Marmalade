@@ -27,6 +27,18 @@ ResGroupResources:
 		"elevator" (0x1f656827)
 		Size: 4132
 	CIwTexture (0x3521f539)
+		"button" (0xf4ff5d81)
+		Size: 4132
+	CIwTexture (0x3521f539)
+		"door" (0x7c95cc59)
+		Size: 4132
+	CIwTexture (0x3521f539)
+		"terminal" (0xfa1db361)
+		Size: 4132
+	CIwTexture (0x3521f539)
+		"exit" (0x7c967e3f)
+		Size: 4132
+	CIwTexture (0x3521f539)
 		"touchscreenMoveL" (0xb035cb6b)
 		Size: 2132
 	CIwTexture (0x3521f539)
@@ -47,12 +59,12 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"floor" (0xf71e367)
 		Size: 3072036
-	ResList 'CIwTexture' pos:38 size:10541282
+	ResList 'CIwTexture' pos:38 size:10557810
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:10541320 size:18063
+	ResList 'CIwGxFont' pos:10557848 size:18063
 
-ResGroupResources: Wrote 10559349 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 10575877 bytes to CIwResGroup "Sprites"
 
