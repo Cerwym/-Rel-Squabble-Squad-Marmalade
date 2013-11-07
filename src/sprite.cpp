@@ -121,14 +121,14 @@ void Sprite::Update(float deltaTime)
 	if ((TEMP_ISCOLLIDING == false)) // and has jumped
 	{
 		m_yVel += GRAVITY;
-		m_Position.y += m_yVel;
-		if (TEMP_ISCOLLIDING == true)
-		{
-			std::cout << "I'm supposed to have stopped" << std::endl;
-			m_yVel = 0;
-		}
+		m_Position.y += (m_yVel / 8);
 		
 		std::cout << "I'm Falling @ " << m_yVel << " mp/s" << std::endl;
+	}
+	else
+	{
+		std::cout << "I'm supposed to have stopped" << std::endl;
+		m_yVel = 0;
 	}
 
 	if (TEMP_JUSTJUMPED == true && TEMP_LANDEDJUMP == true)

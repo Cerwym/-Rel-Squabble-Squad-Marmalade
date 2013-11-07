@@ -39,12 +39,14 @@ public:
 
 	inline float GetHeight(){return m_Height;}
 	inline float GetWidth(){return m_Width;}
+
+	void SetVelocity(float v){m_yVel = v;}
+	float GetVelocity(){return m_yVel;}
 	
 	void SetAnimated(const bool animated, float speed, CIwFVec2 frameCount = CIwFVec2());
 	void Update(const float deltaTime);
 	void Draw();
 	void Draw(CIwSVec2& camPos);
-	void Jump();
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other);
 

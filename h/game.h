@@ -43,6 +43,14 @@ private:
 	int screenHeight;
 
 	bool m_MouseClicked;
+	bool m_SpacePressed;
+	bool m_UpPressed;
+
+	Sprite* m_throwingTarget;
+	Sprite* n_guiButtons[2];
+	Sprite* characters[3];
+	Sprite* m_Portraits[3];
+	GameObject* m_activeTerminal;
 
 	CIw2DFont* m_Font;
 
@@ -52,13 +60,8 @@ private:
 	CIw2DImage* m_Layer3;
 	CIw2DImage* m_Layer4;
 
-	Sprite* m_throwingTarget;
-	Sprite* n_guiButtons[2];
-
-	Sprite* characters[3];
-	Sprite* m_Portraits[3];
-
 	int TEMP_charIndex;
+	bool TEMP_termActive;
 	bool TEMP_isThrowing;
 	bool m_canThrow;
 	CIwFVec2 TEMP_target;
@@ -67,7 +70,6 @@ private:
 
 	Camera* m_Cam;
 	TileMap* m_Level;
-
 };
 
 #endif

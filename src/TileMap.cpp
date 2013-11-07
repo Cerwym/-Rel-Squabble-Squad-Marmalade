@@ -119,6 +119,13 @@ void TileMap::Draw() // make it aware of cam, if not on screen, don't draw
 
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
-		(*it)->Draw();	
+		if ((*it)->IsActive == true)
+		{
+			(*it)->Draw();	
+		}
+		else
+		{
+			std::cout << "Not drawing something" << std::endl;
+		}
 	}
 }

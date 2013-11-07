@@ -37,7 +37,7 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	// Dave (big), Nigel (small), Mandy (girl)
 	characters[0] = new Sprite("dave");
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
-	characters[0]->SetPosition(CIwFVec2(0,0));
+	characters[0]->SetPosition(CIwFVec2(16,0));
 	characters[0]->BuildCollision("characters\\dave.png");
 	characters[0]->ShowColliderPos = true;
 
@@ -98,7 +98,10 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 
 	TEMP_charIndex = 0;
 	TEMP_isThrowing = false;
+	TEMP_termActive = false;
 	m_canThrow = false;
+	m_SpacePressed = false;
+	m_UpPressed = false;
 
 	m_Cam = new Camera;
 	m_Cam->SetPosition(CIwSVec2(0, 0));
@@ -155,7 +158,27 @@ void CGame::Update()
 
 	m_CountUpdates++;
 
+	/*
+	Move this into an input class
+	*/
+	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN) && m_SpacePressed == false)
+	{
+		std::cout << "Space pressed" << std::endl;
+		if (TEMP_charIndex == MANDY){
+			characters[MANDY]->TEMP_JUSTJUMPED = true;}
+		m_SpacePressed = true;
+	}
+
+	if ( (s3eKeyboardGetState(s3eKeyUp) & S3E_POINTER_STATE_DOWN) && m_UpPressed == false)
+	{
+		std::cout << "Up pressed" << std::endl;
+		m_UpPressed = true;
+	}
+	
 	// Input
+
+	if( (s3ePointerGetState(S3E_POINTER_BUTTON_RIGHTMOUSE) & S3E_POINTER_STATE_DOWN))
+		characters[NIGEL]->Debug_PrintPos();
 
     if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
     {
@@ -189,15 +212,7 @@ void CGame::Update()
 		}
 
 
-		if (TEMP_charIndex == MANDY)
-		{
-			// if i = mandy && !colliding with a terminal ->jump
-			// if i = mandy && colliding with a terminal -> child->action
-			if (characters[MANDY]->isColliding((CIwFVec2(s3ePointerGetX() - (float)m_Cam->GetPosition().x , s3ePointerGetY() - (float)m_Cam->GetPosition().y ))))
-				characters[MANDY]->TEMP_JUSTJUMPED = true;
-		}
-
-		if (characters[DAVE]->isColliding(characters[NIGEL]->GetPosition()) && m_canThrow == false)
+		if (characters[DAVE]->isColliding(characters[NIGEL]->GetPosition()) && (m_canThrow == false) && TEMP_charIndex == DAVE)
 		{
 			if (characters[NIGEL]->isColliding((CIwFVec2(s3ePointerGetX() - (float)m_Cam->GetPosition().x , s3ePointerGetY() - (float)m_Cam->GetPosition().y ))))
 			{
@@ -213,6 +228,39 @@ void CGame::Update()
 
 				TEMP_isThrowing = true;
 				TEMP_charIndex = NIGEL;
+			}
+		}
+
+		if (TEMP_charIndex == MANDY)
+		{
+			
+
+
+
+			if (characters[MANDY]->isColliding((CIwFVec2(s3ePointerGetX() - (float)m_Cam->GetPosition().x , s3ePointerGetY() - (float)m_Cam->GetPosition().y ))))
+			{
+				if (!TEMP_termActive ){}
+					//characters[MANDY]->TEMP_JUSTJUMPED = true;
+				else
+				{
+					std::cout << "Interacted with terminal" << std::endl;
+					// if anyone else is colliding with the lift, move them to this position;
+					// Fix this, images draw from top left, so the position .y will not be on the same axis
+					if (characters[DAVE]->isColliding(m_activeTerminal->Child()->GetPosition()))
+					{
+						characters[DAVE]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[DAVE]->GetPosition().y + 100));
+					}
+
+					std::cout << "Nigel -> ";characters[NIGEL]->Debug_PrintPos();
+					std::cout << "Lift -> ";m_activeTerminal->Child()->Debug_PrintPos();
+					if (characters[NIGEL]->isColliding(m_activeTerminal->Child()->GetPosition() + CIwSVec2(0, 8)) || characters[NIGEL]->isColliding(m_activeTerminal->Child()->GetPosition() + CIwSVec2(0, -8))) // +8
+					{
+						std::cout << "Nigel is colliding" << std::endl;
+						characters[NIGEL]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y + 150));
+					}
+
+					m_activeTerminal->Child()->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[MANDY]->GetPosition().y + 42));
+				}
 			}
 		}
 
@@ -257,31 +305,108 @@ void CGame::Update()
 		}
 	}
 
+	// Temporary fix
+	if (characters[NIGEL]->GetPosition().x >= 950 && characters[NIGEL]->GetPosition().x <= 1034)
+	{
+		if (characters[NIGEL]->GetPosition().y >= 244.5 && characters[NIGEL]->GetPosition().y <= 266.5)
+		{
+			std::cout << "hit the gap" << std::endl;
+			characters[NIGEL]->TEMP_ISCOLLIDING = false;
+		}
+	}
+
 	CheckInterations();
 	
 	m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().y + (screenHeight - characters[TEMP_charIndex]->GetHeight()))));
+	
+	if (s3eKeyboardGetState(s3eKeyUp) == 4)
+		m_UpPressed = false;
+	if (s3eKeyboardGetState(s3eKeySpace) == 4)
+		m_SpacePressed = false;
 }
 
 void CGame::CheckInterations()
 {
-	for (size_t i = 0; i < m_Level->GetObjects().size(); i++)
+	int count = 0;
+	for (size_t s = 0; s < m_Level->GetObjects().size(); s++)
 	{
-		GameObject *t = m_Level->GetObjects().at(i);
-		// Test collisons against the button type
-		if (t->GetType() == Button)
+		GameObject *t = m_Level->GetObjects().at(s);
+		// Test if any of the characters hit this object
+		for (int i = 0; i < 3; i++)
 		{
-			for (int i = 0; i < 3; i++)
+			if (t->GetType() == Button)
 			{
 				if (characters[i]->isColliding(t->GetPosition()))
 				{
-					std::cout << "Trying to move elevator" << std::endl;
-					t->Child()->MoveBy(CIwSVec2(-5, 0)); // change this, just using it to test
-					t->Child()->Debug_PrintPos();
+					t->Child()->IsActive = false;
+					count++;
+				}
+				else
+				{
+					if (count == 0)
+						t->Child()->IsActive = true;
 				}
 			}
-		}	
+		}
+
+		if (t->GetType() == Terminal)
+		{
+			if (characters[MANDY]->isColliding(t->GetPosition()))
+			{
+				if (TEMP_charIndex == MANDY){
+					std::cout << "Mandy is Colliding with terminal" << std::endl;}
+				TEMP_termActive = true;
+				m_activeTerminal = t;
+			}
+			else
+			{
+				TEMP_termActive = false;
+			}
+			//std::cout << "Terminal is " << TEMP_termActive << std::endl;
+		}
+	}
+
+	// REMOVE THIS
+	if (TEMP_termActive)
+	{
+		if (characters[NIGEL]->isColliding(m_activeTerminal->Child()->GetPosition() + CIwSVec2(0, -8)))
+		{
+			std::cout << "Nigel -> ";characters[NIGEL]->Debug_PrintPos();
+		}
+		if (characters[DAVE]->isColliding(m_activeTerminal->Child()->GetPosition()))
+		{
+			std::cout << "DAVE is colliding" << std::endl;
+		}
+	}
+
+
+	if (TEMP_charIndex == MANDY)
+	{
+		if (TEMP_termActive)
+		{
+			if (m_UpPressed == true)
+			{
+				if (characters[DAVE]->isColliding(m_activeTerminal->Child()->GetPosition()))
+				{
+					std::cout << "DAVE is colliding" << std::endl;
+					characters[DAVE]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[DAVE]->GetPosition().y - 150));
+				}
+
+				std::cout << "Nigel -> ";characters[NIGEL]->Debug_PrintPos();
+				std::cout << "Lift -> ";m_activeTerminal->Child()->Debug_PrintPos();
+				if (characters[NIGEL]->isColliding(m_activeTerminal->Child()->GetPosition() + CIwSVec2(0, -8))) // +8
+				{
+					std::cout << "Nigel is colliding" << std::endl;
+					characters[NIGEL]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 135));
+				}
+				
+				m_activeTerminal->Child()->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[MANDY]->GetPosition().y + 54));
+				m_UpPressed = false;
+			}
+		}
 	}
 }
+
 void CGame::DrawText(int16 x, int16 y)
 {
 	// Draw Nigel's Position
