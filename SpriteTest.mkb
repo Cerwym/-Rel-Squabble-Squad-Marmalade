@@ -8,23 +8,19 @@ files
     main.cpp
     game.cpp 
 	sprite.cpp
-	spritemanager.cpp
 	camera.cpp
-	gamescene.cpp
-	UI.cpp
 	TileMap.cpp
 	utils.cpp
 	GameObject.cpp
+	Collider.cpp
     (h)
     game.h
     sprite.h
-	spritemanager.h
 	camera.h
-	gamescene.h
-	UI.h
 	TileMap.h
 	utils.h
 	GameObject.h
+	Collider.h
 }
 
 assets

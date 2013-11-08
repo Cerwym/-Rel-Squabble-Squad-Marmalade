@@ -21,6 +21,9 @@ ResGroupResources:
 		"background" (0x677e1785)
 		Size: 17188
 	CIwTexture (0x3521f539)
+		"collisionRect" (0xd606795f)
+		Size: 10036
+	CIwTexture (0x3521f539)
 		"m_floor" (0xaf587293)
 		Size: 4132
 	CIwTexture (0x3521f539)
@@ -59,12 +62,12 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"floor" (0xf71e367)
 		Size: 3072036
-	ResList 'CIwTexture' pos:38 size:10557810
+	ResList 'CIwTexture' pos:38 size:10567846
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:10557848 size:18063
+	ResList 'CIwGxFont' pos:10567884 size:18063
 
-ResGroupResources: Wrote 10575877 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 10585913 bytes to CIwResGroup "Sprites"
 

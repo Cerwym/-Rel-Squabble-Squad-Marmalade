@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Iw2D.h"
 #include "camera.h"
+#include "Collider.h"
 
 #define GRAVITY 0.278f
 #define JUMP_HEIGHT 25.f
@@ -47,6 +48,7 @@ public:
 	void Update(const float deltaTime);
 	void Draw();
 	void Draw(CIwSVec2& camPos);
+	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other);
 
@@ -61,7 +63,7 @@ public:
 protected:
 
 private:
-	CIwFVec2 m_Center; // The center of the image to rotate around
+	CIwSVec2 m_Center; // The center of the image to rotate around
 	CIwFVec2 m_Position; // Screen position
 	CIwFVec2 m_MovSpeed;
 	
@@ -83,6 +85,7 @@ private:
 	CIwSVec2 m_FrameSize;
 	CIwSVec2 m_FrameCount;
 	CIw2DImage* m_Image;
+	Collider* m_Collider;
 	CIwImage m_CollisionMap; // 8bit version of the image's alpha channel.
 
 };

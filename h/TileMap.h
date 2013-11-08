@@ -9,6 +9,7 @@ class TileMap
 public:
 	TileMap (const char* lvlFile);
 
+	void Update();
 	void Draw();
 	std::vector<GameObject*> GetMap(){return m_Map;}
 	std::vector<GameObject*> GetObjects(){return m_Objects;}

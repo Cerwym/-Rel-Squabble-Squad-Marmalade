@@ -1,5 +1,4 @@
 #include "sprite.h"
-#include "camera.h"
 #include <iostream>
 #include <assert.h>
 
@@ -8,22 +7,25 @@ m_Angle(0),m_Animated(false)
 {
 	// hashed name for the sprite in IwResourceManager
 	m_Image = Iw2DCreateImageResource(name);
-
 	m_Width = m_Image->GetWidth();
 	m_Height = m_Image->GetHeight();
 	m_yVel = 0;
 	m_Name = name;
+
+	m_Center = CIwSVec2(static_cast<int16>(m_Width) / 2, static_cast<int16>(m_Height) / 2);
 	TEMP_ISFALLING = true;
 	TEMP_JUSTJUMPED = false;
 	TEMP_LANDEDJUMP = true;
 	TEMP_ISCOLLIDING = false;
 	ShowColliderPos = false;
+	m_Collider = new Collider(m_Position, m_Width, m_Height);
 }
 
 
 Sprite::~Sprite()
 {
 	delete m_Image;
+	delete m_Collider;
 }
 
 void Sprite::BuildCollision(const char* fname)
@@ -56,7 +58,7 @@ void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 	}
 }
 
-// Pass in the location of the element to collide against. A click event or Sprite->GetPosition
+//Simple bounding box detection, no left right top or bottom.
 bool Sprite::isColliding(const CIwFVec2& other)
 {
 	IW_CALLSTACK("Sprite::isColliding");
@@ -70,37 +72,21 @@ bool Sprite::isColliding(const CIwFVec2& other)
 
 	if(localPos.x < 0
 		|| localPos.y < 0
-		|| localPos.x > (int32)m_CollisionMap.GetWidth()
-		|| localPos.y > (int32)m_CollisionMap.GetHeight())
+		|| localPos.x > (int32)m_Width
+		|| localPos.y > (int32)m_Height)
 	{
 		return false;
 	}
 
 
-	return m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
+	return true;
 }
 
 bool Sprite::isColliding(Sprite* other)
 {
 	IW_CALLSTACK("Sprite::isColliding");
 
-	// convert to local coordinate space
-	CIwSVec2 localPos = CIwSVec2
-		(static_cast<int16>(other->GetPosition().x), static_cast<int16>(other->GetPosition().y)) -
-		CIwSVec2(static_cast<int16>(-m_Position.x), static_cast<int16>(-m_Position.y));
-
-
-	//std::cout << "localPos->" << localPos.x << "," << localPos.y << std::endl; 
-
-	if(localPos.x < 0
-		|| localPos.y < 0
-		|| localPos.x > (int32)m_CollisionMap.GetWidth()
-		|| localPos.y > (int32)m_CollisionMap.GetHeight())
-	{
-		return false;
-	}
-
-	return m_CollisionMap.GetTexels()[localPos.y * m_CollisionMap.GetWidth() + localPos.x] > 0x80; // return true if the alpha value is greater than half
+	return(m_Collider->isColliding(other->m_Collider));
 }
 
 void Sprite::Update(float deltaTime)
@@ -121,13 +107,13 @@ void Sprite::Update(float deltaTime)
 	if ((TEMP_ISCOLLIDING == false)) // and has jumped
 	{
 		m_yVel += GRAVITY;
-		m_Position.y += (m_yVel / 8);
+		m_Position.y += (m_yVel);// / 8);
 		
-		std::cout << "I'm Falling @ " << m_yVel << " mp/s" << std::endl;
+		//std::cout << "I'm Falling @ " << m_yVel << " mp/s" << std::endl;
 	}
 	else
 	{
-		std::cout << "I'm supposed to have stopped" << std::endl;
+		//std::cout << "I'm supposed to have stopped" << std::endl;
 		m_yVel = 0;
 	}
 
@@ -153,6 +139,12 @@ void Sprite::Update(float deltaTime)
 			std::cout << "Finished Jumping" << std::endl;
 		}
 	}
+	UpdateCollider();
+}
+
+void Sprite::UpdateCollider()
+{
+	m_Collider->Update(m_Position);
 }
 
 void Sprite::Draw() 
@@ -176,6 +168,10 @@ void Sprite::Draw()
 	else
 	{
 		Iw2DDrawImage(m_Image, drawPos);
+		if (ShowColliderPos)
+		{
+			m_Collider->Draw();
+		}
 	}
 
 	if (m_Angle != 0)
@@ -198,6 +194,10 @@ void Sprite::Draw(CIwSVec2& camPos)
 	else
 	{
 		Iw2DDrawImage(m_Image, drawPos);
+		if (ShowColliderPos)
+		{
+			m_Collider->Draw();
+		}
 	}
 }
 
