@@ -54,19 +54,11 @@ private:
 
 	CIw2DFont* m_Font;
 
-	// Temporary stuff
-	CIw2DImage* m_Layer1;
-	CIw2DImage* m_Layer2;
-	CIw2DImage* m_Layer3;
-	CIw2DImage* m_Layer4;
-
 	int TEMP_charIndex;
 	bool TEMP_termActive;
 	bool TEMP_isThrowing;
 	bool m_canThrow;
 	CIwFVec2 TEMP_target;
-
-	std::vector<CIwFVec2> layerLocs;
 
 	Camera* m_Cam;
 	TileMap* m_Level;

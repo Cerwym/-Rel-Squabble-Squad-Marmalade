@@ -33,10 +33,8 @@ TileMap::TileMap(const char* lvlFile)
 					{
 						eCount++;
 						GameObject* t = new GameObject("elevator", Elevator);
-						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						t->AddTag("Elevator_" + eCount);
-						t->ShowColliderPos = true;
 						m_Objects.push_back(t);
 					}
 
@@ -44,10 +42,8 @@ TileMap::TileMap(const char* lvlFile)
 					{
 						bCount++;
 						GameObject* t = new GameObject("button", Button);
-						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						t->AddTag("Button_" + bCount);
-						t->ShowColliderPos = true;
 						m_Objects.push_back(t);
 					}
 					
@@ -55,10 +51,8 @@ TileMap::TileMap(const char* lvlFile)
 					{
 						dCount++;
 						GameObject* t = new GameObject("door", Door);
-						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						t->AddTag("Door_" + dCount);
-						t->ShowColliderPos = true;
 						m_Objects.push_back(t);
 					}
 
@@ -66,10 +60,8 @@ TileMap::TileMap(const char* lvlFile)
 					{
 						tCount++;
 						GameObject* t = new GameObject("terminal", Terminal);
-						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						t->AddTag("Terminal_" + tCount);
-						t->ShowColliderPos = true;
 						m_Objects.push_back(t);
 					}
 
@@ -77,9 +69,7 @@ TileMap::TileMap(const char* lvlFile)
 					if (buff[x] == '9')
 					{
 						GameObject* t = new GameObject("m_floor", Floor);
-						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
-						t->ShowColliderPos = true;
 						m_Map.push_back(t);
 
 						//cout << "Sprite is at -> " << t->GetWidth() * x << "," << t->GetHeight() * y  << endl;
@@ -90,7 +80,6 @@ TileMap::TileMap(const char* lvlFile)
 						GameObject* t = new GameObject("exit", Exit);
 						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
-						t->ShowColliderPos = true;
 						m_Objects.push_back(t);
 					}
 				}
@@ -101,9 +90,7 @@ TileMap::TileMap(const char* lvlFile)
 		infile.close();
 	}
 
-	//delete buff;
 	// Link up the GameObjects
-
 
 	AddRelationships();
 }
@@ -118,10 +105,17 @@ void TileMap::AddRelationships()
 	// Update all the colliders with their new positions;
 
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
+	{
+		// Possibly print out all the locations for each collider to verify they are being created properly
 		(*it)->UpdateCollider();
+		(*it)->ShowColliderPos = true;
+	}
 
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
+	{
 		(*it)->UpdateCollider();
+		(*it)->ShowColliderPos = true;
+	}
 }
 
 void TileMap::Draw() // make it aware of cam, if not on screen, don't draw

@@ -8,6 +8,7 @@ class Collider
 {
 public:
 	Collider(CIwFVec2 pos, float w, float h);
+	~Collider();
 
 	CIwFVec2 GetPosition() {return m_Position;}
 	void SetPosition(CIwFVec2 pos) {m_Position = pos;}
@@ -16,6 +17,8 @@ public:
 	void Draw();
 
 	bool isColliding(Collider* other);
+
+	void DEBUG_PRINTPOS();
 
 private:
 

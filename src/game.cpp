@@ -62,16 +62,6 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	m_Portraits[2]->SetPosition(CIwFVec2(290,0));
 	m_Portraits[2]->BuildCollision("portraits\\mandy_port.png");
 
-	m_Layer1 = Iw2DCreateImageResource("layer1");
-	m_Layer2 = Iw2DCreateImageResource("layer2");
-	m_Layer3 = Iw2DCreateImageResource("layer3");
-	m_Layer4 = Iw2DCreateImageResource("layer4");
-
-	for (int i = 0; i < 4; i++)
-	{
-		layerLocs.push_back(CIwFVec2(0,0));
-	}
-
 	n_guiButtons[0] = new Sprite("touchScreenMoveL");
 	n_guiButtons[0]->SetPosition(CIwFVec2(0, 260));
 	n_guiButtons[0]->BuildCollision("textures\\touchScreenMoveL.bmp");
@@ -81,7 +71,6 @@ CGame::CGame(): m_Position(0,0), m_Size(Iw2DGetSurfaceHeight() / 10, Iw2DGetSurf
 	n_guiButtons[1]->BuildCollision("textures\\touchScreenMoveR.bmp");
 
 	m_throwingTarget = new Sprite("nigel_port");
-	m_throwingTarget->BuildCollision("portraits\\nigel_port.png");
 	m_throwingTarget->ShowColliderPos = true;
 
 	// I want to put this in a class, will do later
@@ -122,15 +111,6 @@ CGame::~CGame()
 
 	if (m_Font != NULL)
 		delete m_Font;
-	
-	if (m_Layer1 != NULL)
-		delete m_Layer1;
-	if (m_Layer2 != NULL)
-		delete m_Layer2;
-	if (m_Layer3 != NULL)
-		delete m_Layer3;
-	if (m_Layer4 != NULL)
-		delete m_Layer4;
 
 	delete m_Cam;
 	IwResManagerTerminate();
@@ -158,6 +138,8 @@ void CGame::Update()
 	/*
 	Move this into an input class
 	*/
+
+	/*
 	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN) && m_SpacePressed == false)
 	{
 		std::cout << "Space pressed" << std::endl;
@@ -175,7 +157,9 @@ void CGame::Update()
 	// Input
 
 	if( (s3ePointerGetState(S3E_POINTER_BUTTON_RIGHTMOUSE) & S3E_POINTER_STATE_DOWN))
+	{
 		characters[NIGEL]->Debug_PrintPos();
+	}
 
     if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
     {
@@ -220,6 +204,7 @@ void CGame::Update()
 					s3eKeyboardUpdate();
 					m_canThrow = true;
 					m_throwingTarget->SetPosition((CIwFVec2(s3ePointerGetX() - (float)m_Cam->GetPosition().x , s3ePointerGetY() - (float)m_Cam->GetPosition().y )));
+					m_throwingTarget->UpdateCollider();
 					Render();
 				}
 
@@ -237,12 +222,22 @@ void CGame::Update()
 	{
 		characters[NIGEL]->LerpTo(CIwFVec2(m_throwingTarget->GetPosition().x, m_throwingTarget->GetPosition().y), 0.05f);
 		characters[NIGEL]->TEMP_ISFALLING = false;
+		characters[NIGEL]->UpdateCollider();
 		//Dirty fix, collision detection is not quite accurate
 		float xComp = m_throwingTarget->GetPosition().x - characters[NIGEL]->GetPosition().x;
 		float yComp = m_throwingTarget->GetPosition().y - characters[NIGEL]->GetPosition().y;
-		if ((xComp >= -5.05 && xComp <= 5.05) && yComp >= -5.05 && yComp <= 5.05)
+	
+		/*if ((xComp >= -5.05 && xComp <= 5.05) && yComp >= -5.05 && yComp <= 5.05)
 		{
 			std::cout << "Reached target" << std::endl;
+			m_canThrow = false;
+			TEMP_isThrowing = false;
+			characters[NIGEL]->TEMP_ISFALLING = true;
+			characters[NIGEL]->TEMP_ISCOLLIDING = false;
+		}
+
+		if (characters[NIGEL]->isColliding(m_throwingTarget))
+		{
 			m_canThrow = false;
 			TEMP_isThrowing = false;
 			characters[NIGEL]->TEMP_ISFALLING = true;
@@ -260,10 +255,15 @@ void CGame::Update()
 		}
 	}
 
-	for (int i = 0; i < 3; i++)
-		characters[i]->Update(dtSecs);
+	*/
 
 	CheckInterations();
+
+	for (int i = 0; i < 3; i++)
+	{
+		characters[i]->Update(dtSecs);
+		characters[i]->UpdateCollider();
+	}
 	
 	m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[TEMP_charIndex]->GetPosition().y + (screenHeight - characters[TEMP_charIndex]->GetHeight()))));
 	
@@ -279,23 +279,24 @@ void CGame::CheckInterations()
 
 	for (size_t s = 0; s < m_Level->GetMap().size(); s++)
 	{
-		GameObject *t = m_Level->GetMap().at(s);
+		bool value = m_Level->GetMap().at(s)->isColliding(characters[DAVE]);
 
-		if (characters[DAVE]->isColliding(t->GetPosition())) // does not work with t, has to be t->GetPosition **investigate**
+		if (value == true)
+		{
+			std::cout << "Colliding with something" << std::endl;
 			characters[DAVE]->TEMP_ISCOLLIDING = true;
 
-		if (characters[MANDY]->isColliding(t))
-			characters[MANDY]->TEMP_ISCOLLIDING = true;
-
-		if (!TEMP_isThrowing)
-			if (characters[NIGEL]->isColliding(t->GetPosition()))
-				characters[NIGEL]->TEMP_ISCOLLIDING = true;
-
+			// do an for int = characters, if val = true, break.
+		}
 	}
 
 	for (size_t s = 0; s < m_Level->GetObjects().size(); s++)
 	{
 		GameObject *t = m_Level->GetObjects().at(s);
+		t->UpdateCollider();
+
+		if (characters[DAVE]->isColliding(t))
+			std::cout << "NEW COLLISION ON OBJ" << std::endl;
 		// Test if any of the characters hit this object
 		for (int i = 0; i < 3; i++)
 		{
@@ -372,24 +373,13 @@ void CGame::CheckInterations()
 	}
 }
 
-void CGame::DrawText(int16 x, int16 y)
-{
-	// Draw Nigel's Position
-	// Draw Mandy's Position
-	// Draw 
-	Iw2DDrawString("This is some pointless text", CIwSVec2(x - 100, y - 110), CIwSVec2((int16)screenWidth, (int16)screenHeight),IW_2D_FONT_ALIGN_CENTRE, IW_2D_FONT_ALIGN_CENTRE);
-}
-
 void CGame::Render()
 {
     Iw2DSurfaceClear(0xff000000);
 
-	Iw2DDrawImage(m_Layer1, CIwSVec2((int16)layerLocs.at(0).x, (int16)layerLocs.at(0).y));
-	Iw2DDrawImage(m_Layer2, CIwSVec2((int16)layerLocs.at(1).x, (int16)layerLocs.at(1).y));
-	Iw2DDrawImage(m_Layer3, CIwSVec2((int16)layerLocs.at(2).x, (int16)layerLocs.at(2).y));
 	m_Level->Draw();
 
-	for (int i = 0;  i <3; i++)
+	for (int i = 0; i <3; i++)
 	{
 		characters[i]->Draw();
 		m_Portraits[i]->Draw(m_Cam->GetPosition());		
@@ -397,13 +387,9 @@ void CGame::Render()
 
 	if (m_canThrow)
 		m_throwingTarget->Draw();
-		
-	//DrawTouchButtons();
 
 	for (int i = 0; i < 2; i++)
 		n_guiButtons[i]->Draw(m_Cam->GetPosition());
-
-	DrawText(m_Cam->GetPosition().x, m_Cam->GetPosition().y);
 
     Iw2DSurfaceShow();
 }

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <assert.h>
 
-Sprite::Sprite(const char* name): m_Center(0,0), m_Position(0,0),m_MovSpeed(0,0),
+Sprite::Sprite(const char* name): m_Position(0,0),m_MovSpeed(0,0),
 m_Angle(0),m_Animated(false)
 {
 	// hashed name for the sprite in IwResourceManager
@@ -204,4 +204,6 @@ void Sprite::Draw(CIwSVec2& camPos)
 void Sprite::Debug_PrintPos()
 {
 	std::cout << "Pos x : " << m_Position.x << " y : " << m_Position.y << std::endl;
+	if (ShowColliderPos)
+		m_Collider->DEBUG_PRINTPOS();
 }
