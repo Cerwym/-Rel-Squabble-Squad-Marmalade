@@ -13,6 +13,10 @@ void IntroState::Init()
 	IwGetResManager()->LoadGroup("introsprites.group");
 
 	m_Logo = Iw2DCreateImageResource("logo");
+
+	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
+		s3eAudioPlay("audio\\music.mp3", 1);
+
 	printf("IntroState initialized\n");
 }
 

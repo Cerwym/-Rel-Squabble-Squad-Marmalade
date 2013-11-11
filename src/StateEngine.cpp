@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "Iw2D.h"
 #include "IwResManager.h"
+#include "IwSound.h"
 
 
 void StateEngine::Init(const char* title)
@@ -11,7 +12,13 @@ void StateEngine::Init(const char* title)
 	m_isRunning = true;
 
 	Iw2DInit();
+	IwSoundInit();
 	IwResManagerInit();
+
+#ifdef IW_BUILD_RESOURCES
+	// Tell resource system how to convert WAV files
+	IwGetResManager()->AddHandler(new CIwResHandlerWAV);
+#endif
 	printf("Engine Initialized\n");
 }
 
@@ -23,8 +30,11 @@ void StateEngine::Destroy()
 		m_States.back()->Destroy();
 		m_States.pop_back();
 	}
+
 	IwResManagerTerminate();
 	Iw2DTerminate();
+	IwSoundTerminate();
+
 	printf("Engine cleaned up\n");
 }
 
@@ -79,6 +89,7 @@ void StateEngine::HandleEvent()
 
 void StateEngine::Update()
 {
+	IwGetSoundManager()->Update();
 	m_LastTime = s3eTimerGetMs();
 	m_States.back()->Update(this, m_LastTime - m_CurrTime);
 	m_LastTime = m_CurrTime;

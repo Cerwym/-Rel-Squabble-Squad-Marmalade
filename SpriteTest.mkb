@@ -51,6 +51,7 @@ subprojects
 {
     iw2d
 	iwresmanager
+	SoundEngine
 }
 
 # Settings to configure the deployment process

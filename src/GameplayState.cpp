@@ -73,6 +73,8 @@ void GameplayState::Init()
 	m_Level = new TileMap("levels\\levelproto.txt");
 	m_MouseClicked = false;
 
+	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
+		s3eAudioPlay("audio\\bgmusic.mp3", 0);
 	printf("GameplayState initialized\n");
 }
 
@@ -269,9 +271,9 @@ void GameplayState::CheckInterations()
 	{
 		for (size_t m = 0; m < m_Level->GetMap().size(); m++)
 		{
-			bool value = m_Level->GetMap().at(m)->isColliding(characters[c]);
+			bool v = m_Level->GetMap().at(m)->isColliding(characters[c]);
 
-			if (value == true)
+			if (v == true)
 			{
 				characters[c]->TEMP_ISCOLLIDING = true;
 				break;
@@ -284,16 +286,14 @@ void GameplayState::CheckInterations()
 		}
 	}
 
-
-
 	for (size_t s = 0; s < m_Level->GetMap().size(); s++)
 	{
 		for (int i = 0; i < 3; i++)
 		{
 
-			bool value = m_Level->GetMap().at(s)->isColliding(characters[i]);
+			bool v = m_Level->GetMap().at(s)->isColliding(characters[i]);
 
-			if (value == true)
+			if (v == true)
 			{
 				//std::cout << "Colliding with something" << std::endl;
 				characters[i]->TEMP_ISCOLLIDING = true;
