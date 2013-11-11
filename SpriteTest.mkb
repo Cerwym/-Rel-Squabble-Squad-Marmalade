@@ -6,21 +6,30 @@ files
     ["src"]
     (src)
     main.cpp
-    game.cpp 
 	sprite.cpp
 	camera.cpp
 	TileMap.cpp
 	utils.cpp
 	GameObject.cpp
 	Collider.cpp
+	StateEngine.cpp
+	IntroState.cpp
+	MainMenuState.cpp
+	GameplayState.cpp
+	GameoverState.cpp
     (h)
-    game.h
     sprite.h
 	camera.h
 	TileMap.h
 	utils.h
 	GameObject.h
 	Collider.h
+	StateEngine.h
+	GameState.h
+	IntroState.h
+	MainMenuState.h
+	GameplayState.h
+	GameoverState.h
 }
 
 assets
@@ -28,6 +37,8 @@ assets
 	(data)
 
 	(data-ram/data-gles1, data)
+	introsprites.group.bin
+	mainmenusprites.group.bin
 	sprites.group.bin
 }
 

@@ -30,36 +30,7 @@ bool Collider::isColliding(Collider* other)
 	// check all sides for a collision
 	if(!((TopLeft1.x > BottomRight2.x)||(BottomRight1.x < TopLeft2.x)||(TopLeft1.y > BottomRight2.y)||(BottomRight1.y < TopLeft2.y)))
 	{
-		//Result = CIwFVec2(0.001f, 0.0f);
-		// there is a collision 
-		if((m_OldBR.x < TopLeft2.x)&&(BottomRight1.x >= TopLeft2.x))
-		{
-			// right
-			Result = CIwFVec2( BottomRight1.x - m_OldBR.x, 0.0f);
-			h = true;
-		}
-
-		if((m_OldTL.x >= BottomRight2.x)&&(TopLeft1.x < BottomRight2.x))
-		{
-			// left
-			Result = CIwFVec2(TopLeft1.x - m_OldTL.x, 0.0f);
-			h = true;
-		}
-
-		if((m_OldBR.y < TopLeft2.y)&&(BottomRight1.y >= TopLeft2.y))
-		{
-			// bottom
-			Result = CIwFVec2(0.0f, BottomRight1.y - m_OldBR.y);
-			h = true;
-		}
-
-		if((m_OldTL.y >= BottomRight2.y)&&(TopLeft1.y < BottomRight2.y))
-		{
-			// top
-			Result = CIwFVec2(0.0f,TopLeft1.y - m_OldTL.y);
-			h = true;
-		}
-
+		h = true;
 	}
 	else
 	{

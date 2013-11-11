@@ -1,0 +1,8 @@
+ResGroupResources:
+	CIwTexture (0x3521f539)
+		"logo" (0x7c9a2e56)
+		Size: 460836
+	ResList 'CIwTexture' pos:36 size:460846
+
+ResGroupResources: Wrote 460850 bytes to CIwResGroup "Intro"
+

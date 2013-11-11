@@ -1,0 +1,8 @@
+ResGroupResources:
+	CIwTexture (0x3521f539)
+		"menu_image" (0x7b310cdc)
+		Size: 614436
+	ResList 'CIwTexture' pos:39 size:614446
+
+ResGroupResources: Wrote 614450 bytes to CIwResGroup "MainMenu"
+
