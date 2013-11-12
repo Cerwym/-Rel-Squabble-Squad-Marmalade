@@ -3,6 +3,7 @@
 #include "StateEngine.h"
 #include "GameState.h"
 #include "Iw2D.h"
+#include "s3e.h"
 #include "IwResManager.h"
 #include "IwSound.h"
 
@@ -24,6 +25,7 @@ void StateEngine::Init(const char* title)
 
 void StateEngine::Destroy()
 {
+	IwSoundTerminate();
 	// Cleanup the states on the stack
 	while (!m_States.empty())
 	{
@@ -33,8 +35,6 @@ void StateEngine::Destroy()
 
 	IwResManagerTerminate();
 	Iw2DTerminate();
-	IwSoundTerminate();
-
 	printf("Engine cleaned up\n");
 }
 
@@ -46,6 +46,10 @@ void StateEngine::ChangeState(GameState* state)
 		m_States.back()->Destroy();
 		m_States.pop_back();
 	}
+
+	// Stop the music from playing
+	if (s3eAudioIsPlaying())
+	s3eAudioStop();
 
 	// Store and init the new state, fresh to the party
 	m_States.push_back(state);

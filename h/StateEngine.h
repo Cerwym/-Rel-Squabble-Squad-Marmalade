@@ -23,8 +23,6 @@ public:
 	void SetActive(int pRunning){m_isRunning = pRunning;}
 	void Quit() {m_isRunning = false;}
 
-	//OpenGLSys *m_glRender;
-
 protected:
 
 private:

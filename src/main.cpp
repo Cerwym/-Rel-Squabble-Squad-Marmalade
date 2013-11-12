@@ -13,6 +13,8 @@
 #include "s3e.h"
 #include "StateEngine.h"
 #include "IntroState.h"
+#include "GameplayState.h"
+#include "GameoverState.h"
 
 // updates per second
 #define UPS 60

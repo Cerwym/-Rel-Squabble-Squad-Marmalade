@@ -39,6 +39,7 @@ assets
 	(data-ram/data-gles1, data)
 	introsprites.group.bin
 	mainmenusprites.group.bin
+	gameoversprites.group.bin
 	sprites.group.bin
 }
 

@@ -13,13 +13,10 @@ TileMap::TileMap(const char* lvlFile)
 	char buff[1024];
 	//char* buff = new char[1024];
 
+	// Throw an assert if the texture is NOT equal to TILE_WIDTH or TILE_HEIGHT
+
 	if ((!infile.bad()) || (infile != NULL))
 	{
-		int bCount = 0;
-		int eCount = 0;
-		int dCount = 0;
-		int tCount = 0;
-
 		while(std::getline(infile, line) != NULL)
 		{
 			strncpy(buff, line.c_str(), sizeof(buff));
@@ -31,37 +28,29 @@ TileMap::TileMap(const char* lvlFile)
 				{
 					if (buff[x] == 'E')
 					{
-						eCount++;
 						GameObject* t = new GameObject("elevator", Elevator);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
-						t->AddTag("Elevator_" + eCount);
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'B')
 					{
-						bCount++;
 						GameObject* t = new GameObject("button", Button);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
-						t->AddTag("Button_" + bCount);
 						m_Objects.push_back(t);
 					}
 					
 					if (buff[x] == 'D')
 					{
-						dCount++;
 						GameObject* t = new GameObject("door", Door);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
-						t->AddTag("Door_" + dCount);
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'T')
 					{
-						tCount++;
 						GameObject* t = new GameObject("terminal", Terminal);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
-						t->AddTag("Terminal_" + tCount);
 						m_Objects.push_back(t);
 					}
 
@@ -78,7 +67,7 @@ TileMap::TileMap(const char* lvlFile)
 					if (buff[x] == 'X')
 					{
 						GameObject* t = new GameObject("exit", Exit);
-						t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
+						//t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Objects.push_back(t);
 					}

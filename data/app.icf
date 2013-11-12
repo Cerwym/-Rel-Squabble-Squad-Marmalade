@@ -25,4 +25,4 @@ MemSizeDebug=50485760
 DataCacheSize=500000
 
 #[Util]
-#MemoryBreakpoint=506
+#MemoryBreakpoint=148

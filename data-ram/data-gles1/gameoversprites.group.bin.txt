@@ -1,0 +1,8 @@
+ResGroupResources:
+	CIwTexture (0x3521f539)
+		"game_over" (0xe3a8a5a)
+		Size: 460836
+	ResList 'CIwTexture' pos:39 size:460846
+
+ResGroupResources: Wrote 460850 bytes to CIwResGroup "GameOver"
+

@@ -7,8 +7,8 @@ CIwResGroup
 		"./portraits/dave_port.png"
 		"./portraits/mandy_port.png"
 		"./portraits/nigel_port.png"
-		"./textures/background.png"
 		"./textures/collisionRect.png"
+		"./textures/target_sprite.png"
 		"./tiles/m_floor.png"
 		"./tiles/elevator.png"
 		"./tiles/button.png"
@@ -21,6 +21,5 @@ CIwResGroup
 		"./background/layer2.png"
 		"./background/layer3.png"
 		"./background/layer4.png"
-		"./background/floor.png"
 		fonts/font_small.gxfont
 } 

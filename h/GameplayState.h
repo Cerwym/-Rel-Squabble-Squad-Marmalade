@@ -32,11 +32,7 @@ public:
 	}
 public:
 	// New functions
-	void DrawTouchButtons();
-	// Draw a sprite, centered at the specified position with a given size
-	void DrawSpriteCentered(CIw2DImage*, int, int, int);
-	void DrawText(int16, int16);
-	void CheckInterations();
+	void CheckInterations(StateEngine* state);
 
 protected:
 	GameplayState(){} // When called, the state MUST call its own Init() function.
@@ -68,11 +64,11 @@ private:
 
 	CIw2DFont* m_Font;
 
-	int TEMP_charIndex;
-	bool TEMP_termActive;
-	bool TEMP_isThrowing;
+	int m_CharacterIndex;
+	// if the level has a terminal, is it active and therefore, has its child class been instantiated
+	bool m_isTermActive;
+	bool m_isThrowing;
 	bool m_canThrow;
-	CIwFVec2 TEMP_target;
 
 	Camera* m_Cam;
 	TileMap* m_Level;
