@@ -271,8 +271,22 @@ void GameplayState::CheckInterations(StateEngine* state)
 			{
 				if (characters[i]->isColliding(t))
 				{
-					t->Child()->IsActive = false;
-					count++;
+					if (t->Child()->GetType() == Door)
+					{
+						t->Child()->IsActive = false;
+						count++;
+					}
+
+					if ((i == NIGEL) && (t->Child()->GetType() == Elevator))
+					{
+						if (characters[DAVE]->isColliding(t->Child()))
+							characters[DAVE]->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 182));
+
+						if (characters[MANDY]->isColliding(t->Child()->GetPosition()))
+							characters[MANDY]->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 142));
+
+						t->Child()->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y + 54));
+					}
 				}
 				else
 				{
