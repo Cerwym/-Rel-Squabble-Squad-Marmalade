@@ -7,7 +7,8 @@
 class TileMap
 {
 public:
-	TileMap (const char* lvlFile);
+	TileMap (const char* lvlFile, const char* rFile);
+	~TileMap();
 
 	void Update();
 	void Draw();
@@ -16,7 +17,7 @@ public:
 	std::vector<CIwFVec2> GetSpawnPositions(){return m_SpawnPos;}
 
 private:
-	void AddRelationships();
+	void AddRelationships(const char* rFile);
 	
 	std::vector<GameObject*> m_Map;
 	std::vector<GameObject*> m_Objects;

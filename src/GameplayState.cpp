@@ -56,7 +56,7 @@ void GameplayState::Init()
 	m_Cam->SetPosition(CIwSVec2(0, 0));
 	m_Cam->Position = CIwSVec2(0, 0);
 
-	m_Level = new TileMap("levels\\levelproto.txt");
+	m_Level = new TileMap("levels\\levelproto1.txt", "levels\\levelrelationships1.txt");
 	SpawnCharacters();
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
@@ -80,6 +80,8 @@ void GameplayState::Destroy()
 		delete m_Font;
 
 	delete m_Cam;
+
+	delete m_Level;
 
 	IwGetResManager()->DestroyGroup("Sprites");
 	printf("GameplayState Destroyed\n");
@@ -229,6 +231,8 @@ void GameplayState::CheckInterations(StateEngine* state)
 {
 	int count = 0;
 	int exitCount = 0;
+
+	int debug_ele = 0;
 	// Check if the characters are colliding with any floor tiles, if they are set their collision value to true and break, if not continue to poll the remaining tiles.
 	for (int c = 0; c < 3; c++)
 	{
@@ -248,8 +252,11 @@ void GameplayState::CheckInterations(StateEngine* state)
 		}
 	}
 
+
 	for (size_t s = 0; s < m_Level->GetObjects().size(); s++)
 	{
+		debug_ele++;
+
 		GameObject *t = m_Level->GetObjects().at(s);
 		t->UpdateCollider();
 		// Test if any of the characters hit this object
@@ -265,7 +272,9 @@ void GameplayState::CheckInterations(StateEngine* state)
 				else
 				{
 					if (count == 0)
+					{
 						t->Child()->IsActive = true;
+					}
 				}
 			}
 		}

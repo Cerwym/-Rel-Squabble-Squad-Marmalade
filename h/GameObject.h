@@ -4,7 +4,7 @@
 #include <string>
 #include "sprite.h"
 
-enum ObjectType {Elevator, Button, Door, Terminal, Floor, Exit};
+enum ObjectType {Elevator, Button, Door, Terminal, Scenerary, Exit};
 
 class GameObject : public Sprite
 {

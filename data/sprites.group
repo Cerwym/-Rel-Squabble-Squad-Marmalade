@@ -9,11 +9,30 @@ CIwResGroup
 		"./portraits/nigel_port.png"
 		"./textures/collisionRect.png"
 		"./textures/target_sprite.png"
-		"./tiles/m_floor.png"
-		"./tiles/elevator.png"
-		"./tiles/button.png"
-		"./tiles/door.png"
-		"./tiles/terminal.png"
+
+
+		"./tiles/floor_left_1.png"
+		"./tiles/floor_repeatable_2.png"
+		"./tiles/floor_right_3.png"
+
+		"./tiles/vent_corner_9.png"
+		"./tiles/vent_o.png"
+		"./tiles/vent_opening_7.png"
+
+		"./tiles/vent_p.png"
+		"./tiles/vent_repeatable_8.png"
+		"./tiles/vent_support.png"
+		"./tiles/vent_up_0.png"
+
+		"./tiles/wall_bottom_6.png"
+		"./tiles/wall_repeatable_5.png"
+		"./tiles/wall_top_4.png"
+
+		"./objects/button.png"
+		"./objects/door.png"
+		"./objects/elevator.png"
+		"./objects/terminal.png"
+		
 		"./tiles/exit.png"
 		"./textures/touchscreenMoveL.bmp"
 		"./textures/touchscreenMoveR.bmp"
