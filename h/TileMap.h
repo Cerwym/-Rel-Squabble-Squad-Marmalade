@@ -13,11 +13,13 @@ public:
 	void Draw();
 	std::vector<GameObject*> GetMap(){return m_Map;}
 	std::vector<GameObject*> GetObjects(){return m_Objects;}
+	std::vector<CIwFVec2> GetSpawnPositions(){return m_SpawnPos;}
 
 private:
 	void AddRelationships();
 	
 	std::vector<GameObject*> m_Map;
 	std::vector<GameObject*> m_Objects;
+	std::vector<CIwFVec2> m_SpawnPos;
 };
 #endif

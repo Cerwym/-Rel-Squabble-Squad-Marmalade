@@ -22,7 +22,7 @@ public:
 	static GameoverState* Instance()
 	{
 		return &m_GameOverState;
-	}
+ 	}
 
 protected:
 	GameoverState(){} // When called, the state MUST call its own Init() function.

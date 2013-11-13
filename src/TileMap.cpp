@@ -7,6 +7,10 @@ using namespace std;
 
 TileMap::TileMap(const char* lvlFile)
 {
+	// Initialize the vector with 3 elements (0,0) so that we can add the character's parsed positions in game
+	for (int i = 0; i <3; i++)
+		m_SpawnPos.push_back(CIwFVec2(0,0));
+
 	ifstream infile(lvlFile);
 	string line;
 	int y = 0;
@@ -60,17 +64,22 @@ TileMap::TileMap(const char* lvlFile)
 						GameObject* t = new GameObject("m_floor", Floor);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
-
-						//cout << "Sprite is at -> " << t->GetWidth() * x << "," << t->GetHeight() * y  << endl;
 					}
 
 					if (buff[x] == 'X')
 					{
 						GameObject* t = new GameObject("exit", Exit);
-						//t->SetCenter(CIwSVec2(t->GetWidth() / 2, t->GetHeight() /2));
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Objects.push_back(t);
 					}
+
+					// Characters
+					if (buff[x] == 'd')
+						m_SpawnPos.at(0) = CIwFVec2(x * 32,(y * 32) - 100); // offset by sprite's height
+					if (buff[x] == 'n')
+						m_SpawnPos.at(1) = CIwFVec2(x * 32,(y * 32) - 46); // offset by sprite's height
+					if (buff[x] == 'm')
+						m_SpawnPos.at(2) = CIwFVec2(x * 32,(y * 32) - 69); // offset by sprite's height
 				}
 			}
 			y++;
@@ -80,7 +89,6 @@ TileMap::TileMap(const char* lvlFile)
 	}
 
 	// Link up the GameObjects
-
 	AddRelationships();
 }
 

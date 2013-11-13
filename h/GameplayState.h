@@ -33,6 +33,7 @@ public:
 public:
 	// New functions
 	void CheckInterations(StateEngine* state);
+	void SpawnCharacters();
 
 protected:
 	GameplayState(){} // When called, the state MUST call its own Init() function.
@@ -69,6 +70,7 @@ private:
 	bool m_isTermActive;
 	bool m_isThrowing;
 	bool m_canThrow;
+	bool m_gameOver;
 
 	Camera* m_Cam;
 	TileMap* m_Level;

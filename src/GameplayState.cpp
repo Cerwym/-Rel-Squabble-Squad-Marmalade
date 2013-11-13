@@ -15,19 +15,6 @@ void GameplayState::Init()
 {
 	IwGetResManager()->LoadGroup("sprites.group");
 
-	// Dave (big), Nigel (small), Mandy (girl)
-	characters[0] = new Sprite("dave");
-	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
-	characters[0]->SetPosition(CIwFVec2(50,0));
-
-	characters[1] = new Sprite("nigel");
-	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
-	characters[1]->SetPosition(CIwFVec2(414, 100));
-
-	characters[2] = new Sprite("mandy");
-	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
-	characters[2]->SetPosition(CIwFVec2(64, 150));
-
 	m_Portraits[0] = new Sprite("dave_port");
 	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
 	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
@@ -56,22 +43,21 @@ void GameplayState::Init()
 	m_Font = Iw2DCreateFontResource("font_small");
 	Iw2DSetFont(m_Font);
 
-	for (int i = 0; i < 3; i++)
-		characters[i]->ShowColliderPos = true;
-
 	m_CharacterIndex = 0;
 	m_isThrowing = false;
 	m_isTermActive = false;
 	m_canThrow = false;
 	m_SpacePressed = false;
 	m_UpPressed = false;
+	m_gameOver = false;
+	m_MouseClicked = false;
 
 	m_Cam = new Camera;
 	m_Cam->SetPosition(CIwSVec2(0, 0));
 	m_Cam->Position = CIwSVec2(0, 0);
 
 	m_Level = new TileMap("levels\\levelproto.txt");
-	m_MouseClicked = false;
+	SpawnCharacters();
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("audio\\bgmusic.mp3", 0);
@@ -107,6 +93,26 @@ void GameplayState::Pause()
 
 void GameplayState::Resume()
 {
+
+}
+
+void GameplayState::SpawnCharacters()
+{
+	// Dave (big), Nigel (small), Mandy (girl)
+	characters[0] = new Sprite("dave");
+	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
+	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
+
+	characters[1] = new Sprite("nigel");
+	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
+	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
+
+	characters[2] = new Sprite("mandy");
+	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
+	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
+
+	for (int i = 0; i < 3; i++)
+		characters[i]->ShowColliderPos = true;
 
 }
 
@@ -194,6 +200,9 @@ void GameplayState::HandleEvent(StateEngine* state)
 			characters[NIGEL]->TEMP_ISCOLLIDING = false;
 		}
 	}
+
+	if (m_gameOver)
+		state->ChangeState(GameoverState::Instance());
 }
 
 void GameplayState::Update(StateEngine* state, double dt)
@@ -206,7 +215,9 @@ void GameplayState::Update(StateEngine* state, double dt)
 		characters[NIGEL]->Update(dt);
 
 	// Set the camera's position to the currently controlled player, at the bottom and (roughly) towards the center of the screen.
-	m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[m_CharacterIndex]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[m_CharacterIndex]->GetPosition().y + (screenHeight - characters[m_CharacterIndex]->GetHeight()))));
+	m_Cam->SetPosition(
+		CIwSVec2(static_cast<int16>(-characters[m_CharacterIndex]->GetPosition().x + (screenWidth /2)),
+		static_cast<int16>(-characters[m_CharacterIndex]->GetPosition().y + (screenHeight - characters[m_CharacterIndex]->GetHeight() - 32))));
 
 	if (s3eKeyboardGetState(s3eKeyUp) == 4)
 		m_UpPressed = false;
@@ -275,12 +286,14 @@ void GameplayState::CheckInterations(StateEngine* state)
 		{
 			if (t->GetType() == Exit)
 			{
-				if (characters[i]->isColliding(t))
+				if (characters[i]->isColliding(t) && exitCount !=3)
 					exitCount++;
+				if (exitCount == 3)
+				{
+					m_gameOver = true;
+					break;
+				}
 			}
-
-			if (exitCount == 3)
-				state->ChangeState(GameoverState::Instance());
 		}
 	}
 
