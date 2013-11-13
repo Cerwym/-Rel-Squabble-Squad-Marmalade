@@ -30,59 +30,39 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 				if( (buff[x] != '\r') || (buff[x] != '*'))
 				{
 
-					/*
-
-					E- elevator
-					B - button
-					T - terminal
-					D - door
-					1 - floor_left_1
-					2 - floor_repeatable_2
-					3 - floor_right_3
-					4 - wall_top_4
-					5 - wall_repeatable_5
-					6 - wall_bottom_6
-					7 - vent_opening_7
-					8 - vent_repeatable_8
-					9 - vent_corner_9
-					s - vent_support
-					0 - vent_up_0
-					o - vent_o
-					p - vent_p
-
-					*/
 					if (buff[x] == 'E')
 					{
 						GameObject* t = new GameObject("elevator", Elevator);
-						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32))); // its width
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'B')
 					{
 						GameObject* t = new GameObject("button", Button);
-						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
+						std::cout << "Button is " << t->GetWidth() << "x" << t->GetHeight() << std::endl;
 						m_Objects.push_back(t);
 					}
 					
 					if (buff[x] == 'D')
 					{
 						GameObject* t = new GameObject("door", Door);
-						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'T')
 					{
 						GameObject* t = new GameObject("terminal", Terminal);
-						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'X')
 					{
 						GameObject* t = new GameObject("exit", Exit);
-						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), t->GetHeight() * y));
 						m_Objects.push_back(t);
 					}
 
@@ -154,7 +134,7 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					if (buff[x] == 's')
 					{
 						GameObject* t = new GameObject("vent_support", Scenerary);
-						t->SetPosition(CIwFVec2(t->GetWidth() * x, (y * 32) - t->GetHeight()));
+						t->SetPosition(CIwFVec2(t->GetWidth() * x, (y * 32) - t->GetHeight())); // check if this is drawn in the right way
 						m_Map.push_back(t);
 					}
 
@@ -257,18 +237,8 @@ void TileMap::AddRelationships(const char* rFile)
 	for (auto it = relationships.begin(); it != relationships.end(); ++it)
 		m_Objects.at(it->x)->AddChildObject(m_Objects.at(it->y));
 
-	//end
-/*
-	m_Objects.at(0)->AddChildObject(m_Objects.at(5)); 
-	m_Objects.at(4)->AddChildObject(m_Objects.at(3));
-	m_Objects.at(2)->AddChildObject(m_Objects.at(9));
-	m_Objects.at(6)->AddChildObject(m_Objects.at(8));
-	m_Objects.at(7)->AddChildObject(m_Objects.at(8));
-*/
-
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
 	{
-		// Possibly print out all the locations for each collider to verify they are being created properly
 		(*it)->UpdateCollider();
 		//(*it)->ShowColliderPos = true;
 	}
@@ -284,8 +254,7 @@ void TileMap::AddRelationships(const char* rFile)
 
 void TileMap::Draw() // make it aware of cam, if not on screen, don't draw
 {
-	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
-		(*it)->Draw();
+
 
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
@@ -298,4 +267,7 @@ void TileMap::Draw() // make it aware of cam, if not on screen, don't draw
 			std::cout << "Not drawing something" << std::endl;
 		}
 	}
+
+	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
+		(*it)->Draw();
 }

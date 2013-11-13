@@ -64,16 +64,16 @@ ResGroupResources:
 		Size: 4132
 	CIwTexture (0x3521f539)
 		"button" (0xf4ff5d81)
-		Size: 65572
+		Size: 4132
 	CIwTexture (0x3521f539)
 		"door" (0x7c95cc59)
-		Size: 184356
+		Size: 20516
 	CIwTexture (0x3521f539)
 		"elevator" (0x1f656827)
-		Size: 196644
+		Size: 12324
 	CIwTexture (0x3521f539)
 		"terminal" (0xfa1db361)
-		Size: 131108
+		Size: 8228
 	CIwTexture (0x3521f539)
 		"exit" (0x7c967e3f)
 		Size: 4132
@@ -95,12 +95,12 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
 		Size: 1843236
-	ResList 'CIwTexture' pos:38 size:8196534
+	ResList 'CIwTexture' pos:38 size:7664054
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:8196572 size:18063
+	ResList 'CIwGxFont' pos:7664092 size:18063
 
-ResGroupResources: Wrote 8214601 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 7682121 bytes to CIwResGroup "Sprites"
 
