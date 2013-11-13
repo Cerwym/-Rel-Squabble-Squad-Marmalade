@@ -108,6 +108,7 @@ void Sprite::Update(float deltaTime)
 	{
 		m_yVel += GRAVITY;
 		m_Position.y += (m_yVel);// / 8);
+		std::cout << "Down Velocity" << std::endl;
 		
 		//std::cout << "I'm Falling @ " << m_yVel << " mp/s" << std::endl;
 	}
@@ -127,8 +128,7 @@ void Sprite::Update(float deltaTime)
 	{
 		m_yVel += GRAVITY;
 		m_Position.y -= m_yVel;
-		std::cout << "Still rising" << std::endl;
-		std::cout << "old y value is " << TEMP_BEFOREJUMPY << std::endl;
+		std::cout << "Velocity " << m_yVel << std::endl;
 		if (m_Position.y <= (TEMP_BEFOREJUMPY - 128)) // TEMP BEFORE Y IS THE PROBLEM.
 		{
 			m_yVel = 0;

@@ -72,6 +72,8 @@ private:
 	bool m_canThrow;
 	bool m_gameOver;
 
+	std::vector<Sprite*> m_Layers;
+
 	Camera* m_Cam;
 	TileMap* m_Level;
 };

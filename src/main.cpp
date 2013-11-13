@@ -35,7 +35,7 @@ int main()
 {
     // create game object
 	engine.Init("Game");
-	engine.ChangeState(GameplayState::Instance());
+	engine.ChangeState(IntroState::Instance());
 
     int currentUpdate = GetUpdateFrame();
     int nextUpdate = currentUpdate;

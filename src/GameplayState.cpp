@@ -59,6 +59,11 @@ void GameplayState::Init()
 	m_Level = new TileMap("levels\\levelproto1.txt", "levels\\levelrelationships1.txt");
 	SpawnCharacters();
 
+	m_Layers.push_back(new Sprite("layer1"));
+	m_Layers.push_back(new Sprite("layer2"));
+	m_Layers.push_back(new Sprite("layer3"));
+	m_Layers.push_back(new Sprite("layer4"));
+
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("audio\\bgmusic.mp3", 0);
 
@@ -327,6 +332,11 @@ void GameplayState::CheckInterations(StateEngine* state)
 
 void GameplayState::Draw(StateEngine* state)
 {
+
+	for (int i = 0; i < 4; i++)
+	{
+		m_Layers.at(i)->Draw(m_Cam->GetPosition());
+	}
 	m_Level->Draw();
 
 	for (int i = 0; i <3; i++)
