@@ -13,7 +13,8 @@
 class Sprite
 {
 public:
-	Sprite(const char* fname, bool collFlag);
+	Sprite(const char*, bool);
+	Sprite::Sprite(const char*, bool, CIwFVec2);
 	~Sprite();
 	
 	inline void SetCenter(const CIwSVec2& center) { m_Center = center; }

@@ -9,6 +9,9 @@ ResGroupResources:
 		"nigel" (0x1000def4)
 		Size: 7580
 	CIwTexture (0x3521f539)
+		"nigel_anim" (0x295481f8)
+		Size: 25620
+	CIwTexture (0x3521f539)
 		"dave_port" (0x6591ca69)
 		Size: 14436
 	CIwTexture (0x3521f539)
@@ -95,12 +98,12 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
 		Size: 1843236
-	ResList 'CIwTexture' pos:38 size:7664054
+	ResList 'CIwTexture' pos:38 size:7689674
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:7664092 size:18063
+	ResList 'CIwGxFont' pos:7689712 size:18063
 
-ResGroupResources: Wrote 7682121 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 7707741 bytes to CIwResGroup "Sprites"
 

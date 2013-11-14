@@ -95,8 +95,8 @@ void StateEngine::Update()
 {
 	IwGetSoundManager()->Update();
 	m_LastTime = s3eTimerGetMs();
-	m_States.back()->Update(this, m_LastTime - m_CurrTime);
-	m_LastTime = m_CurrTime;
+	m_States.back()->Update(this, (m_LastTime - m_CurrTime) / 60);
+	m_CurrTime = m_LastTime;
 }
 
 void StateEngine::Draw()

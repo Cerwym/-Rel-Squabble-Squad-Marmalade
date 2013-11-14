@@ -2,8 +2,7 @@
 #include <iostream>
 #include <assert.h>
 
-Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),
-m_Angle(0),m_Animated(false)
+Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),m_Angle(0),m_Animated(false)
 {
 	// hashed name for the sprite in IwResourceManager
 	m_Image = Iw2DCreateImageResource(name);
@@ -23,6 +22,24 @@ m_Angle(0),m_Animated(false)
 	{
 		m_Collider = new Collider(m_Position, m_Width, m_Height);
 	}
+}
+
+Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0),m_MovSpeed(0,0),m_Angle(0),m_Animated(true)
+{
+	// hashed name for the sprite in IwResourceManager
+	m_Image = Iw2DCreateImageResource(name);
+	m_yVel = 0;
+	m_Name = name;
+
+	TEMP_ISFALLING = true;
+	TEMP_JUSTJUMPED = false;
+	TEMP_LANDEDJUMP = true;
+	TEMP_ISCOLLIDING = false;
+	ShowColliderPos = false;
+	m_hasCollider = flag;
+
+	// 1 frame every game second
+	SetAnimated(true, 0.5, frameCount);
 }
 
 
@@ -56,10 +73,23 @@ void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 
 	if (animated) 
 	{
-		m_FrameSize = CIwFVec2((m_Image->GetWidth() / frameCount.x), (m_Image->GetHeight() / frameCount.y));
+		int16 fw = m_Image->GetWidth() / frameCount.x;
+		std::cout << "Frame width " << fw << std::endl;
+		int16 fh = m_Image->GetHeight() / frameCount.y;
+		std::cout << "Frame height " << fh << std::endl;
+
+		m_FrameSize = CIwSVec2(fw, fh); // this is the bug
 		m_CurrentFrame = 0;
-		m_FrameCount = frameCount; 
+		m_FrameCount.x = frameCount.x;
+		m_FrameCount.y = frameCount.y;
 	}
+
+	m_Width = m_FrameSize.x;
+	m_Height = m_FrameSize.y;
+
+	m_Center = CIwSVec2(static_cast<int16>(m_Width) / 2, static_cast<int16>(m_Height) / 2);
+
+	if (m_hasCollider){m_Collider = new Collider(m_Position, m_Width, m_Height);}
 }
 
 //Simple bounding box detection, no left right top or bottom.
@@ -98,26 +128,25 @@ bool Sprite::isColliding(Sprite* other)
 
 void Sprite::Update(float deltaTime)
 {
+	std::cout << "Delta time is " << deltaTime << std::endl;
 	// update animation
 	if (m_Animated)
 	{
+		std::cout << "Current frame is " << m_CurrentFrame << std::endl;
 		m_CurrentFrame += m_AnimSpeed * deltaTime;
-
-		if (m_CurrentFrame > (m_FrameCount.x * m_FrameCount.y)) { m_CurrentFrame = 0; }
+		//std::cout << "Max frame " << m_FrameCount.x * m_FrameCount.y << std::endl;
+		if (m_CurrentFrame > (m_FrameCount.x * m_FrameCount.y)) // This needs to be fixed somehow, so the amount of frames is calculated correctly
+		{
+			std::cout << "Reset anim" << std::endl;
+			m_CurrentFrame = 0;
+		}
 	}
-
-	// update position
-		
-	//m_Position += m_MovSpeed * deltaTime;
 
 	// Update gravity
 	if ((TEMP_ISCOLLIDING == false)) // and has jumped
 	{
 		m_yVel += GRAVITY;
 		m_Position.y += (m_yVel);// / 8);
-		//std::cout << "Down Velocity" << std::endl;
-		
-		//std::cout << "I'm Falling @ " << m_yVel << " mp/s" << std::endl;
 	}
 	else
 	{
@@ -167,11 +196,15 @@ void Sprite::Draw()
 		//Iw2DSetTransformMatrix(rotMatrix);
 	}
 
-	// scale // rotate //translate
 	if (m_Animated) 
 	{
 		CIwSVec2 offset(((int)m_CurrentFrame % m_FrameCount.x) * m_FrameSize.x, ((int)m_CurrentFrame / m_FrameCount.x) * m_FrameSize.y);
 		Iw2DDrawImageRegion(m_Image, drawPos, offset, m_FrameSize);
+		if (ShowColliderPos)
+		{
+			if (m_hasCollider)
+				m_Collider->Draw();
+		}
 	} 
 	else
 	{

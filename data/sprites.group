@@ -4,6 +4,8 @@ CIwResGroup
 		"./characters/dave.png"
 		"./characters/mandy.png"
 		"./characters/nigel.png"
+		"./characters/nigel_anim.png"
+
 		"./portraits/dave_port.png"
 		"./portraits/mandy_port.png"
 		"./portraits/nigel_port.png"

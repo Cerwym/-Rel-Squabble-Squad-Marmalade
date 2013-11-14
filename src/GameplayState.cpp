@@ -110,7 +110,7 @@ void GameplayState::SpawnCharacters()
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
 	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
 
-	characters[1] = new Sprite("nigel", true);
+	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(4,1));
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
 
