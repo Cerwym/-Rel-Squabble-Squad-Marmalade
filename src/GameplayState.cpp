@@ -15,27 +15,27 @@ void GameplayState::Init()
 {
 	IwGetResManager()->LoadGroup("sprites.group");
 
-	m_Portraits[0] = new Sprite("dave_port");
+	m_Portraits[0] = new Sprite("dave_port", true);
 	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
 	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
 
-	m_Portraits[1] = new Sprite("nigel_port");
+	m_Portraits[1] = new Sprite("nigel_port", true);
 	m_Portraits[1]->SetPosition(CIwFVec2(210,0));
 	m_Portraits[1]->BuildCollision("portraits\\nigel_port.png");
 
-	m_Portraits[2] = new Sprite("mandy_port");
+	m_Portraits[2] = new Sprite("mandy_port", true);
 	m_Portraits[2]->SetPosition(CIwFVec2(290,0));
 	m_Portraits[2]->BuildCollision("portraits\\mandy_port.png");
 
-	n_guiButtons[0] = new Sprite("touchScreenMoveL");
+	n_guiButtons[0] = new Sprite("touchScreenMoveL", true);
 	n_guiButtons[0]->SetPosition(CIwFVec2(0, 260));
 	n_guiButtons[0]->BuildCollision("textures\\touchScreenMoveL.bmp");
 
-	n_guiButtons[1] = new Sprite("touchScreenMoveR");
+	n_guiButtons[1] = new Sprite("touchScreenMoveR", true);
 	n_guiButtons[1]->SetPosition(CIwFVec2(414, 260));
 	n_guiButtons[1]->BuildCollision("textures\\touchScreenMoveR.bmp");
 
-	m_throwingTarget = new Sprite("target_sprite");
+	m_throwingTarget = new Sprite("target_sprite", true);
 
 	screenHeight = Iw2DGetSurfaceHeight();
 	screenWidth = Iw2DGetSurfaceWidth();
@@ -59,10 +59,10 @@ void GameplayState::Init()
 	m_Level = new TileMap("levels\\levelproto1.txt", "levels\\levelrelationships1.txt");
 	SpawnCharacters();
 
-	m_Layers.push_back(new Sprite("layer1"));
-	m_Layers.push_back(new Sprite("layer2"));
-	m_Layers.push_back(new Sprite("layer3"));
-	m_Layers.push_back(new Sprite("layer4"));
+	m_Layers.push_back(new Sprite("layer1", false));
+	m_Layers.push_back(new Sprite("layer2", false));
+	m_Layers.push_back(new Sprite("layer3", false));
+	m_Layers.push_back(new Sprite("layer4", false));
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("audio\\bgmusic.mp3", 0);
@@ -106,15 +106,15 @@ void GameplayState::Resume()
 void GameplayState::SpawnCharacters()
 {
 	// Dave (big), Nigel (small), Mandy (girl)
-	characters[0] = new Sprite("dave");
+	characters[0] = new Sprite("dave", true);
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
 	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
 
-	characters[1] = new Sprite("nigel");
+	characters[1] = new Sprite("nigel", true);
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
 
-	characters[2] = new Sprite("mandy");
+	characters[2] = new Sprite("mandy", true);
 	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
 	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
 

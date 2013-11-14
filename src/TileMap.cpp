@@ -32,14 +32,14 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 
 					if (buff[x] == 'E')
 					{
-						GameObject* t = new GameObject("elevator", Elevator);
+						GameObject* t = new GameObject("elevator", Elevator, true);
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32))); // its width
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'B')
 					{
-						GameObject* t = new GameObject("button", Button);
+						GameObject* t = new GameObject("button", Button, true);
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
 						std::cout << "Button is " << t->GetWidth() << "x" << t->GetHeight() << std::endl;
 						m_Objects.push_back(t);
@@ -47,21 +47,21 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					
 					if (buff[x] == 'D')
 					{
-						GameObject* t = new GameObject("door", Door);
+						GameObject* t = new GameObject("door", Door, true);
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'T')
 					{
-						GameObject* t = new GameObject("terminal", Terminal);
+						GameObject* t = new GameObject("terminal", Terminal, true);
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'X')
 					{
-						GameObject* t = new GameObject("exit", Exit);
+						GameObject* t = new GameObject("exit", Exit, true);
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), t->GetHeight() * y));
 						m_Objects.push_back(t);
 					}
@@ -70,91 +70,91 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 
 					if (buff[x] == '1')
 					{
-						GameObject* t = new GameObject("floor_left_1", Scenerary);
+						GameObject* t = new GameObject("floor_left_1", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '2')
 					{
-						GameObject* t = new GameObject("floor_repeatable_2", Scenerary);
+						GameObject* t = new GameObject("floor_repeatable_2", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '3')
 					{
-						GameObject* t = new GameObject("floor_right_3", Scenerary);
+						GameObject* t = new GameObject("floor_right_3", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '4')
 					{
-						GameObject* t = new GameObject("wall_top_4", Scenerary);
+						GameObject* t = new GameObject("wall_top_4", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '5')
 					{
-						GameObject* t = new GameObject("wall_repeatable_5", Scenerary);
+						GameObject* t = new GameObject("wall_repeatable_5", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '6')
 					{
-						GameObject* t = new GameObject("wall_bottom_6", Scenerary);
+						GameObject* t = new GameObject("wall_bottom_6", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '7')
 					{
-						GameObject* t = new GameObject("vent_opening_7", Scenerary);
+						GameObject* t = new GameObject("vent_opening_7", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '8')
 					{
-						GameObject* t = new GameObject("vent_repeatable_8", Scenerary);
+						GameObject* t = new GameObject("vent_repeatable_8", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '9')
 					{
-						GameObject* t = new GameObject("vent_corner_9", Scenerary);
+						GameObject* t = new GameObject("vent_corner_9", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 's')
 					{
-						GameObject* t = new GameObject("vent_support", Scenerary);
+						GameObject* t = new GameObject("vent_support", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, (y * 32) - t->GetHeight())); // check if this is drawn in the right way
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == '0')
 					{
-						GameObject* t = new GameObject("vent_up_0", Scenerary);
+						GameObject* t = new GameObject("vent_up_0", Scenerary, true);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 'o')
 					{
-						GameObject* t = new GameObject("vent_o", Scenerary);
+						GameObject* t = new GameObject("vent_o", Scenerary, false);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 'p')
 					{
-						GameObject* t = new GameObject("vent_p", Scenerary);
+						GameObject* t = new GameObject("vent_p", Scenerary, false);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
 						m_Map.push_back(t);
 					}
@@ -239,14 +239,20 @@ void TileMap::AddRelationships(const char* rFile)
 
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
 	{
-		(*it)->UpdateCollider();
+		if ( (*it)->hasCollider())
+		{
+			(*it)->UpdateCollider();
+		}
 		//(*it)->ShowColliderPos = true;
 	}
 
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
-		(*it)->UpdateCollider();
-		(*it)->ShowColliderPos = true;
+		if ( (*it)->hasCollider())
+		{
+			(*it)->UpdateCollider();
+			(*it)->ShowColliderPos = true;
+		}
 	}
 
 	std::cout << "Relationships added" << std::endl;

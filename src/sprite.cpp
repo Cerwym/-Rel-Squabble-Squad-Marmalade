@@ -2,7 +2,7 @@
 #include <iostream>
 #include <assert.h>
 
-Sprite::Sprite(const char* name): m_Position(0,0),m_MovSpeed(0,0),
+Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),
 m_Angle(0),m_Animated(false)
 {
 	// hashed name for the sprite in IwResourceManager
@@ -18,7 +18,11 @@ m_Angle(0),m_Animated(false)
 	TEMP_LANDEDJUMP = true;
 	TEMP_ISCOLLIDING = false;
 	ShowColliderPos = false;
-	m_Collider = new Collider(m_Position, m_Width, m_Height);
+	m_hasCollider = flag;
+	if (flag)
+	{
+		m_Collider = new Collider(m_Position, m_Width, m_Height);
+	}
 }
 
 
@@ -86,7 +90,10 @@ bool Sprite::isColliding(Sprite* other)
 {
 	IW_CALLSTACK("Sprite::isColliding");
 
-	return(m_Collider->isColliding(other->m_Collider));
+	if (m_hasCollider && other->hasCollider())
+		return(m_Collider->isColliding(other->m_Collider));
+	else
+		return false;
 }
 
 void Sprite::Update(float deltaTime)
@@ -139,12 +146,13 @@ void Sprite::Update(float deltaTime)
 			std::cout << "Finished Jumping" << std::endl;
 		}
 	}
-	UpdateCollider();
+		UpdateCollider();
 }
 
 void Sprite::UpdateCollider()
 {
-	m_Collider->Update(m_Position);
+	if (m_hasCollider)
+		m_Collider->Update(m_Position);
 }
 
 void Sprite::Draw() 
@@ -170,7 +178,8 @@ void Sprite::Draw()
 		Iw2DDrawImage(m_Image, drawPos);
 		if (ShowColliderPos)
 		{
-			m_Collider->Draw();
+			if (m_hasCollider)
+				m_Collider->Draw();
 		}
 	}
 
@@ -196,7 +205,8 @@ void Sprite::Draw(CIwSVec2& camPos)
 		Iw2DDrawImage(m_Image, drawPos);
 		if (ShowColliderPos)
 		{
-			m_Collider->Draw();
+			if (m_hasCollider)
+				m_Collider->Draw();
 		}
 	}
 }
@@ -205,5 +215,8 @@ void Sprite::Debug_PrintPos()
 {
 	std::cout << "Pos x : " << m_Position.x << " y : " << m_Position.y << std::endl;
 	if (ShowColliderPos)
-		m_Collider->DEBUG_PRINTPOS();
+	{
+		if (m_hasCollider)
+			m_Collider->DEBUG_PRINTPOS();
+	}
 }

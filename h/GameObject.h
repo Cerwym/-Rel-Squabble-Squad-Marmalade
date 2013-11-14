@@ -9,7 +9,7 @@ enum ObjectType {Elevator, Button, Door, Terminal, Scenerary, Exit};
 class GameObject : public Sprite
 {
 public:
-	GameObject(const char* name, ObjectType t);
+	GameObject(const char* name, ObjectType t, bool collisionFlag);
 
 	void AddChildObject(GameObject* obj) {m_Child = obj;}
 	void AddTag(std::string tag) {m_Tag = tag;}

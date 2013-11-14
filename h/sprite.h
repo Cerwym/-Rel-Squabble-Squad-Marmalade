@@ -13,7 +13,7 @@
 class Sprite
 {
 public:
-	Sprite(const char* fname);
+	Sprite(const char* fname, bool collFlag);
 	~Sprite();
 	
 	inline void SetCenter(const CIwSVec2& center) { m_Center = center; }
@@ -39,6 +39,8 @@ public:
 
 	inline float GetHeight(){return m_Height;}
 	inline float GetWidth(){return m_Width;}
+
+	bool hasCollider(){ return m_hasCollider;}
 
 	void SetVelocity(float v){m_yVel = v;}
 	float GetVelocity(){return m_yVel;}
@@ -68,6 +70,7 @@ private:
 	
 	iwangle m_Angle;
 	bool m_Animated;
+	bool m_hasCollider;
 	float m_AnimSpeed;
 	float m_CurrentFrame;
 	float m_yVel;
