@@ -23,6 +23,8 @@ public:
 	void SetActive(int pRunning){m_isRunning = pRunning;}
 	void Quit() {m_isRunning = false;}
 
+	double m_deltaTime;
+
 protected:
 
 private:

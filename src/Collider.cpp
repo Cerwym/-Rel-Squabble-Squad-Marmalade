@@ -11,7 +11,7 @@ Collider::Collider(CIwFVec2 pos, float w, float h)
 
 Collider::~Collider()
 {
-
+	delete m_Collider;
 }
 
 bool Collider::isColliding(Collider* other)

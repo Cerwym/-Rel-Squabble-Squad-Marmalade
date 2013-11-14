@@ -46,7 +46,7 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 Sprite::~Sprite()
 {
 	delete m_Image;
-	delete m_Collider;
+	//delete m_Collider;
 }
 
 void Sprite::BuildCollision(const char* fname)
@@ -74,10 +74,7 @@ void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 	if (animated) 
 	{
 		int16 fw = m_Image->GetWidth() / frameCount.x;
-		std::cout << "Frame width " << fw << std::endl;
 		int16 fh = m_Image->GetHeight() / frameCount.y;
-		std::cout << "Frame height " << fh << std::endl;
-
 		m_FrameSize = CIwSVec2(fw, fh); // this is the bug
 		m_CurrentFrame = 0;
 		m_FrameCount.x = frameCount.x;
@@ -101,8 +98,6 @@ bool Sprite::isColliding(const CIwFVec2& other)
 	CIwSVec2 localPos = CIwSVec2
 		(static_cast<int16>(other.x), static_cast<int16>(other.y)) -
 		CIwSVec2(static_cast<int16>(m_Position.x), static_cast<int16>(m_Position.y));
-
-	//std::cout << "localPos->" << localPos.x << "," << localPos.y << std::endl; 
 
 	if(localPos.x < 0
 		|| localPos.y < 0
@@ -128,18 +123,12 @@ bool Sprite::isColliding(Sprite* other)
 
 void Sprite::Update(float deltaTime)
 {
-	std::cout << "Delta time is " << deltaTime << std::endl;
 	// update animation
 	if (m_Animated)
 	{
-		std::cout << "Current frame is " << m_CurrentFrame << std::endl;
 		m_CurrentFrame += m_AnimSpeed * deltaTime;
-		//std::cout << "Max frame " << m_FrameCount.x * m_FrameCount.y << std::endl;
-		if (m_CurrentFrame > (m_FrameCount.x * m_FrameCount.y)) // This needs to be fixed somehow, so the amount of frames is calculated correctly
-		{
-			std::cout << "Reset anim" << std::endl;
+		if (m_CurrentFrame > (m_FrameCount.x * m_FrameCount.y))
 			m_CurrentFrame = 0;
-		}
 	}
 
 	// Update gravity
@@ -164,15 +153,13 @@ void Sprite::Update(float deltaTime)
 	{
 		m_yVel += GRAVITY;
 		m_Position.y += (-m_yVel * 2);
-		std::cout << "Velocity " << m_yVel << std::endl;
-		if (m_Position.y <= (TEMP_BEFOREJUMPY - 128)) // TEMP BEFORE Y IS THE PROBLEM.
+		if (m_Position.y <= (TEMP_BEFOREJUMPY - JUMP_HEIGHT))
 		{
 			m_yVel = 0;
 			TEMP_JUSTJUMPED = false;
 			TEMP_ISFALLING = true;
 			TEMP_LANDEDJUMP = true;
 			TEMP_ISCOLLIDING = false;
-			std::cout << "Finished Jumping" << std::endl;
 		}
 	}
 		UpdateCollider();
@@ -187,15 +174,6 @@ void Sprite::UpdateCollider()
 void Sprite::Draw() 
 {
 	CIwSVec2 drawPos((int16)m_Position.x, (int16)m_Position.y);
-	//drawPos -=m_Center;
-
-	if (m_Angle != 0)
-	{
-		CIwMat2D rotMatrix;
-		rotMatrix.SetRot(m_Angle, CIwVec2((int32)m_Position.x, (int32)m_Position.y));
-		//Iw2DSetTransformMatrix(rotMatrix);
-	}
-
 	if (m_Animated) 
 	{
 		CIwSVec2 offset(((int)m_CurrentFrame % m_FrameCount.x) * m_FrameSize.x, ((int)m_CurrentFrame / m_FrameCount.x) * m_FrameSize.y);
@@ -214,11 +192,6 @@ void Sprite::Draw()
 			if (m_hasCollider)
 				m_Collider->Draw();
 		}
-	}
-
-	if (m_Angle != 0)
-	{
-		//Iw2DSetTransformMatrix(CIwMat2D::g_Identity);
 	}
 }
 

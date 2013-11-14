@@ -41,7 +41,6 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					{
 						GameObject* t = new GameObject("button", Button, true);
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
-						std::cout << "Button is " << t->GetWidth() << "x" << t->GetHeight() << std::endl;
 						m_Objects.push_back(t);
 					}
 					
@@ -221,17 +220,10 @@ void TileMap::AddRelationships(const char* rFile)
 				}
 				std::cout << buff[x];
 			}
-
-			std::cout << "Element in " << y << " is " << relationships.at(y).x << "," << relationships.at(y).y << std::endl;
 			y++;
 			line.clear();
 		}
 		infile.close();
-	}
-
-	for (int i = 0; i < relationships.size(); i++)
-	{
-		std::cout << "Relationship " << i << " ->" << relationships.at(i).x << "," << relationships.at(i).y << std::endl;
 	}
 
 	for (auto it = relationships.begin(); it != relationships.end(); ++it)
@@ -251,7 +243,7 @@ void TileMap::AddRelationships(const char* rFile)
 		if ( (*it)->hasCollider())
 		{
 			(*it)->UpdateCollider();
-			(*it)->ShowColliderPos = true;
+			//(*it)->ShowColliderPos = true;
 		}
 	}
 
@@ -265,13 +257,7 @@ void TileMap::Draw() // make it aware of cam, if not on screen, don't draw
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
 		if ((*it)->IsActive == true)
-		{
 			(*it)->Draw();	
-		}
-		else
-		{
-			std::cout << "Not drawing something" << std::endl;
-		}
 	}
 
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)

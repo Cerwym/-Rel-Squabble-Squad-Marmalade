@@ -109,14 +109,17 @@ void GameplayState::SpawnCharacters()
 	characters[0] = new Sprite("dave", true);
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
 	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
+	characters[0]->SetMovSpeed(CIwFVec2(2,0)); // Moves 2 units fast in the x axis (slow)
 
 	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(4,1));
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
+	characters[1]->SetMovSpeed(CIwFVec2(5,0)); // Moves 5 units fast in the x axis (fastest)
 
 	characters[2] = new Sprite("mandy", true);
 	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
 	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
+	characters[2]->SetMovSpeed(CIwFVec2(3,0)); // Moves 3 units fast in the x axis (faster than dave, slower than nigel)
 
 	for (int i = 0; i < 3; i++)
 		characters[i]->ShowColliderPos = true;
@@ -132,6 +135,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 			characters[MANDY]->TEMP_JUSTJUMPED = true;}
 		m_SpacePressed = true;
 	}
+
 
 	if ( (s3eKeyboardGetState(s3eKeyUp) & S3E_POINTER_STATE_DOWN) && m_UpPressed == false)
 	{
@@ -156,14 +160,14 @@ void GameplayState::HandleEvent(StateEngine* state)
 
 		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY())))) // Left Arrow Button
 		{
-			characters[m_CharacterIndex]->MoveBy(CIwSVec2(-10, 0));
-			m_Cam->MoveBy(CIwSVec2(10,0));
+			characters[m_CharacterIndex]->MoveBy(CIwSVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0)); // extend this to have char_movespeed in;
+			m_Cam->MoveBy(CIwSVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x,0));
 		}
 
 		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))
 		{
-			characters[m_CharacterIndex]->MoveBy(CIwSVec2(10, 0));
-			m_Cam->MoveBy(CIwSVec2(-10, 0));
+			characters[m_CharacterIndex]->MoveBy(CIwSVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x, 0));
+			m_Cam->MoveBy(CIwSVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0));
 		}
 
 
@@ -267,6 +271,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 		// Test if any of the characters hit this object
 		for (int i = 0; i < 3; i++)
 		{
+			// First of all, test to see if a character hits something.
 			if (t->GetType() == Button)
 			{
 				if (characters[i]->isColliding(t))
@@ -282,7 +287,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 						if (characters[DAVE]->isColliding(t->Child()))
 							characters[DAVE]->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 182));
 
-						if (characters[MANDY]->isColliding(t->Child()->GetPosition()))
+						if (characters[MANDY]->isColliding(t->Child()))
 							characters[MANDY]->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 142));
 
 						t->Child()->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y + 54));
@@ -338,7 +343,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 					if (characters[DAVE]->isColliding(m_activeTerminal->Child()))
 						characters[DAVE]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[DAVE]->GetPosition().y - 150));
 
-					if (characters[NIGEL]->isColliding(m_activeTerminal->Child()->GetPosition()))
+					if (characters[NIGEL]->isColliding(m_activeTerminal->Child()))
 						characters[NIGEL]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 110));
 
 					m_activeTerminal->Child()->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[MANDY]->GetPosition().y + 54));

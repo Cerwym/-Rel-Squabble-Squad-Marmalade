@@ -8,7 +8,7 @@
 #include "Collider.h"
 
 #define GRAVITY 0.278f
-#define JUMP_HEIGHT 25.f
+#define JUMP_HEIGHT 128
 
 class Sprite
 {
@@ -22,6 +22,7 @@ public:
 	inline void SetPosition(const CIwFVec2& position) { m_Position = position; }
 	inline void MoveBy(const CIwSVec2& position) { m_Position += CIwFVec2(static_cast<float>(position.x), static_cast<float>(position.y));}
 	inline void SetMovSpeed(const CIwFVec2& speed) { m_MovSpeed = speed; }
+	inline CIwFVec2 GetMovSpeed() {return m_MovSpeed;}
 	// past in a const reference to CIWVec2 instead of the class itself
 	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar)
 	{
