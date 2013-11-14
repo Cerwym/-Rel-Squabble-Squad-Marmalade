@@ -331,14 +331,22 @@ void GameplayState::CheckInterations(StateEngine* state)
 		{
 			if (m_UpPressed == true)
 			{
-				if (characters[DAVE]->isColliding(m_activeTerminal->Child()))
-					characters[DAVE]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[DAVE]->GetPosition().y - 150));
 
-				if (characters[NIGEL]->isColliding(m_activeTerminal->Child()->GetPosition()))
-					characters[NIGEL]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 110));
+				if (m_activeTerminal->Child()->GetType() == Elevator)
+				{
 
-				m_activeTerminal->Child()->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[MANDY]->GetPosition().y + 54));
+					if (characters[DAVE]->isColliding(m_activeTerminal->Child()))
+						characters[DAVE]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[DAVE]->GetPosition().y - 150));
+
+					if (characters[NIGEL]->isColliding(m_activeTerminal->Child()->GetPosition()))
+						characters[NIGEL]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 110));
+
+					m_activeTerminal->Child()->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[MANDY]->GetPosition().y + 54));
 				//m_UpPressed = false;
+				}
+
+				if (m_activeTerminal->Child()->GetType() == Door)
+					m_activeTerminal->Child()->IsActive = false;
 			}
 		}
 	}
