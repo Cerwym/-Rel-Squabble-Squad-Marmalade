@@ -92,6 +92,8 @@ void GameplayState::Destroy()
 
 	delete m_Level;
 
+	delete buttonSound;
+
 	IwGetResManager()->DestroyGroup("Sprites");
 	printf("GameplayState Destroyed\n");
 
@@ -132,6 +134,7 @@ void GameplayState::SpawnCharacters()
 
 void GameplayState::HandleEvent(StateEngine* state)
 {
+
 	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN) && m_SpacePressed == false)
 	{
 		std::cout << "Space pressed" << std::endl;
@@ -164,17 +167,10 @@ void GameplayState::HandleEvent(StateEngine* state)
 		}
 
 		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY())))) // Left Arrow Button
-		{
 			characters[m_CharacterIndex]->MoveBy(CIwSVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0)); // extend this to have char_movespeed in;
-			m_Cam->MoveBy(CIwSVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x,0));
-		}
 
 		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))
-		{
 			characters[m_CharacterIndex]->MoveBy(CIwSVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x, 0));
-			m_Cam->MoveBy(CIwSVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0));
-		}
-
 
 		if (characters[DAVE]->isColliding(characters[NIGEL]->GetPosition()) && (m_canThrow == false) && m_CharacterIndex == DAVE)
 		{
@@ -264,8 +260,30 @@ void GameplayState::CheckInterations(StateEngine* state)
 				characters[c]->TEMP_ISCOLLIDING = false;
 			}
 		}
-	}
 
+		// Check to see if any of the characters are colliding with 
+		for (size_t o = 0; o < m_Level->GetObjects().size(); o++)
+		{
+			GameObject *t = m_Level->GetObjects().at(o);
+			// Check to see if someone is colliding with an active door, if so, deny access
+			if (characters[c]->isColliding(t))
+			{
+				if (t->GetType() == Door)
+				{
+					if (t->IsActive)
+					{
+						std::cout << "Resetting position" << std::endl;
+						 // To dissalow the movement of the player through doors, if a collision is detected and the door is active, move in the inverse direciton
+
+						if (characters[c]->GetPosition().x < t->GetPosition().x)
+							characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x - (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
+						else
+							characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x + (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
+					}
+				}
+			}
+		}
+	}
 
 	for (size_t s = 0; s < m_Level->GetObjects().size(); s++)
 	{
@@ -287,8 +305,8 @@ void GameplayState::CheckInterations(StateEngine* state)
 						count++;
 						//if (TEMP_HASPLAYED == false)
 						//{
-							buttonSound->Play();
-							//EMP_HASPLAYED = true;
+						buttonSound->Play();
+						//EMP_HASPLAYED = true;
 						//}
 					}
 
@@ -313,6 +331,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 			}
 		}
 
+
 		if (t->GetType() == Terminal)
 		{
 			if (characters[MANDY]->isColliding(t))
@@ -334,7 +353,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 				if (exitCount == 3)
 				{
 					m_gameOver = true;
-					break;
+					//break;
 				}
 			}
 		}

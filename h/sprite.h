@@ -20,8 +20,9 @@ public:
 	inline void SetCenter(const CIwSVec2& center) { m_Center = center; }
 	inline CIwFVec2 GetPosition() { return m_Position; }
 	inline void SetPosition(const CIwFVec2& position) { m_Position = position; }
-	inline void MoveBy(const CIwSVec2& position) { m_Position += CIwFVec2(static_cast<float>(position.x), static_cast<float>(position.y));}
+	inline void MoveBy(const CIwSVec2& position) { m_LastPosition = m_Position;m_Position += CIwFVec2(static_cast<float>(position.x), static_cast<float>(position.y));}
 	inline void SetMovSpeed(const CIwFVec2& speed) { m_MovSpeed = speed; }
+	inline void ResetPosition() { m_Position = m_LastPosition;}
 	inline CIwFVec2 GetMovSpeed() {return m_MovSpeed;}
 	// past in a const reference to CIWVec2 instead of the class itself
 	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar)
@@ -68,6 +69,7 @@ protected:
 private:
 	CIwSVec2 m_Center; // The center of the image to rotate around
 	CIwFVec2 m_Position; // Screen position
+	CIwFVec2 m_LastPosition;
 	CIwFVec2 m_MovSpeed;
 	
 	iwangle m_Angle;

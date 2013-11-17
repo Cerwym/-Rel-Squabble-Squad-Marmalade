@@ -12,7 +12,11 @@ void IntroState::Init()
 {
 	IwGetResManager()->LoadGroup("introsprites.group");
 
-	m_Logo = Iw2DCreateImageResource("logo");
+	m_SplashImg1 = Iw2DCreateImageResource("logo");
+	m_SplashImg2 = Iw2DCreateImageResource("splash2");
+
+	m_TransManager.Init();
+	m_TransitionState == FADE_IN;
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("audio\\music.mp3", 1);
@@ -22,8 +26,9 @@ void IntroState::Init()
 
 void IntroState::Destroy()
 {
-	delete m_Logo;
 	IwGetResManager()->DestroyGroup("Intro");
+	delete m_SplashImg1;
+	delete m_SplashImg2;
 	printf("IntroState Destroyed\n");
 }
 
@@ -40,18 +45,35 @@ void IntroState::Resume()
 void IntroState::HandleEvent(StateEngine* state)
 {
 	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN))
-	{
-		SleepFor(1);
 		state->ChangeState(MainMenuState::Instance());
-	}
 }
 
 void IntroState::Update(StateEngine* state, double dt)
 {
-	//m_rotation += dt * 50;
+	
 }
 
 void IntroState::Draw(StateEngine* state)
 {
-	Iw2DDrawImage(m_Logo, CIwSVec2(0,0));
+	if (m_TransitionState == FADE_IN)
+		if (m_TransManager.TransitionIn(m_SplashImg1, state->m_deltaTime + 3.5))
+		{
+			m_TransitionState = BETWEEN;
+			m_TransManager.Init();
+			std::cout << "State changed to between" << std::endl;
+		}
+
+	if (m_TransitionState == BETWEEN)
+		if (m_TransManager.TransitionBetween(m_SplashImg1, m_SplashImg2, state->m_deltaTime + 3.5))
+		{
+			m_TransitionState = FADE_OUT;
+			m_TransManager.Init();
+		}
+
+	if (m_TransitionState == FADE_OUT)
+		if (m_TransManager.TransitionOut(m_SplashImg2, state->m_deltaTime + 3.5))
+		{
+			m_TransManager.FinishTransition();
+			state->ChangeState(MainMenuState::Instance());//std::cout << "Finished transitioning" << std::endl;
+		}
 }

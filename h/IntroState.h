@@ -5,6 +5,7 @@
 #include "Iw2D.h"
 #include "s3e.h"
 #include "IwResManager.h"
+#include "TransitionManager.h"
 
 class IntroState : public GameState
 {
@@ -29,9 +30,16 @@ protected:
 
 private:
 	static IntroState m_IntroState;
+
 	CIwFVec2 m_Position;
 	CIwSVec2 m_Size;
-	CIw2DImage* m_Logo;
+
+	CIw2DImage* m_SplashImg1;
+	CIw2DImage* m_SplashImg2;
+	TransitionManager m_TransManager;
+
+	enum TStat{FADE_IN = 0, BETWEEN = 1, FADE_OUT = 2}; TStat m_TransitionState;
+
 };
 
 #endif

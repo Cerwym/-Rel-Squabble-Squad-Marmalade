@@ -51,6 +51,7 @@ includepaths
 subprojects
 {
     iw2d
+	iwgx
 	iwresmanager
 	SoundEngine
 }

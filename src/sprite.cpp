@@ -38,7 +38,7 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 	ShowColliderPos = false;
 	m_hasCollider = flag;
 
-	// 1 frame every game second
+	// 1/2 frame every game second
 	SetAnimated(true, 0.5, frameCount);
 }
 
@@ -123,6 +123,7 @@ bool Sprite::isColliding(Sprite* other)
 
 void Sprite::Update(float deltaTime)
 {
+	m_LastPosition = m_Position;
 	// update animation
 	if (m_Animated)
 	{
@@ -179,19 +180,15 @@ void Sprite::Draw()
 		CIwSVec2 offset(((int)m_CurrentFrame % m_FrameCount.x) * m_FrameSize.x, ((int)m_CurrentFrame / m_FrameCount.x) * m_FrameSize.y);
 		Iw2DDrawImageRegion(m_Image, drawPos, offset, m_FrameSize);
 		if (ShowColliderPos)
-		{
 			if (m_hasCollider)
 				m_Collider->Draw();
-		}
 	} 
 	else
 	{
 		Iw2DDrawImage(m_Image, drawPos);
 		if (ShowColliderPos)
-		{
 			if (m_hasCollider)
 				m_Collider->Draw();
-		}
 	}
 }
 
@@ -210,10 +207,8 @@ void Sprite::Draw(CIwSVec2& camPos)
 	{
 		Iw2DDrawImage(m_Image, drawPos);
 		if (ShowColliderPos)
-		{
 			if (m_hasCollider)
 				m_Collider->Draw();
-		}
 	}
 }
 
