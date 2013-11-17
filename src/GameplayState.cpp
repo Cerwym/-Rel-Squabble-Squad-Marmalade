@@ -51,6 +51,8 @@ void GameplayState::Init()
 	m_UpPressed = false;
 	m_gameOver = false;
 	m_MouseClicked = false;
+	TEMP_HASPLAYED = false;
+
 
 	m_Cam = new Camera;
 	m_Cam->SetPosition(CIwSVec2(0, 0));
@@ -66,6 +68,8 @@ void GameplayState::Init()
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("audio\\bgmusic.mp3", 0);
+
+	buttonSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec"));
 
 	printf("GameplayState initialized\n");
 }
@@ -106,7 +110,7 @@ void GameplayState::Resume()
 void GameplayState::SpawnCharacters()
 {
 	// Dave (big), Nigel (small), Mandy (girl)
-	characters[0] = new Sprite("dave", true);
+	characters[0] = new Sprite("dave_anim", true, CIwFVec2(4,1));
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
 	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
 	characters[0]->SetMovSpeed(CIwFVec2(2,0)); // Moves 2 units fast in the x axis (slow)
@@ -116,7 +120,7 @@ void GameplayState::SpawnCharacters()
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
 	characters[1]->SetMovSpeed(CIwFVec2(5,0)); // Moves 5 units fast in the x axis (fastest)
 
-	characters[2] = new Sprite("mandy", true);
+	characters[2] = new Sprite("mandy_anim", true, CIwFVec2(4,1));
 	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
 	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
 	characters[2]->SetMovSpeed(CIwFVec2(3,0)); // Moves 3 units fast in the x axis (faster than dave, slower than nigel)
@@ -142,6 +146,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 		std::cout << "Up pressed" << std::endl;
 		m_UpPressed = true;
 	}
+
 	
     if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
     {
@@ -280,6 +285,11 @@ void GameplayState::CheckInterations(StateEngine* state)
 					{
 						t->Child()->IsActive = false;
 						count++;
+						//if (TEMP_HASPLAYED == false)
+						//{
+							buttonSound->Play();
+							//EMP_HASPLAYED = true;
+						//}
 					}
 
 					if ((i == NIGEL) && (t->Child()->GetType() == Elevator))

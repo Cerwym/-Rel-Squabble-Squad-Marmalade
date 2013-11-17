@@ -30,17 +30,53 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 				if( (buff[x] != '\r') || (buff[x] != '*'))
 				{
 
+					// graffiti tiles
+					if (buff[x] == 'g')
+					{
+						GameObject* t = new GameObject("graff_1", Scenerary, false);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
+						m_Map.push_back(t);
+					}
+
+					if (buff[x] == 'h')
+					{
+						GameObject* t = new GameObject("graff_2", Scenerary, false);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
+						m_Map.push_back(t);
+					}
+
+					if (buff[x] == 'j')
+					{
+						GameObject* t = new GameObject("graff_3", Scenerary, false);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
+						m_Map.push_back(t);
+					}
+
+					if (buff[x] == 'k')
+					{
+						GameObject* t = new GameObject("graff_4", Scenerary, false);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
+						m_Map.push_back(t);
+					}
+
+					if (buff[x] == 'l')
+					{
+						GameObject* t = new GameObject("graff_5", Scenerary, false);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
+						m_Map.push_back(t);
+					}
+
 					if (buff[x] == 'E')
 					{
 						GameObject* t = new GameObject("elevator", Elevator, true);
-						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32))); // its width
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32))); // its width
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'B')
 					{
 						GameObject* t = new GameObject("button", Button, true);
-						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32) + 20));
 						m_Objects.push_back(t);
 					}
 					
@@ -133,7 +169,7 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					if (buff[x] == 's')
 					{
 						GameObject* t = new GameObject("vent_support", Scenerary, true);
-						t->SetPosition(CIwFVec2(t->GetWidth() * x, (y * 32) - t->GetHeight())); // check if this is drawn in the right way
+						t->SetPosition(CIwFVec2((x * 32), ((y*32) + 32) - t->GetHeight())); // check if this is drawn in the right way
 						m_Map.push_back(t);
 					}
 
@@ -254,12 +290,14 @@ void TileMap::Draw() // make it aware of cam, if not on screen, don't draw
 {
 
 
-	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
+
+
+	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
+		(*it)->Draw();
+
+		for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
 		if ((*it)->IsActive == true)
 			(*it)->Draw();	
 	}
-
-	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
-		(*it)->Draw();
 }

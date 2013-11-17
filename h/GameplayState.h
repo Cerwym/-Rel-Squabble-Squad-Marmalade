@@ -6,6 +6,7 @@
 #include "IwGx.h"
 #include "Iw2D.h"
 #include "IwResManager.h"
+#include "IwSound.h"
 #include "sprite.h"
 #include "GameObject.h"
 #include "camera.h"
@@ -71,6 +72,9 @@ private:
 	bool m_isThrowing;
 	bool m_canThrow;
 	bool m_gameOver;
+
+	CIwSoundSpec* buttonSound;
+	bool TEMP_HASPLAYED;
 
 	std::vector<Sprite*> m_Layers;
 

@@ -2,7 +2,9 @@ CIwResGroup
 { 
 	name "Sprites" 
 		"./characters/dave.png"
+		"./characters/dave_anim.png"
 		"./characters/mandy.png"
+		"./characters/mandy_anim.png"
 		"./characters/nigel.png"
 		"./characters/nigel_anim.png"
 
@@ -11,7 +13,6 @@ CIwResGroup
 		"./portraits/nigel_port.png"
 		"./textures/collisionRect.png"
 		"./textures/target_sprite.png"
-
 
 		"./tiles/floor_left_1.png"
 		"./tiles/floor_repeatable_2.png"
@@ -35,6 +36,21 @@ CIwResGroup
 		"./objects/elevator.png"
 		"./objects/terminal.png"
 		
+		"./objects/graff_1.png"
+		"./objects/graff_2.png"
+		"./objects/graff_3.png"
+		"./objects/graff_4.png"
+		"./objects/graff_5.png"
+		
+		"./audio/Button01.wav"
+		CIwSoundSpec
+		{
+			name "button_clicked"
+			data "Button01"
+			loop false
+			vol 1.0
+		}
+		
 		"./tiles/exit.png"
 		"./textures/touchscreenMoveL.bmp"
 		"./textures/touchscreenMoveR.bmp"
@@ -42,5 +58,7 @@ CIwResGroup
 		"./background/layer2.png"
 		"./background/layer3.png"
 		"./background/layer4.png"
+	
 		fonts/font_small.gxfont
-} 
+}
+

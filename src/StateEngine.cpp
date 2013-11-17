@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 
 #include "StateEngine.h"
 #include "GameState.h"
@@ -66,7 +67,8 @@ void StateEngine::PushState(GameState* state)
 
 	// Store and init the new state
 	m_States.push_back(state);
-	m_States.back()->Init();
+	//m_States.back()->Init();
+	std::cout << "States existing = " << m_States.size() << std::endl;
 }
 
 void StateEngine::PopState()
