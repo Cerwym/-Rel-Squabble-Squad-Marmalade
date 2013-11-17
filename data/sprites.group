@@ -82,6 +82,14 @@ CIwResGroup
 			loop false
 			vol 1.0
 		}
+		"./audio/door_locked.wav"
+		CIwSoundSpec
+		{
+			name "locked_door"
+			data "door_locked"
+			loop false
+			vol 1.0
+		}
 
 		
 		"./tiles/exit.png"

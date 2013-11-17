@@ -72,6 +72,8 @@ void GameplayState::Init()
 
 	buttonSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec"));
 	terminalSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("terminal_selected", "CIwSoundSpec"));
+	doorSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("locked_door", "CIwSoundSpec"));
+	doorSoundInst = doorSound->Play();
 
 	printf("GameplayState initialized\n");
 }
@@ -295,6 +297,9 @@ void GameplayState::CheckInterations(StateEngine* state)
 							characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x - (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
 						else
 							characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x + (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
+
+						if (!doorSoundInst->IsPlaying())
+							doorSound->Play();
 					}
 				}
 			}

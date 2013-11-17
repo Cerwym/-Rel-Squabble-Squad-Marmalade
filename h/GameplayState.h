@@ -77,6 +77,9 @@ private:
 
 	CIwSoundSpec* buttonSound;
 	CIwSoundSpec* terminalSound;
+	CIwSoundSpec* doorSound;
+	CIwSoundInst* doorSoundInst;
+
 	bool TEMP_HASPLAYED;
 
 	std::vector<Sprite*> m_Layers;
