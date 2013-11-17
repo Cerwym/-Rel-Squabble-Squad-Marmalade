@@ -121,17 +121,24 @@ bool Sprite::isColliding(Sprite* other)
 		return false;
 }
 
-void Sprite::Update(float deltaTime)
+void Sprite::MoveBy(const CIwFVec2& position, double dt) 
 {
 	m_LastPosition = m_Position;
-	// update animation
+	m_Position += CIwFVec2(static_cast<float>(position.x), static_cast<float>((position.y)));
 	if (m_Animated)
 	{
-		m_CurrentFrame += m_AnimSpeed * deltaTime;
+		m_CurrentFrame += m_AnimSpeed * dt;
 		if (m_CurrentFrame > (m_FrameCount.x * m_FrameCount.y))
 			m_CurrentFrame = 0;
 	}
 
+	// Play walking sound
+	//Playwalkingsound() Disabled because it constantly fires
+}
+
+void Sprite::Update(float deltaTime)
+{
+	m_LastPosition = m_Position;
 	// Update gravity
 	if ((TEMP_ISCOLLIDING == false)) // and has jumped
 	{

@@ -35,6 +35,7 @@ void GameplayState::Init()
 	n_guiButtons[1]->SetPosition(CIwFVec2(414, 260));
 	n_guiButtons[1]->BuildCollision("textures\\touchScreenMoveR.bmp");
 
+
 	m_throwingTarget = new Sprite("target_sprite", true);
 
 	screenHeight = Iw2DGetSurfaceHeight();
@@ -70,6 +71,7 @@ void GameplayState::Init()
 		s3eAudioPlay("audio\\bgmusic.mp3", 0);
 
 	buttonSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec"));
+	terminalSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("terminal_selected", "CIwSoundSpec"));
 
 	printf("GameplayState initialized\n");
 }
@@ -116,19 +118,24 @@ void GameplayState::SpawnCharacters()
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
 	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
 	characters[0]->SetMovSpeed(CIwFVec2(2,0)); // Moves 2 units fast in the x axis (slow)
+	m_PortraitSounds[0] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("dave_selected", "CIwSoundSpec"));
 
 	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(4,1));
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
 	characters[1]->SetMovSpeed(CIwFVec2(5,0)); // Moves 5 units fast in the x axis (fastest)
+	m_PortraitSounds[1] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("nigel_selected", "CIwSoundSpec"));
 
 	characters[2] = new Sprite("mandy_anim", true, CIwFVec2(4,1));
 	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
 	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
 	characters[2]->SetMovSpeed(CIwFVec2(3,0)); // Moves 3 units fast in the x axis (faster than dave, slower than nigel)
+	m_PortraitSounds[2] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("mandy_selected", "CIwSoundSpec"));
 
 	for (int i = 0; i < 3; i++)
+	{
 		characters[i]->ShowColliderPos = true;
+	}
 
 }
 
@@ -162,15 +169,24 @@ void GameplayState::HandleEvent(StateEngine* state)
 				{
 					m_Cam->SetPosition(CIwSVec2(static_cast<int16>(-characters[i]->GetPosition().x + (screenWidth /2)), static_cast<int16>(-characters[i]->GetPosition().y + (screenHeight - characters[i]->GetHeight()))));
 					m_CharacterIndex = i; // Set the character to be the element that was collided against
+					m_PortraitSounds[i]->Play();
 				}
 			}
 		}
 
 		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY())))) // Left Arrow Button
-			characters[m_CharacterIndex]->MoveBy(CIwSVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0)); // extend this to have char_movespeed in;
+		{
+			CIwFVec2 val = CIwFVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0);
+			characters[m_CharacterIndex]->MoveBy(val, state->m_deltaTime);
+			//ScrollBackground(val);
+		}
 
 		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))
-			characters[m_CharacterIndex]->MoveBy(CIwSVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x, 0));
+		{
+			CIwFVec2 val = CIwFVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x, 0);
+			characters[m_CharacterIndex]->MoveBy(val, state->m_deltaTime);
+			//ScrollBackground(val);
+		}
 
 		if (characters[DAVE]->isColliding(characters[NIGEL]->GetPosition()) && (m_canThrow == false) && m_CharacterIndex == DAVE)
 		{
@@ -273,7 +289,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 					if (t->IsActive)
 					{
 						std::cout << "Resetting position" << std::endl;
-						 // To dissalow the movement of the player through doors, if a collision is detected and the door is active, move in the inverse direciton
+						 // To disallow the movement of the player through doors, if a collision is detected and the door is active, move in the inverse direction
 
 						if (characters[c]->GetPosition().x < t->GetPosition().x)
 							characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x - (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
@@ -368,6 +384,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 
 				if (m_activeTerminal->Child()->GetType() == Elevator)
 				{
+					terminalSound->Play();
 
 					if (characters[DAVE]->isColliding(m_activeTerminal->Child()))
 						characters[DAVE]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[DAVE]->GetPosition().y - 150));
@@ -406,4 +423,13 @@ void GameplayState::Draw(StateEngine* state)
 
 	for (int i = 0; i < 2; i++)
 		n_guiButtons[i]->Draw(m_Cam->GetPosition());
+}
+
+void GameplayState::ScrollBackground(CIwFVec2& scrollBy)
+{
+	for (int i = 0; i < m_Layers.size(); i++)
+	{
+		m_Layers.at(i)->MoveBy(
+			CIwFVec2(scrollBy.x - (i * 1.5), (0 * i) - scrollBy.y), 0);
+	}
 }

@@ -124,17 +124,41 @@ ResGroupResources:
 	CIwSoundData (0xd5610dab)
 		"Button01" (0x324cc822)
 		Size: 18986
-	ResList 'CIwSoundData' pos:8135820 size:18996
+	CIwSoundData (0xd5610dab)
+		"dave_select" (0x177510a4)
+		Size: 95004
+	CIwSoundData (0xd5610dab)
+		"mandy_select" (0x4524bdfd)
+		Size: 94718
+	CIwSoundData (0xd5610dab)
+		"nigel_select" (0xf9d86f13)
+		Size: 50364
+	CIwSoundData (0xd5610dab)
+		"terminal_select" (0x8c666e0)
+		Size: 19362
+	ResList 'CIwSoundData' pos:8135820 size:278444
 
 	CIwSoundSpec (0xd569853c)
 		"button_clicked" (0xe0861b8f)
 		Size: 30
-	ResList 'CIwSoundSpec' pos:8154816 size:40
+	CIwSoundSpec (0xd569853c)
+		"dave_selected" (0xc8fbd70d)
+		Size: 30
+	CIwSoundSpec (0xd569853c)
+		"mandy_selected" (0x214c3ea6)
+		Size: 30
+	CIwSoundSpec (0xd569853c)
+		"nigel_selected" (0xd1b08d3c)
+		Size: 30
+	CIwSoundSpec (0xd569853c)
+		"terminal_selected" (0x53fbac49)
+		Size: 30
+	ResList 'CIwSoundSpec' pos:8414264 size:160
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:8154856 size:18063
+	ResList 'CIwGxFont' pos:8414424 size:18063
 
-ResGroupResources: Wrote 8172885 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 8432453 bytes to CIwResGroup "Sprites"
 

@@ -20,7 +20,6 @@ public:
 	inline void SetCenter(const CIwSVec2& center) { m_Center = center; }
 	inline CIwFVec2 GetPosition() { return m_Position; }
 	inline void SetPosition(const CIwFVec2& position) { m_Position = position; }
-	inline void MoveBy(const CIwSVec2& position) { m_LastPosition = m_Position;m_Position += CIwFVec2(static_cast<float>(position.x), static_cast<float>(position.y));}
 	inline void SetMovSpeed(const CIwFVec2& speed) { m_MovSpeed = speed; }
 	inline void ResetPosition() { m_Position = m_LastPosition;}
 	inline CIwFVec2 GetMovSpeed() {return m_MovSpeed;}
@@ -36,6 +35,7 @@ public:
 	void BuildCollision(CIwImage img);
 	CIwImage GetCollisionMap() const {return m_CollisionMap;}
 	void SetMaterial();
+	void MoveBy(const CIwFVec2& position, double dt);
 
 	inline iwangle GetRotation() { return m_Angle; }
 	inline void SetRotation(const iwangle& angle) { m_Angle = angle; }

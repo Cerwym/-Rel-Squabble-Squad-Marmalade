@@ -35,6 +35,7 @@ public:
 	// New functions
 	void CheckInterations(StateEngine* state);
 	void SpawnCharacters();
+	void ScrollBackground(CIwFVec2& scrollBy);
 
 protected:
 	GameplayState(){} // When called, the state MUST call its own Init() function.
@@ -62,6 +63,7 @@ private:
 	Sprite* n_guiButtons[2];
 	Sprite* characters[3];
 	Sprite* m_Portraits[3];
+	CIwSoundSpec* m_PortraitSounds[3];
 	GameObject* m_activeTerminal;
 
 	CIw2DFont* m_Font;
@@ -74,6 +76,7 @@ private:
 	bool m_gameOver;
 
 	CIwSoundSpec* buttonSound;
+	CIwSoundSpec* terminalSound;
 	bool TEMP_HASPLAYED;
 
 	std::vector<Sprite*> m_Layers;

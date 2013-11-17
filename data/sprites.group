@@ -50,6 +50,39 @@ CIwResGroup
 			loop false
 			vol 1.0
 		}
+		"./audio/dave_select.wav"
+		CIwSoundSpec
+		{
+			name "dave_selected"
+			data "dave_select"
+			loop false
+			vol 1.0
+		}
+		"./audio/mandy_select.wav"
+		CIwSoundSpec
+		{
+			name "mandy_selected"
+			data "mandy_select"
+			loop false
+			vol 1.0
+		}
+		"./audio/nigel_select.wav"
+		CIwSoundSpec
+		{
+			name "nigel_selected"
+			data "nigel_select"
+			loop false
+			vol 3.0
+		}
+		"./audio/terminal_select.wav"
+		CIwSoundSpec
+		{
+			name "terminal_selected"
+			data "terminal_select"
+			loop false
+			vol 1.0
+		}
+
 		
 		"./tiles/exit.png"
 		"./textures/touchscreenMoveL.bmp"
