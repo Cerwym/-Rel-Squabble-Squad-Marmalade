@@ -13,8 +13,7 @@ GameplayState GameplayState::m_GameplayState;
 
 void GameplayState::Init()
 {
-	IwGetResManager()->LoadGroup("sprites.group");
-
+	
 	m_Portraits[0] = new Sprite("dave_port", true);
 	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
 	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
@@ -71,10 +70,11 @@ void GameplayState::Init()
 		s3eAudioPlay("audio\\bgmusic.mp3", 0);
 
 	buttonSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec"));
+	buttonSoundInst = NULL;
 	terminalSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("terminal_selected", "CIwSoundSpec"));
+	terminalInst = NULL;
 	doorSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("locked_door", "CIwSoundSpec"));
-	doorSoundInst = doorSound->Play();
-
+	doorSoundInst = NULL;
 	printf("GameplayState initialized\n");
 }
 
@@ -84,6 +84,7 @@ void GameplayState::Destroy()
 	{
 		delete characters[i];
 		delete m_Portraits[i];
+		//delete m_PortraitSounds[i];
 	}
 
 	for (int i = 0; i < 2; i++)
@@ -93,12 +94,9 @@ void GameplayState::Destroy()
 		delete m_Font;
 
 	delete m_Cam;
-
 	delete m_Level;
 
-	delete buttonSound;
-
-	IwGetResManager()->DestroyGroup("Sprites");
+	//IwGetResManager()->DestroyGroup("Sprites");
 	printf("GameplayState Destroyed\n");
 
 }
@@ -156,6 +154,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 	if ( (s3eKeyboardGetState(s3eKeyUp) & S3E_POINTER_STATE_DOWN) && m_UpPressed == false)
 	{
 		std::cout << "Up pressed" << std::endl;
+		state->ChangeState(GameoverState::Instance());
 		m_UpPressed = true;
 	}
 
@@ -304,8 +303,15 @@ void GameplayState::CheckInterations(StateEngine* state)
 						else
 							characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x + (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
 
-						if (!doorSoundInst->IsPlaying())
-							doorSound->Play();
+						if (doorSoundInst == NULL)
+						{
+							doorSoundInst = doorSound->Play();
+						}
+						else
+						{
+							if (!doorSoundInst->IsPlaying())
+								doorSound->Play();
+						}
 					}
 				}
 			}
@@ -404,7 +410,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 						characters[NIGEL]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 110));
 
 					m_activeTerminal->Child()->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[MANDY]->GetPosition().y + 54));
-				//m_UpPressed = false;
 				}
 
 				if (m_activeTerminal->Child()->GetType() == Door)

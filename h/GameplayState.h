@@ -36,6 +36,7 @@ public:
 	void CheckInterations(StateEngine* state);
 	void SpawnCharacters();
 	void ScrollBackground(CIwFVec2& scrollBy);
+	void PlayEff(CIwSoundSpec* spec, CIwSoundInst* inst);
 
 protected:
 	GameplayState(){} // When called, the state MUST call its own Init() function.
@@ -64,6 +65,7 @@ private:
 	Sprite* characters[3];
 	Sprite* m_Portraits[3];
 	CIwSoundSpec* m_PortraitSounds[3];
+	CIwSoundInst* m_PortraitSoundInsts[3];
 	GameObject* m_activeTerminal;
 
 	CIw2DFont* m_Font;
@@ -76,7 +78,9 @@ private:
 	bool m_gameOver;
 
 	CIwSoundSpec* buttonSound;
+	CIwSoundInst* buttonSoundInst;
 	CIwSoundSpec* terminalSound;
+	CIwSoundInst* terminalInst;
 	CIwSoundSpec* doorSound;
 	CIwSoundInst* doorSoundInst;
 

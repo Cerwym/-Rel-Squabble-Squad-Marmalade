@@ -10,13 +10,13 @@ IntroState IntroState::m_IntroState;
 
 void IntroState::Init()
 {
-	IwGetResManager()->LoadGroup("introsprites.group");
+	//IwGetResManager()->LoadGroup("introsprites.group");
 
-	m_SplashImg1 = Iw2DCreateImageResource("logo");
-	m_SplashImg2 = Iw2DCreateImageResource("splash2");
+	m_Splash1 = new Sprite("logo", false);
+	m_Splash2 = new Sprite("splash2", false);
 
 	m_TransManager.Init();
-	m_TransitionState == FADE_IN;
+	m_TransitionState = FADE_IN;
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("audio\\music.mp3", 1);
@@ -26,9 +26,9 @@ void IntroState::Init()
 
 void IntroState::Destroy()
 {
-	IwGetResManager()->DestroyGroup("Intro");
-	delete m_SplashImg1;
-	delete m_SplashImg2;
+	//IwGetResManager()->DestroyGroup("Intro");
+	//delete m_Splash1;
+	//delete m_Splash2;
 	printf("IntroState Destroyed\n");
 }
 
@@ -56,7 +56,7 @@ void IntroState::Update(StateEngine* state, double dt)
 void IntroState::Draw(StateEngine* state)
 {
 	if (m_TransitionState == FADE_IN)
-		if (m_TransManager.TransitionIn(m_SplashImg1, state->m_deltaTime + 3.5))
+		if (m_TransManager.TransitionIn(m_Splash1->GetImage(), state->m_deltaTime + 3.5))
 		{
 			m_TransitionState = BETWEEN;
 			m_TransManager.Init();
@@ -64,14 +64,14 @@ void IntroState::Draw(StateEngine* state)
 		}
 
 	if (m_TransitionState == BETWEEN)
-		if (m_TransManager.TransitionBetween(m_SplashImg1, m_SplashImg2, state->m_deltaTime + 3.5))
+		if (m_TransManager.TransitionBetween(m_Splash1->GetImage(), m_Splash2->GetImage(), state->m_deltaTime + 3.5))
 		{
 			m_TransitionState = FADE_OUT;
 			m_TransManager.Init();
 		}
 
 	if (m_TransitionState == FADE_OUT)
-		if (m_TransManager.TransitionOut(m_SplashImg2, state->m_deltaTime + 3.5))
+		if (m_TransManager.TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 3.5))
 		{
 			m_TransManager.FinishTransition();
 			state->ChangeState(MainMenuState::Instance());//std::cout << "Finished transitioning" << std::endl;

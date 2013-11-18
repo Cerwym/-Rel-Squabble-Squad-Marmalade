@@ -39,6 +39,7 @@ public:
 	void BuildCollision(const char* fname);
 	void BuildCollision(CIwImage img);
 	CIwImage GetCollisionMap() const {return m_CollisionMap;}
+	CIw2DImage* GetImage() const {return m_Image;}
 	void SetMaterial();
 	void MoveBy(const CIwFVec2& position, double dt);
 

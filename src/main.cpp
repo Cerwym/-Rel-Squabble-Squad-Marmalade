@@ -13,6 +13,8 @@
 #include "s3e.h"
 #include "StateEngine.h"
 #include "IntroState.h"
+#include "GameoverState.h"
+
 
 StateEngine engine;
 

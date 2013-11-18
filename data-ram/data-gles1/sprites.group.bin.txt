@@ -1,5 +1,17 @@
 ResGroupResources:
 	CIwTexture (0x3521f539)
+		"logo" (0x7c9a2e56)
+		Size: 460836
+	CIwTexture (0x3521f539)
+		"splash2" (0xa5442c82)
+		Size: 614436
+	CIwTexture (0x3521f539)
+		"menu_image" (0x7b310cdc)
+		Size: 614436
+	CIwTexture (0x3521f539)
+		"game_over" (0xe3a8a5a)
+		Size: 460836
+	CIwTexture (0x3521f539)
 		"dave" (0x7c9591a5)
 		Size: 40036
 	CIwTexture (0x3521f539)
@@ -119,7 +131,7 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
 		Size: 1843236
-	ResList 'CIwTexture' pos:38 size:8135782
+	ResList 'CIwTexture' pos:38 size:10286326
 
 	CIwSoundData (0xd5610dab)
 		"Button01" (0x324cc822)
@@ -139,7 +151,7 @@ ResGroupResources:
 	CIwSoundData (0xd5610dab)
 		"door_locked" (0x1055bbca)
 		Size: 77684
-	ResList 'CIwSoundData' pos:8135820 size:356128
+	ResList 'CIwSoundData' pos:10286364 size:356128
 
 	CIwSoundSpec (0xd569853c)
 		"button_clicked" (0xe0861b8f)
@@ -159,12 +171,12 @@ ResGroupResources:
 	CIwSoundSpec (0xd569853c)
 		"locked_door" (0x9ac85ca)
 		Size: 30
-	ResList 'CIwSoundSpec' pos:8491948 size:190
+	ResList 'CIwSoundSpec' pos:10642492 size:190
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:8492138 size:18063
+	ResList 'CIwGxFont' pos:10642682 size:18063
 
-ResGroupResources: Wrote 8510167 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 10660711 bytes to CIwResGroup "Sprites"
 

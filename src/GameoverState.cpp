@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <iostream>
 #include "StateEngine.h"
 #include "GameState.h"
 #include "GameoverState.h" // The current state
@@ -9,13 +10,17 @@ GameoverState GameoverState::m_GameOverState;
 
 void GameoverState::Init()
 {
-	IwGetResManager()->LoadGroup("gameoversprites.group");
-	m_menuImage = Iw2DCreateImageResource("game_over");
+	//IwGetResManager()->LoadGroup("gameoversprites.group");
+	m_menuImage = new Sprite("game_over", false);
+	m_Transmanager.Init();
 	printf("GameoverState initialized\n");
 }
 
 void GameoverState::Destroy()
 {
+	//if (m_menuImage != NULL)
+		//delete m_menuImage;
+	// IwGetResManager()->DestroyGroup("gameover");
 	printf("GameoverState Destroyed\n");
 }
 
@@ -45,5 +50,6 @@ void GameoverState::Update(StateEngine* state, double dt)
 
 void GameoverState::Draw(StateEngine* state)
 {
-	Iw2DDrawImage(m_menuImage, CIwSVec2(0,0));
+	if (m_Transmanager.TransitionIn(m_menuImage->GetImage(), state->m_deltaTime + 3.5))
+		m_menuImage->Draw();
 }

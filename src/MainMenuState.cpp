@@ -9,13 +9,15 @@ MainMenuState MainMenuState::m_MainMenuState;
 
 void MainMenuState::Init()
 {
-	IwGetResManager()->LoadGroup("mainmenusprites.group");
-	m_menuImage = Iw2DCreateImageResource("menu_image");
+	//IwGetResManager()->LoadGroup("mainmenusprites.group");
+	m_menuImage = new Sprite("menu_image", false);
 	printf("MainMenuState initialized\n");
 }
 
 void MainMenuState::Destroy()
 {
+	//delete m_menuImage;
+	//IwGetResManager()->DestroyGroup("MainMenu");
 	printf("MainMenuState Destroyed\n");
 }
 
@@ -45,5 +47,5 @@ void MainMenuState::Update(StateEngine* state, double dt)
 
 void MainMenuState::Draw(StateEngine* state)
 {
-	Iw2DDrawImage(m_menuImage, CIwSVec2(0,0));
+	m_menuImage->Draw();
 }

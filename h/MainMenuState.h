@@ -5,6 +5,7 @@
 #include "Iw2D.h"
 #include "s3e.h"
 #include "IwResManager.h"
+#include "sprite.h"
 
 class MainMenuState : public GameState
 {
@@ -32,7 +33,7 @@ private:
 	CIwFVec2 m_Position;
 	CIwSVec2 m_Size;
 
-	CIw2DImage* m_menuImage;
+	Sprite* m_menuImage;
 };
 
 #endif

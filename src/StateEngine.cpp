@@ -21,6 +21,8 @@ void StateEngine::Init(const char* title)
 	// Tell resource system how to convert WAV files
 	IwGetResManager()->AddHandler(new CIwResHandlerWAV);
 #endif
+	
+	IwGetResManager()->LoadGroup("sprites.group");
 	printf("Engine Initialized\n");
 }
 
@@ -34,6 +36,7 @@ void StateEngine::Destroy()
 		m_States.pop_back();
 	}
 
+	IwGetResManager()->DestroyGroup("Sprites");
 	IwResManagerTerminate();
 	Iw2DTerminate();
 	printf("Engine cleaned up\n");

@@ -11,7 +11,7 @@ Camera::Camera()
 
 Camera::~Camera()
 {
-
+	Iw2DSetTransformMatrix(CIwMat2D::g_Identity);
 }
 
 void Camera::Update()

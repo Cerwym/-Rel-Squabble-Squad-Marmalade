@@ -110,7 +110,7 @@ CIwResource*    CIwResHandlerWAV::Build(const CIwStringL& pathname)
             const char* g_IgnoreTypes = "LIST" //LIST is just copyright info etc.
                 "DISP";  //DISP seems to be info about what package exported it
 
-            IwAssertMsg(SOUND, strstr(g_IgnoreTypes, typeID), ("Unhandled chunk type '%s' in %s. Ignoring this data.", typeID, m_Pathname.c_str()));
+            //IwAssertMsg(SOUND, strstr(g_IgnoreTypes, typeID), ("Unhandled chunk type '%s' in %s. Ignoring this data.", typeID, m_Pathname.c_str()));
         }
 
         // Exit if at end of file
