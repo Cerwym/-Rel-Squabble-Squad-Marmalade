@@ -10,6 +10,8 @@
 #define GRAVITY 0.278f
 #define JUMP_HEIGHT 128
 
+enum FACING{FACING_RIGHT = 0, FACING_LEFT = 1}; 
+
 class Sprite
 {
 public:
@@ -30,6 +32,9 @@ public:
 		m_Position = t;
 		return t;
 	}
+
+	inline int GetDirection(){return m_facingDir;}
+	inline void SetDirection(FACING f) {m_facingDir = f;}
 
 	void BuildCollision(const char* fname);
 	void BuildCollision(CIwImage img);
@@ -93,6 +98,8 @@ private:
 	CIw2DImage* m_Image;
 	Collider* m_Collider;
 	CIwImage m_CollisionMap; // 8bit version of the image's alpha channel.
+
+	FACING m_facingDir;
 
 };
 
