@@ -154,7 +154,6 @@ void GameplayState::HandleEvent(StateEngine* state)
 	if ( (s3eKeyboardGetState(s3eKeyUp) & S3E_POINTER_STATE_DOWN) && m_UpPressed == false)
 	{
 		std::cout << "Up pressed" << std::endl;
-		state->ChangeState(GameoverState::Instance());
 		m_UpPressed = true;
 	}
 

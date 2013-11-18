@@ -17,6 +17,7 @@ files
 	MainMenuState.cpp
 	GameplayState.cpp
 	GameoverState.cpp
+	TransitionManager.cpp
     (h)
     sprite.h
 	camera.h
@@ -30,6 +31,7 @@ files
 	MainMenuState.h
 	GameplayState.h
 	GameoverState.h
+	TransitionManager.h
 }
 
 assets
