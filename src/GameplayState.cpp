@@ -174,7 +174,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 			}
 		}
 
-		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY())))) // Left Arrow Button
+		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))) && (!characters[m_CharacterIndex]->CollisionLocation.Left) && (characters[m_CharacterIndex]->GetPosition().x > 32)) // Left Arrow Button
 		{
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_RIGHT)
 				characters[m_CharacterIndex]->SetDirection(FACING_LEFT);
@@ -184,7 +184,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 			//ScrollBackground(val);
 		}
 
-		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))
+		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))) && (!characters[m_CharacterIndex]->CollisionLocation.Right))
 		{
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_LEFT)
 				characters[m_CharacterIndex]->SetDirection(FACING_RIGHT);
@@ -204,7 +204,8 @@ void GameplayState::HandleEvent(StateEngine* state)
 					s3ePointerUpdate();
 					s3eKeyboardUpdate();
 					m_canThrow = true;
-					m_throwingTarget->SetPosition((CIwFVec2(s3ePointerGetX() - (float)m_Cam->GetPosition().x , s3ePointerGetY() - (float)m_Cam->GetPosition().y )));
+					// Set the target to reach to be where the center of the pointer is.
+					m_throwingTarget->SetPosition((CIwFVec2((s3ePointerGetX() - (float)m_Cam->GetPosition().x)  - ( m_throwingTarget->GetWidth() /2) , (s3ePointerGetY() - (float)m_Cam->GetPosition().y ) - (m_throwingTarget->GetHeight() /2))));
 					m_throwingTarget->UpdateCollider();
 					
 					// Draw the current state or else we'll be in a loop that will show no updated frame
@@ -270,7 +271,8 @@ void GameplayState::CheckInterations(StateEngine* state)
 	{
 		for (size_t m = 0; m < m_Level->GetMap().size(); m++)
 		{
-			bool v = m_Level->GetMap().at(m)->isColliding(characters[c]);
+			GameObject *t = m_Level->GetMap().at(m);
+			bool v = t->isColliding(characters[c]);
 
 			if (v == true)
 			{
@@ -294,14 +296,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 				{
 					if (t->IsActive)
 					{
-						std::cout << "Resetting position" << std::endl;
-						 // To disallow the movement of the player through doors, if a collision is detected and the door is active, move in the inverse direction
-
-						if (characters[c]->GetPosition().x < t->GetPosition().x)
-							characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x - (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
-						else
-							characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x + (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
-
+						if (characters[c]->CollisionLocation.Right == false && characters[c]->CollisionLocation.Left == false){
 						if (doorSoundInst == NULL)
 						{
 							doorSoundInst = doorSound->Play();
@@ -310,9 +305,20 @@ void GameplayState::CheckInterations(StateEngine* state)
 						{
 							if (!doorSoundInst->IsPlaying())
 								doorSound->Play();
-						}
+						}}
+
+						if (characters[c]->GetPosition().x < t->GetPosition().x)
+							characters[c]->CollisionLocation.Right = true; //characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x - (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
+						else
+							characters[c]->CollisionLocation.Left = true;
 					}
 				}
+				c++;
+			}
+			else
+			{
+				characters[c]->CollisionLocation.Right = false;
+				characters[c]->CollisionLocation.Left = false;
 			}
 		}
 	}
@@ -423,21 +429,22 @@ void GameplayState::Draw(StateEngine* state)
 
 	for (int i = 0; i < 4; i++)
 	{
-		m_Layers.at(i)->Draw(m_Cam->GetPosition());
+		m_Layers.at(i)->Draw(m_Cam);
 	}
-	m_Level->Draw();
+
+	m_Level->Draw(m_Cam); // TODO: Don't draw elements in the level that are off screen
 
 	for (int i = 0; i <3; i++)
 	{
 		characters[i]->Draw();
-		m_Portraits[i]->Draw(m_Cam->GetPosition());		
+		m_Portraits[i]->Draw(m_Cam);		
 	}
 
 	if (m_canThrow)
 		m_throwingTarget->Draw();
 
 	for (int i = 0; i < 2; i++)
-		n_guiButtons[i]->Draw(m_Cam->GetPosition());
+		n_guiButtons[i]->Draw(m_Cam);
 }
 
 void GameplayState::ScrollBackground(CIwFVec2& scrollBy)

@@ -23,6 +23,7 @@ Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),m_A
 		m_Collider = new Collider(m_Position, m_Width, m_Height);
 	}
 	m_facingDir = FACING_RIGHT;
+	m_onCam = false;
 }
 
 Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0),m_MovSpeed(0,0),m_Angle(0),m_Animated(true)
@@ -39,6 +40,7 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 	ShowColliderPos = false;
 	m_hasCollider = flag;
 	m_facingDir = FACING_RIGHT;
+	m_onCam = false;
 
 	// 1/2 frame every game second
 	SetAnimated(true, 0.5, frameCount);
@@ -118,7 +120,14 @@ bool Sprite::isColliding(Sprite* other)
 	IW_CALLSTACK("Sprite::isColliding");
 
 	if (m_hasCollider && other->hasCollider())
-		return(m_Collider->isColliding(other->m_Collider));
+	{
+		bool v = m_Collider->isColliding(other->m_Collider);
+		/*CollisionLocation.Left = m_Collider->GetLeft();
+		CollisionLocation.Right = m_Collider->GetRight();
+		CollisionLocation.Top = m_Collider->GetTop();
+		CollisionLocation.Bottom = m_Collider->GetBottom();*/
+		return v;
+	}
 	else
 		return false;
 }
@@ -208,8 +217,10 @@ void Sprite::Draw()
 }
 
 // Give the camera's position to keep the sprites on screen
-void Sprite::Draw(CIwSVec2& camPos) 
+void Sprite::Draw(Camera* cam) 
 {
+	CIwSVec2 camPos = cam->GetPosition();
+
 	if (m_facingDir == FACING_RIGHT)
 		Iw2DSetImageTransform(IW_2D_IMAGE_TRANSFORM_NONE);
 	else if (m_facingDir == FACING_LEFT)

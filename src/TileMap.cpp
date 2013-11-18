@@ -286,16 +286,15 @@ void TileMap::AddRelationships(const char* rFile)
 	std::cout << "Relationships added" << std::endl;
 }
 
-void TileMap::Draw() // make it aware of cam, if not on screen, don't draw
+void TileMap::Draw(Camera* cam) // make it aware of cam, if not on screen, don't draw
 {
-
-
-
-
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
+	{
+		// If it is on camera, draw it
 		(*it)->Draw();
+	}
 
-		for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
+	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
 		if ((*it)->IsActive == true)
 			(*it)->Draw();	

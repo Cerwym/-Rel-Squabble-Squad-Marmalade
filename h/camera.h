@@ -27,10 +27,7 @@ public:
 	}
 
 	inline CIwMat2D GetTranslation(){return m_Transform;}
-	
-	void Debug_PrintPosition();
 
-	void Update();
 	CIwSVec2 Position;
 private:
 

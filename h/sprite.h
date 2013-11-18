@@ -11,6 +11,8 @@
 #define JUMP_HEIGHT 128
 
 enum FACING{FACING_RIGHT = 0, FACING_LEFT = 1}; 
+struct CollLoc{ bool Top; bool Bottom; bool Left;bool Right;
+};
 
 class Sprite
 {
@@ -57,7 +59,7 @@ public:
 	void SetAnimated(const bool animated, float speed, CIwFVec2 frameCount = CIwFVec2());
 	void Update(const float deltaTime);
 	void Draw();
-	void Draw(CIwSVec2& camPos);
+	void Draw(Camera* cam);
 	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other);
@@ -70,6 +72,8 @@ public:
 	bool TEMP_LANDEDJUMP;
 	bool TEMP_ISCOLLIDING;
 
+	CollLoc CollisionLocation;
+
 protected:
 
 private:
@@ -77,10 +81,11 @@ private:
 	CIwFVec2 m_Position; // Screen position
 	CIwFVec2 m_LastPosition;
 	CIwFVec2 m_MovSpeed;
-	
+
 	iwangle m_Angle;
 	bool m_Animated;
 	bool m_hasCollider;
+	bool m_onCam;
 	float m_AnimSpeed;
 	float m_CurrentFrame;
 	float m_yVel;

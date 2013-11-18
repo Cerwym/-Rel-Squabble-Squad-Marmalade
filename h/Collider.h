@@ -18,6 +18,12 @@ public:
 
 	bool isColliding(Collider* other);
 
+	// Polish this up
+	bool GetTop(){return m_CollisionLocation.Top;}
+	bool GetBottom(){return m_CollisionLocation.Bottom;}
+	bool GetLeft(){return m_CollisionLocation.Left;}
+	bool GetRight(){return m_CollisionLocation.Right;}
+
 	void DEBUG_PRINTPOS();
 
 private:
@@ -32,6 +38,9 @@ private:
 
 	CIwFVec2 m_OldTL;
 	CIwFVec2 m_OldBR;
+
+	struct CollLoc{ bool Top; bool Bottom; bool Left;bool Right;
+	}; CollLoc m_CollisionLocation;
 };
 
 #endif
