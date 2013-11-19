@@ -34,6 +34,7 @@ public:
 public:
 	// New functions
 	void CheckInterations(StateEngine* state);
+	void CheckCollisions(const int &pCharacter);
 	void SpawnCharacters();
 	void ScrollBackground(CIwFVec2& scrollBy);
 	void PlayEff(CIwSoundSpec* spec, CIwSoundInst* inst);

@@ -7,12 +7,14 @@
 #include "camera.h"
 #include "Collider.h"
 
-#define GRAVITY 0.278f
+#define GRAVITY 6.78f
 #define JUMP_HEIGHT 128
 
 enum FACING{FACING_RIGHT = 0, FACING_LEFT = 1}; 
-struct CollLoc{ bool Top; bool Bottom; bool Left;bool Right;
-};
+struct CollLoc
+{ 
+	bool Top; bool Bottom; bool Left;bool Right;
+	CollLoc():Top(false),Bottom(false),Left(false),Right(false){}};
 
 class Sprite
 {
@@ -51,6 +53,8 @@ public:
 	inline float GetHeight(){return m_Height;}
 	inline float GetWidth(){return m_Width;}
 
+	CIwFVec2 GetLastPosition(){return m_LastPosition;}
+
 	bool hasCollider(){ return m_hasCollider;}
 
 	void SetVelocity(float v){m_yVel = v;}
@@ -63,11 +67,14 @@ public:
 	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other);
+	CIwFVec2 isCollidingC(Sprite* other);
+
+	// THis function will take in the intended move by values and test to see if a collision WILL happen, if a collision WILL happen, the function will return true, then you should move by the inverse of x,y
+	bool isCollidingOnStep(Sprite* other, const CIwFVec2&);
 
 	void Debug_PrintPos();
 	bool ShowColliderPos;
 
-	bool TEMP_ISFALLING;
 	bool TEMP_JUSTJUMPED;
 	bool TEMP_LANDEDJUMP;
 	bool TEMP_ISCOLLIDING;

@@ -14,6 +14,7 @@
 #include "StateEngine.h"
 #include "IntroState.h"
 #include "GameoverState.h"
+#include "GameplayState.h"
 
 
 StateEngine engine;
@@ -22,7 +23,7 @@ int main()
 {
     // create game object
 	engine.Init("Game");
-	engine.ChangeState(IntroState::Instance());
+	engine.ChangeState(GameplayState::Instance());
     
 	while(engine.Running())
 	{

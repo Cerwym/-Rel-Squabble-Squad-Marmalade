@@ -12,7 +12,6 @@ Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),m_A
 	m_Name = name;
 
 	m_Center = CIwSVec2(static_cast<int16>(m_Width) / 2, static_cast<int16>(m_Height) / 2);
-	TEMP_ISFALLING = true;
 	TEMP_JUSTJUMPED = false;
 	TEMP_LANDEDJUMP = true;
 	TEMP_ISCOLLIDING = false;
@@ -33,7 +32,6 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 	m_yVel = 0;
 	m_Name = name;
 
-	TEMP_ISFALLING = true;
 	TEMP_JUSTJUMPED = false;
 	TEMP_LANDEDJUMP = true;
 	TEMP_ISCOLLIDING = false;
@@ -122,14 +120,40 @@ bool Sprite::isColliding(Sprite* other)
 	if (m_hasCollider && other->hasCollider())
 	{
 		bool v = m_Collider->isColliding(other->m_Collider);
-		/*CollisionLocation.Left = m_Collider->GetLeft();
-		CollisionLocation.Right = m_Collider->GetRight();
-		CollisionLocation.Top = m_Collider->GetTop();
-		CollisionLocation.Bottom = m_Collider->GetBottom();*/
+
 		return v;
 	}
 	else
 		return false;
+}
+
+bool Sprite::isCollidingOnStep(Sprite* other, const CIwFVec2& step)
+{
+	IW_CALLSTACK("Sprite::isCollidingOnStep");
+
+	if (m_hasCollider && other->hasCollider())
+	{
+		Collider* stepCollider = m_Collider;
+		stepCollider->SetPosition(stepCollider->GetPosition() + step);
+		bool v = stepCollider->isColliding(other->m_Collider);
+		return v;
+	}
+
+	return false;
+}
+
+CIwFVec2 Sprite::isCollidingC(Sprite* other)
+{
+	if (m_hasCollider && other->hasCollider())
+	{
+		CollisionLocation.Left = m_Collider->GetLeft();
+		CollisionLocation.Right = m_Collider->GetRight();
+		CollisionLocation.Bottom = m_Collider->GetBottom();
+		CollisionLocation.Top = m_Collider->GetTop();
+		return m_Collider->isCollidingC(other->m_Collider);
+	}
+
+	//return CIwFVec2(0,0);
 }
 
 void Sprite::MoveBy(const CIwFVec2& position, double dt) 
@@ -151,16 +175,9 @@ void Sprite::Update(float deltaTime)
 {
 	m_LastPosition = m_Position;
 	// Update gravity
-	if ((TEMP_ISCOLLIDING == false)) // and has jumped
-	{
-		m_yVel += GRAVITY;
-		m_Position.y += (m_yVel);// / 8);
-	}
-	else
-	{
-		if (!TEMP_JUSTJUMPED)
-			m_yVel = 0;
-	}
+	//m_yVel += GRAVITY;
+	if (!CollisionLocation.Top)
+		m_Position.y += (GRAVITY);// / 8);
 
 	if (TEMP_JUSTJUMPED == true && TEMP_LANDEDJUMP == true)
 	{
@@ -170,18 +187,19 @@ void Sprite::Update(float deltaTime)
 
 	if (TEMP_JUSTJUMPED == true)
 	{
-		m_yVel += GRAVITY;
-		m_Position.y += (-m_yVel * 2);
+		m_Position.y -= (GRAVITY * 2);
 		if (m_Position.y <= (TEMP_BEFOREJUMPY - JUMP_HEIGHT))
 		{
-			m_yVel = 0;
 			TEMP_JUSTJUMPED = false;
+/*
 			TEMP_ISFALLING = true;
 			TEMP_LANDEDJUMP = true;
 			TEMP_ISCOLLIDING = false;
+*/
 		}
 	}
-		UpdateCollider();
+	
+	UpdateCollider();
 }
 
 void Sprite::UpdateCollider()

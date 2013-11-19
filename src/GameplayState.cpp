@@ -174,17 +174,16 @@ void GameplayState::HandleEvent(StateEngine* state)
 			}
 		}
 
-		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))) && (!characters[m_CharacterIndex]->CollisionLocation.Left) && (characters[m_CharacterIndex]->GetPosition().x > 32)) // Left Arrow Button
+		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))// && (characters[m_CharacterIndex]->GetPosition().x > 32)) // Left Arrow Button
 		{
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_RIGHT)
 				characters[m_CharacterIndex]->SetDirection(FACING_LEFT);
 
 			CIwFVec2 val = CIwFVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0);
 			characters[m_CharacterIndex]->MoveBy(val, state->m_deltaTime);
-			//ScrollBackground(val);
 		}
 
-		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))) && (!characters[m_CharacterIndex]->CollisionLocation.Right))
+		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))
 		{
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_LEFT)
 				characters[m_CharacterIndex]->SetDirection(FACING_RIGHT);
@@ -225,13 +224,11 @@ void GameplayState::HandleEvent(StateEngine* state)
 	if (m_isThrowing)
 	{
 		characters[NIGEL]->LerpTo(CIwFVec2(m_throwingTarget->GetPosition().x, m_throwingTarget->GetPosition().y), 0.05f);
-		characters[NIGEL]->TEMP_ISFALLING = false;
 		characters[NIGEL]->UpdateCollider();
 		if (characters[NIGEL]->isColliding(m_throwingTarget))
 		{
 			m_canThrow = false;
 			m_isThrowing = false;
-			characters[NIGEL]->TEMP_ISFALLING = true;
 			characters[NIGEL]->TEMP_ISCOLLIDING = false;
 		}
 	}
@@ -242,7 +239,10 @@ void GameplayState::HandleEvent(StateEngine* state)
 
 void GameplayState::Update(StateEngine* state, double dt)
 {
-	CheckInterations(state);
+	for (int i = 0; i <3; i++)
+		CheckCollisions(i);
+
+	//CheckInterations(state);
 
 	characters[DAVE]->Update(dt);
 	characters[MANDY]->Update(dt);
@@ -260,6 +260,32 @@ void GameplayState::Update(StateEngine* state, double dt)
 		m_SpacePressed = false;
 }
 
+void GameplayState::CheckCollisions(const int &pCharacter)
+{
+	characters[pCharacter]->UpdateCollider();
+	for (size_t m = 0; m < m_Level->GetMap().size(); m++)
+	{
+		GameObject *t = m_Level->GetMap().at(m);
+		if (characters[pCharacter]->isColliding(t))
+		{
+			CIwFVec2 collBy = characters[pCharacter]->isCollidingC(t);
+			std::cout << "Collision happened at " << collBy.x << "," << collBy.y << std::endl; 
+			characters[pCharacter]->SetPosition(characters[pCharacter]->GetLastPosition());
+		}
+	}
+
+	/*
+	Decompose movement into X and Y axes, step one at a time. If you’re planning on implementing slopes afterwards, step X first, then Y. Otherwise, the order shouldn’t matter much. Then, for each axis:
+	
+	Get the coordinate of the forward-facing edge, e.g. : If walking left, the x coordinate of left of bounding box. If walking right, x coordinate of right side. If up, y coordinate of top, etc.
+	
+	Figure which lines of tiles the bounding box intersects with – this will give you a minimum and maximum tile value on the OPPOSITE axis. 
+	For example, if we’re walking left, perhaps the player intersects with horizontal rows 32, 33 and 34 (that is, tiles with y = 32 * TS, y = 33 * TS, and y = 34 * TS, where TS = tile size).
+	Scan along those lines of tiles and towards the direction of movement until you find the closest static obstacle. Then loop through every moving obstacle, and determine which is the closest obstacle that is actually on your path.
+	The total movement of the player along that direction is then the minimum between the distance to closest obstacle, and the amount that you wanted to move in the first place.
+	Move player to the new position. With this new position, step the other coordinate, if still not done.*/
+}
+
 void GameplayState::CheckInterations(StateEngine* state)
 {
 	int count = 0;
@@ -269,22 +295,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 	// Check if the characters are colliding with any floor tiles, if they are set their collision value to true and break, if not continue to poll the remaining tiles.
 	for (int c = 0; c < 3; c++)
 	{
-		for (size_t m = 0; m < m_Level->GetMap().size(); m++)
-		{
-			GameObject *t = m_Level->GetMap().at(m);
-			bool v = t->isColliding(characters[c]);
-
-			if (v == true)
-			{
-				characters[c]->TEMP_ISCOLLIDING = true;
-				break;
-			}
-			else
-			{
-				characters[c]->TEMP_ISCOLLIDING = false;
-			}
-		}
-
 		// Check to see if any of the characters are colliding with 
 		for (size_t o = 0; o < m_Level->GetObjects().size(); o++)
 		{
