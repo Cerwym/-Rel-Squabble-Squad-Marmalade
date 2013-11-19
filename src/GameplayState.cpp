@@ -242,7 +242,7 @@ void GameplayState::Update(StateEngine* state, double dt)
 	for (int i = 0; i <3; i++)
 		CheckCollisions(i);
 
-	//CheckInterations(state);
+	CheckInterations(state);
 
 	characters[DAVE]->Update(dt);
 	characters[MANDY]->Update(dt);
