@@ -96,23 +96,26 @@ ResGroupResources:
 		"terminal" (0xfa1db361)
 		Size: 8228
 	CIwTexture (0x3521f539)
-		"graff_1" (0xd6f1c9b)
-		Size: 49188
-	CIwTexture (0x3521f539)
-		"graff_2" (0xd6f1c9c)
-		Size: 49188
-	CIwTexture (0x3521f539)
-		"graff_3" (0xd6f1c9d)
-		Size: 49188
-	CIwTexture (0x3521f539)
-		"graff_4" (0xd6f1c9e)
-		Size: 49188
-	CIwTexture (0x3521f539)
-		"graff_5" (0xd6f1c9f)
-		Size: 49188
-	CIwTexture (0x3521f539)
 		"exit" (0x7c967e3f)
 		Size: 4132
+	CIwTexture (0x3521f539)
+		"portal_anim" (0x1f791d9b)
+		Size: 131108
+	CIwTexture (0x3521f539)
+		"graff1_anim" (0xcabc1f00)
+		Size: 393252
+	CIwTexture (0x3521f539)
+		"graff2_anim" (0xcd1147a1)
+		Size: 393252
+	CIwTexture (0x3521f539)
+		"graff3_anim" (0xcf667042)
+		Size: 393252
+	CIwTexture (0x3521f539)
+		"graff4_anim" (0xd1bb98e3)
+		Size: 393252
+	CIwTexture (0x3521f539)
+		"graff5_anim" (0xd410c184)
+		Size: 393252
 	CIwTexture (0x3521f539)
 		"touchscreenMoveL" (0xb035cb6b)
 		Size: 2132
@@ -131,7 +134,7 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
 		Size: 1843236
-	ResList 'CIwTexture' pos:38 size:10286326
+	ResList 'CIwTexture' pos:38 size:12137754
 
 	CIwSoundData (0xd5610dab)
 		"Button01" (0x324cc822)
@@ -151,7 +154,7 @@ ResGroupResources:
 	CIwSoundData (0xd5610dab)
 		"door_locked" (0x1055bbca)
 		Size: 77684
-	ResList 'CIwSoundData' pos:10286364 size:356128
+	ResList 'CIwSoundData' pos:12137792 size:356128
 
 	CIwSoundSpec (0xd569853c)
 		"button_clicked" (0xe0861b8f)
@@ -171,12 +174,12 @@ ResGroupResources:
 	CIwSoundSpec (0xd569853c)
 		"locked_door" (0x9ac85ca)
 		Size: 30
-	ResList 'CIwSoundSpec' pos:10642492 size:190
+	ResList 'CIwSoundSpec' pos:12493920 size:190
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:10642682 size:18063
+	ResList 'CIwGxFont' pos:12494110 size:18063
 
-ResGroupResources: Wrote 10660711 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 12512139 bytes to CIwResGroup "Sprites"
 

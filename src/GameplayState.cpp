@@ -432,7 +432,7 @@ void GameplayState::Draw(StateEngine* state)
 		m_Layers.at(i)->Draw(m_Cam);
 	}
 
-	m_Level->Draw(m_Cam); // TODO: Don't draw elements in the level that are off screen
+	m_Level->Draw(m_Cam, state->m_deltaTime); // TODO: Don't draw elements in the level that are off screen
 
 	for (int i = 0; i <3; i++)
 	{

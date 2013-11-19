@@ -63,6 +63,7 @@ public:
 	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other);
+	void Animate(double dt);
 
 	void Debug_PrintPos();
 	bool ShowColliderPos;

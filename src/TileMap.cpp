@@ -33,35 +33,35 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					// graffiti tiles
 					if (buff[x] == 'g')
 					{
-						GameObject* t = new GameObject("graff_1", Scenerary, false);
+						GameObject* t = new GameObject("graff1_anim", Scenerary, false, CIwFVec2(8,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 'h')
 					{
-						GameObject* t = new GameObject("graff_2", Scenerary, false);
+						GameObject* t = new GameObject("graff2_anim", Scenerary, false, CIwFVec2(8,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 'j')
 					{
-						GameObject* t = new GameObject("graff_3", Scenerary, false);
+						GameObject* t = new GameObject("graff3_anim", Scenerary, false, CIwFVec2(8,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 'k')
 					{
-						GameObject* t = new GameObject("graff_4", Scenerary, false);
+						GameObject* t = new GameObject("graff4_anim", Scenerary, false, CIwFVec2(8,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 'l')
 					{
-						GameObject* t = new GameObject("graff_5", Scenerary, false);
+						GameObject* t = new GameObject("graff5_anim", Scenerary, false, CIwFVec2(8,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
@@ -90,14 +90,15 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					if (buff[x] == 'T')
 					{
 						GameObject* t = new GameObject("terminal", Terminal, true);
+						//characters[0] = new Sprite("dave_anim", true, CIwFVec2(4,1));
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
 						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'X')
 					{
-						GameObject* t = new GameObject("exit", Exit, true);
-						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), t->GetHeight() * y));
+						GameObject* t = new GameObject("portal_anim", Exit, true, CIwFVec2(8,1));
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32) - 32));
 						m_Objects.push_back(t);
 					}
 
@@ -286,17 +287,23 @@ void TileMap::AddRelationships(const char* rFile)
 	std::cout << "Relationships added" << std::endl;
 }
 
-void TileMap::Draw(Camera* cam) // make it aware of cam, if not on screen, don't draw
+void TileMap::Draw(Camera* cam, double dt) // make it aware of cam, if not on screen, don't draw
 {
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
 	{
 		// If it is on camera, draw it
 		(*it)->Draw();
+		if ((*it)->IsAnimated)
+			(*it)->Animate(dt);
 	}
 
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
 		if ((*it)->IsActive == true)
+		{
 			(*it)->Draw();	
+			if ((*it)->IsAnimated)
+				(*it)->Animate(dt);
+		}
 	}
 }
