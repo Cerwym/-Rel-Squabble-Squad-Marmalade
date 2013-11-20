@@ -176,7 +176,7 @@ void Sprite::Update(float deltaTime)
 	m_LastPosition = m_Position;
 	// Update gravity
 	//m_yVel += GRAVITY;
-	if (!CollisionLocation.Top)
+	if (!CollisionLocation.Bottom)// top / bottom are currently incorrect
 		m_Position.y += (GRAVITY);// / 8);
 
 	if (TEMP_JUSTJUMPED == true && TEMP_LANDEDJUMP == true)

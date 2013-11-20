@@ -78,16 +78,22 @@ CIwFVec2 Collider::isCollidingC(Collider* other) // add in force it's moving by
 			// top
 			//Result = CIwFVec2(0.0f,TopLeft1.y - m_OldTL.y);
 			Result.y += (TopLeft1.y - m_OldTL.y);
-			m_CollisionLocation.Top = true;
+			m_CollisionLocation.Bottom = true;
 			h = true;
+		}else
+		{
+			m_CollisionLocation.Bottom = false;
 		}
 
 		if(TopLeft2.y < m_OldTL.y && m_OldTL.y < BottomRight2.y && BottomRight2.y < m_OldBR.y){
 			// bottom
 			//Result = CIwFVec2(0.0f, BottomRight1.y - m_OldBR.y);
 			Result.y += (BottomRight1.y - m_OldBR.y);
-			m_CollisionLocation.Bottom = true;
+			m_CollisionLocation.Top = true;
 			h = true;
+		}else
+		{
+			m_CollisionLocation.Top = false;
 		}
 	}
 	else

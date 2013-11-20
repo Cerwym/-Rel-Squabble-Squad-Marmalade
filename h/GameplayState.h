@@ -35,6 +35,7 @@ public:
 	// New functions
 	void CheckInterations(StateEngine* state);
 	void CheckCollisions(const int &pCharacter);
+	void CheckObjects(const int &pCharacter);
 	void SpawnCharacters();
 	void ScrollBackground(CIwFVec2& scrollBy);
 	void PlayEff(CIwSoundSpec* spec, CIwSoundInst* inst);
@@ -53,6 +54,7 @@ private:
 	int m_TimeToOneSec;
 	int m_CountUpdates;
 	int m_UpdatesPerSec;
+	int buttonSoundCount;
 
 	int screenWidth;
 	int screenHeight;
