@@ -42,11 +42,12 @@ CIwResGroup
 		"./objects/elevator.png"
 		"./objects/terminal.png"
 		
-		"./objects/graff_1.png"
-		"./objects/graff_2.png"
-		"./objects/graff_3.png"
-		"./objects/graff_4.png"
-		"./objects/graff_5.png"
+		"./objects/graff1_anim.png"
+		"./objects/graff2_anim.png"
+		"./objects/graff3_anim.png"
+		"./objects/graff4_anim.png"
+		"./objects/graff5_anim.png"
+
 		
 		"./audio/Button01.wav"
 		CIwSoundSpec
@@ -98,7 +99,7 @@ CIwResGroup
 		}
 
 		
-		"./tiles/exit.png"
+		"./tiles/portal_anim.png"
 		"./textures/touchscreenMoveL.bmp"
 		"./textures/touchscreenMoveR.bmp"
 		"./background/layer1.png"

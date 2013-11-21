@@ -129,13 +129,18 @@ void Sprite::MoveBy(const CIwFVec2& position, double dt)
 	m_Position += CIwFVec2(static_cast<float>(position.x), static_cast<float>((position.y)));
 	if (m_Animated)
 	{
-		m_CurrentFrame += m_AnimSpeed * dt;
-		if (m_CurrentFrame > (m_FrameCount.x * m_FrameCount.y))
-			m_CurrentFrame = 0;
+		Animate(dt);
 	}
 
 	// Play walking sound
 	//Playwalkingsound() Disabled because it constantly fires
+}
+
+void Sprite::Animate(double dt)
+{
+	m_CurrentFrame += m_AnimSpeed * dt;
+	if (m_CurrentFrame > (m_FrameCount.x * m_FrameCount.y))
+		m_CurrentFrame = 0;
 }
 
 void Sprite::Update(float deltaTime)

@@ -425,7 +425,7 @@ void GameplayState::Draw(StateEngine* state)
 	{
 		m_Layers.at(i)->Draw(m_Cam->GetPosition());
 	}
-	m_Level->Draw();
+	m_Level->Draw(state->m_deltaTime);
 
 	for (int i = 0; i <3; i++)
 	{

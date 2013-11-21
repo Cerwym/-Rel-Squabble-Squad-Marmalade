@@ -11,7 +11,7 @@ public:
 	~TileMap();
 
 	void Update();
-	void Draw();
+	void Draw(double dt);
 	std::vector<GameObject*> GetMap(){return m_Map;}
 	std::vector<GameObject*> GetObjects(){return m_Objects;}
 	std::vector<CIwFVec2> GetSpawnPositions(){return m_SpawnPos;}
