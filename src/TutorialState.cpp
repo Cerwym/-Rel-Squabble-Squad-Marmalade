@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include "StateEngine.h"
+#include "GameState.h"
+#include "TutorialState.h" // The current state
+#include "GameplayState.h" // The state to change to
+#include "utils.h"
+
+TutorialState TutorialState::m_TutorialState;
+
+void TutorialState::Init()
+{
+	//IwGetResManager()->LoadGroup("mainmenusprites.group");
+	m_TransManager.Init();
+	m_Splash1 = new Sprite("tutorial_page_1", false);
+	m_Splash2 = new Sprite("tutorial_page_2", false);
+	printf("TutorialState initialized\n");
+}
+
+void TutorialState::Destroy()
+{
+	delete m_Splash1;
+	delete m_Splash2;
+	//IwGetResManager()->DestroyGroup("MainMenu");
+	printf("TutorialState Destroyed\n");
+}
+
+void TutorialState::Pause()
+{
+
+}
+
+void TutorialState::Resume()
+{
+
+}
+
+void TutorialState::HandleEvent(StateEngine* state)
+{
+
+	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN))
+	{
+		SleepFor(2);
+		state->ChangeState(GameplayState::Instance());
+	}
+}
+
+void TutorialState::Update(StateEngine* state, double dt)
+{
+}
+
+void TutorialState::Draw(StateEngine* state)
+{
+	if (m_TransitionState == FADE_IN)
+	{
+		if (m_TransManager.TransitionIn(m_Splash1->GetImage(), state->m_deltaTime + 1.5))
+		{
+			m_TransitionState = BETWEEN;
+			m_TransManager.Init();
+			std::cout << "State changed to between" << std::endl;
+		}
+	}
+
+	if (m_TransitionState == BETWEEN)
+	{
+		if (m_TransManager.TransitionBetween(m_Splash1->GetImage(), m_Splash2->GetImage(), state->m_deltaTime + 1.5))
+		{
+			m_TransitionState = FADE_OUT;
+			m_TransManager.Init();
+		}
+	}
+
+	if (m_TransitionState == FADE_OUT)
+	{
+		if (m_TransManager.TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 1.5))
+		{
+			m_TransManager.FinishTransition();
+			state->ChangeState(GameplayState::Instance());//std::cout << "Finished transitioning" << std::endl;
+		}
+	}
+}

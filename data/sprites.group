@@ -19,6 +19,8 @@ CIwResGroup
 		"./portraits/nigel_port.png"
 		"./textures/collisionRect.png"
 		"./textures/target_sprite.png"
+		"./textures/tutorial_page_1.png"
+		"./textures/tutorial_page_2.png"
 
 		"./tiles/floor_left_1.png"
 		"./tiles/floor_repeatable_2.png"

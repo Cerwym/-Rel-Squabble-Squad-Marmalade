@@ -54,8 +54,8 @@ CIwTexture* TransitionManager::CaptureScreen()
 	texture->SetMipMapping(false);
 	texture->Upload();
 
-	delete buffer;
-	delete buffer2;
+	delete [] buffer;
+	delete []buffer2;
 
 	return texture;
 }

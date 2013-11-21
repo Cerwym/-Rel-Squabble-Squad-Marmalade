@@ -2,7 +2,7 @@
 #include "StateEngine.h"
 #include "GameState.h"
 #include "MainMenuState.h" // The current state
-#include "GameplayState.h" // The state to change to
+#include "TutorialState.h" // The state to change to
 #include "utils.h"
 
 MainMenuState MainMenuState::m_MainMenuState;
@@ -37,7 +37,7 @@ void MainMenuState::HandleEvent(StateEngine* state)
 	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN))
 	{
 		SleepFor(2);
-		state->ChangeState(GameplayState::Instance());
+		state->ChangeState(TutorialState::Instance());
 	}
 }
 

@@ -17,6 +17,7 @@ files
 	MainMenuState.cpp
 	GameplayState.cpp
 	GameoverState.cpp
+	TutorialState.cpp
 	TransitionManager.cpp
     (h)
     sprite.h
@@ -31,6 +32,7 @@ files
 	MainMenuState.h
 	GameplayState.h
 	GameoverState.h
+	TutorialState.h
 	TransitionManager.h
 }
 
