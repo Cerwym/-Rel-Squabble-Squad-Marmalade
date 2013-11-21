@@ -204,7 +204,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 					s3ePointerUpdate();
 					s3eKeyboardUpdate();
 					m_canThrow = true;
-					m_throwingTarget->SetPosition((CIwFVec2(s3ePointerGetX() - (float)m_Cam->GetPosition().x , s3ePointerGetY() - (float)m_Cam->GetPosition().y )));
+					m_throwingTarget->SetPosition((CIwFVec2((s3ePointerGetX() - (float)m_Cam->GetPosition().x)  - ( m_throwingTarget->GetWidth() /2) , (s3ePointerGetY() - (float)m_Cam->GetPosition().y ) - (m_throwingTarget->GetHeight() /2))));
 					m_throwingTarget->UpdateCollider();
 					
 					// Draw the current state or else we'll be in a loop that will show no updated frame
