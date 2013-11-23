@@ -68,8 +68,6 @@ private:
 	CIwSoundInst* m_PortraitSoundInsts[3];
 	GameObject* m_activeTerminal;
 
-	CIw2DFont* m_Font;
-
 	int m_CharacterIndex;
 	// if the level has a terminal, is it active and therefore, has its child class been instantiated
 	bool m_isTermActive;

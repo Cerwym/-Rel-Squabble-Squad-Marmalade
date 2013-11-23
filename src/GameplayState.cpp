@@ -40,9 +40,6 @@ void GameplayState::Init()
 	screenHeight = Iw2DGetSurfaceHeight();
 	screenWidth = Iw2DGetSurfaceWidth();
 
-	m_Font = Iw2DCreateFontResource("font_small");
-	Iw2DSetFont(m_Font);
-
 	m_CharacterIndex = 0;
 	m_isThrowing = false;
 	m_isTermActive = false;
@@ -52,7 +49,6 @@ void GameplayState::Init()
 	m_gameOver = false;
 	m_MouseClicked = false;
 	TEMP_HASPLAYED = false;
-
 
 	m_Cam = new Camera;
 	m_Cam->SetPosition(CIwSVec2(0, 0));
@@ -90,13 +86,10 @@ void GameplayState::Destroy()
 	for (int i = 0; i < 2; i++)
 		delete n_guiButtons[i];
 
-	if (m_Font != NULL)
-		delete m_Font;
-
 	delete m_Cam;
 	delete m_Level;
 
-	IwGetResManager()->DestroyGroup("Sprites");
+	//IwGetResManager()->DestroyGroup("Sprites");
 	printf("GameplayState Destroyed\n");
 
 }

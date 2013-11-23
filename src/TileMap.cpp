@@ -219,8 +219,14 @@ TileMap::~TileMap()
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
 		delete (*it);
 
+	m_Map.clear();
+
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 		delete (*it);
+
+	m_Objects.clear();
+
+	m_SpawnPos.clear();
 }
 
 // This is a "temporary" function, ideally I want to be able to create a level format with these definitions built in, but for now i have to hard code it in.
@@ -288,6 +294,7 @@ void TileMap::AddRelationships(const char* rFile)
 
 void TileMap::Draw(double dt) // make it aware of cam, if not on screen, don't draw
 {
+	IW_CALLSTACK("TileMap::Draw");
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
 	{
 		(*it)->Draw();

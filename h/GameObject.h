@@ -13,7 +13,6 @@ public:
 	GameObject(const char* name, ObjectType t, bool collisionFlag, CIwFVec2 frames);
 
 	void AddChildObject(GameObject* obj) {m_Child = obj;}
-	void AddTag(std::string tag) {m_Tag = tag;}
 
 	GameObject* Child(){return m_Child;}
 	ObjectType GetType(){return m_Type;}
@@ -25,7 +24,6 @@ private:
 	
 	// Pointer to the child object, so one object can be 'attached' to another
 	GameObject* m_Child;
-	std::string m_Tag;
 };
 
 #endif

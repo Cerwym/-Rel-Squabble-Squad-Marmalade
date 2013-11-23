@@ -103,10 +103,10 @@ void TransitionManager::Destroy()
 	IwGxClear();
 	IwGxFlush();
 
-	//if (m_StartTexture != NULL)
-		//delete m_StartTexture;
-	//if (m_EndTexture != NULL)
-		//delete m_EndTexture;
+	if (m_StartTexture != NULL)
+		delete m_StartTexture;
+	if (m_EndTexture != NULL)
+		delete m_EndTexture;
 	m_StartTexture = NULL;
 	m_EndTexture = NULL;
 }
@@ -128,8 +128,8 @@ bool TransitionManager::isFinished()
 {
 	if (m_alphaValue >= 255)
 	{
-		delete m_StartTexture;
-		delete m_EndTexture;
+		//delete m_StartTexture;
+		//delete m_EndTexture;
 		return true;
 	}
 	return false;
