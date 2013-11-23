@@ -1,4 +1,3 @@
-#include "IwGx.h"
 #include "Iw2D.h"
 #include "TransitionManager.h"
 #include <iostream>
@@ -17,6 +16,7 @@ void TransitionManager::Init()
 
 CIwTexture* TransitionManager::CaptureScreen()
 {
+	IW_CALLSTACK("TransitionManager::CaptureScreen")
 	int w = IwGxGetDeviceWidth();
 	int h = IwGxGetDeviceHeight();
 	int length = w * h * 4;
@@ -55,7 +55,7 @@ CIwTexture* TransitionManager::CaptureScreen()
 	texture->Upload();
 
 	delete [] buffer;
-	delete []buffer2;
+	delete [] buffer2;
 
 	return texture;
 }
@@ -97,14 +97,16 @@ void TransitionManager::Fade(double transitionSpeed)
 	}
 }
 
-void TransitionManager::FinishTransition()
+void TransitionManager::Destroy()
 {
 	IW_CALLSTACK("TransitionManager::FinishTransition");
 	IwGxClear();
 	IwGxFlush();
 
-	delete m_StartTexture;
-	delete m_EndTexture;
+	//if (m_StartTexture != NULL)
+		//delete m_StartTexture;
+	//if (m_EndTexture != NULL)
+		//delete m_EndTexture;
 	m_StartTexture = NULL;
 	m_EndTexture = NULL;
 }
@@ -125,7 +127,11 @@ void TransitionManager::Fade(CIwTexture* start, CIwTexture* end, double transiti
 bool TransitionManager::isFinished()
 {
 	if (m_alphaValue >= 255)
+	{
+		delete m_StartTexture;
+		delete m_EndTexture;
 		return true;
+	}
 	return false;
 }
 
@@ -140,6 +146,7 @@ bool TransitionManager::TransitionIn(CIw2DImage* start, double transitionSpeed)
 		CaptureStartScreen();
 		Iw2DDrawImage(start, CIwSVec2(0,0));
 		CaptureEndScreen();
+		m_HasStarted = true;
 	}
 
 	if (!f)
@@ -159,6 +166,7 @@ bool TransitionManager::TransitionBetween(CIw2DImage* start, CIw2DImage* end, do
 		CaptureStartScreen();
 		Iw2DDrawImage(end, CIwSVec2(0,0));
 		CaptureEndScreen();
+		m_HasStarted = true;
 	}
 
 	if (!f)
@@ -178,6 +186,8 @@ bool TransitionManager::TransitionOut(CIw2DImage* end, double speed)
 		CaptureStartScreen();
 		Iw2DSurfaceClear(0xff000000);
 		CaptureEndScreen();
+		std::cout << "Captured end screens" << std::endl;
+		m_HasStarted = true;
 	}
 
 	if (!f)

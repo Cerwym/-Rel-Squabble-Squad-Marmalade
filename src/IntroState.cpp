@@ -10,7 +10,7 @@ IntroState IntroState::m_IntroState;
 
 void IntroState::Init()
 {
-	//IwGetResManager()->LoadGroup("introsprites.group");
+	IwGetResManager()->LoadGroup("introsprites.group");
 
 	m_Splash1 = new Sprite("logo", false);
 	m_Splash2 = new Sprite("splash2", false);
@@ -26,9 +26,9 @@ void IntroState::Init()
 
 void IntroState::Destroy()
 {
-	//IwGetResManager()->DestroyGroup("Intro");
-	//delete m_Splash1;
-	//delete m_Splash2;
+	delete m_Splash1;
+	delete m_Splash2;
+	IwGetResManager()->DestroyGroup("Intro");
 	printf("IntroState Destroyed\n");
 }
 
@@ -56,24 +56,29 @@ void IntroState::Update(StateEngine* state, double dt)
 void IntroState::Draw(StateEngine* state)
 {
 	if (m_TransitionState == FADE_IN)
+	{
 		if (m_TransManager.TransitionIn(m_Splash1->GetImage(), state->m_deltaTime + 3.5))
 		{
 			m_TransitionState = BETWEEN;
 			m_TransManager.Init();
-			std::cout << "State changed to between" << std::endl;
 		}
+	}
 
 	if (m_TransitionState == BETWEEN)
+	{
 		if (m_TransManager.TransitionBetween(m_Splash1->GetImage(), m_Splash2->GetImage(), state->m_deltaTime + 3.5))
 		{
 			m_TransitionState = FADE_OUT;
 			m_TransManager.Init();
 		}
+	}
 
 	if (m_TransitionState == FADE_OUT)
+	{
 		if (m_TransManager.TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 3.5))
 		{
-			m_TransManager.FinishTransition();
+			m_TransManager.Destroy();
 			state->ChangeState(MainMenuState::Instance());//std::cout << "Finished transitioning" << std::endl;
 		}
+	}
 }

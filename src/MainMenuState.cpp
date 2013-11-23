@@ -9,15 +9,15 @@ MainMenuState MainMenuState::m_MainMenuState;
 
 void MainMenuState::Init()
 {
-	//IwGetResManager()->LoadGroup("mainmenusprites.group");
+	IwGetResManager()->LoadGroup("mainmenusprites.group");
 	m_menuImage = new Sprite("menu_image", false);
 	printf("MainMenuState initialized\n");
 }
 
 void MainMenuState::Destroy()
 {
-	//delete m_menuImage;
-	//IwGetResManager()->DestroyGroup("MainMenu");
+	delete m_menuImage;
+	IwGetResManager()->DestroyGroup("MainMenu");
 	printf("MainMenuState Destroyed\n");
 }
 

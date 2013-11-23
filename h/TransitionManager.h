@@ -7,7 +7,7 @@ class TransitionManager
 {
 public:
 	void Init();
-	void FinishTransition();
+	void Destroy();
 
 	bool TransitionOut(CIw2DImage* img, double speed);
 	bool TransitionIn(CIw2DImage* img, double speed);

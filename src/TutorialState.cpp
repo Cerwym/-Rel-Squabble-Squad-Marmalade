@@ -9,7 +9,7 @@ TutorialState TutorialState::m_TutorialState;
 
 void TutorialState::Init()
 {
-	//IwGetResManager()->LoadGroup("mainmenusprites.group");
+	IwGetResManager()->LoadGroup("tutorialsprites.group");
 	m_TransManager.Init();
 	m_Splash1 = new Sprite("tutorial_page_1", false);
 	m_Splash2 = new Sprite("tutorial_page_2", false);
@@ -20,7 +20,7 @@ void TutorialState::Destroy()
 {
 	delete m_Splash1;
 	delete m_Splash2;
-	//IwGetResManager()->DestroyGroup("MainMenu");
+	IwGetResManager()->DestroyGroup("TutorialScreen");
 	printf("TutorialState Destroyed\n");
 }
 
@@ -46,6 +46,7 @@ void TutorialState::HandleEvent(StateEngine* state)
 
 void TutorialState::Update(StateEngine* state, double dt)
 {
+
 }
 
 void TutorialState::Draw(StateEngine* state)
@@ -56,7 +57,6 @@ void TutorialState::Draw(StateEngine* state)
 		{
 			m_TransitionState = BETWEEN;
 			m_TransManager.Init();
-			std::cout << "State changed to between" << std::endl;
 		}
 	}
 
@@ -71,9 +71,9 @@ void TutorialState::Draw(StateEngine* state)
 
 	if (m_TransitionState == FADE_OUT)
 	{
-		if (m_TransManager.TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 1.5))
+		if (m_TransManager.TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 3.5))
 		{
-			m_TransManager.FinishTransition();
+			m_TransManager.Destroy();
 			state->ChangeState(GameplayState::Instance());//std::cout << "Finished transitioning" << std::endl;
 		}
 	}

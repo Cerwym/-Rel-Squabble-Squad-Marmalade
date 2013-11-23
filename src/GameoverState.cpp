@@ -10,7 +10,7 @@ GameoverState GameoverState::m_GameOverState;
 
 void GameoverState::Init()
 {
-	//IwGetResManager()->LoadGroup("gameoversprites.group");
+	IwGetResManager()->LoadGroup("gameoversprites.group");
 	m_menuImage = new Sprite("game_over", false);
 	m_Transmanager.Init();
 	printf("GameoverState initialized\n");
@@ -18,9 +18,8 @@ void GameoverState::Init()
 
 void GameoverState::Destroy()
 {
-	//if (m_menuImage != NULL)
-		//delete m_menuImage;
-	// IwGetResManager()->DestroyGroup("gameover");
+	delete m_menuImage;
+	IwGetResManager()->DestroyGroup("gameover");
 	printf("GameoverState Destroyed\n");
 }
 

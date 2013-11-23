@@ -43,8 +43,9 @@ assets
 	(data-ram/data-gles1, data)
 	introsprites.group.bin
 	mainmenusprites.group.bin
-	gameoversprites.group.bin
+	tutorialsprites.group.bin
 	sprites.group.bin
+	gameoversprites.group.bin
 }
 
 includepaths

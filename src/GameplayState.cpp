@@ -13,7 +13,7 @@ GameplayState GameplayState::m_GameplayState;
 
 void GameplayState::Init()
 {
-	
+	IwGetResManager()->LoadGroup("sprites.group");
 	m_Portraits[0] = new Sprite("dave_port", true);
 	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
 	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
@@ -96,7 +96,7 @@ void GameplayState::Destroy()
 	delete m_Cam;
 	delete m_Level;
 
-	//IwGetResManager()->DestroyGroup("Sprites");
+	IwGetResManager()->DestroyGroup("Sprites");
 	printf("GameplayState Destroyed\n");
 
 }

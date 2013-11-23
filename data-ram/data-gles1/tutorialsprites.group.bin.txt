@@ -1,0 +1,11 @@
+ResGroupResources:
+	CIwTexture (0x3521f539)
+		"tutorial_page_1" (0x5231bdc5)
+		Size: 614436
+	CIwTexture (0x3521f539)
+		"tutorial_page_2" (0x5231bdc6)
+		Size: 614436
+	ResList 'CIwTexture' pos:45 size:1228882
+
+ResGroupResources: Wrote 1228886 bytes to CIwResGroup "TutorialScreen"
+

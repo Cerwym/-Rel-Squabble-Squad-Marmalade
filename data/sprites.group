@@ -2,8 +2,6 @@ CIwResGroup
 { 
 	name "Sprites" 
 
-		"./textures/logo.png"
-		"./textures/splash2.png"
 		"./textures/menu_image.png"
 		"./textures/game_over.png"
 

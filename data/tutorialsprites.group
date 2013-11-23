@@ -1,0 +1,6 @@
+CIwResGroup 
+{ 
+	name "TutorialScreen" 
+		"./textures/tutorial_page_1.png"
+		"./textures/tutorial_page_2.png"
+} 
