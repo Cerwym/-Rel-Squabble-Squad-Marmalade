@@ -45,7 +45,7 @@ public:
 	CIwImage GetCollisionMap() const {return m_CollisionMap;}
 	CIw2DImage* GetImage() const {return m_Image;}
 	void SetMaterial();
-	void MoveBy(const CIwFVec2& position, double dt);
+	void MoveBy(const CIwFVec2& val, double dt);
 
 	inline iwangle GetRotation() { return m_Angle; }
 	inline void SetRotation(const iwangle& angle) { m_Angle = angle; }
@@ -54,6 +54,7 @@ public:
 	inline float GetWidth(){return m_Width;}
 
 	CIwFVec2 GetLastPosition(){return m_LastPosition;}
+	CIwFVec2 GetLastMovement(){return m_LastMovementVal;}
 
 	bool hasCollider(){ return m_hasCollider;}
 
@@ -67,10 +68,6 @@ public:
 	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other);
-	CIwFVec2 isCollidingC(Sprite* other);
-
-	// THis function will take in the intended move by values and test to see if a collision WILL happen, if a collision WILL happen, the function will return true, then you should move by the inverse of x,y
-	bool isCollidingOnStep(Sprite* other, const CIwFVec2&);
 
 	void Debug_PrintPos();
 	bool ShowColliderPos;
@@ -84,9 +81,12 @@ public:
 protected:
 
 private:
+	void SetLastX(float x){ m_LastMovementVal.x = x;}
+	void SetLastY(float y){ m_LastMovementVal.y = y;}
 	CIwSVec2 m_Center; // The center of the image to rotate around
 	CIwFVec2 m_Position; // Screen position
 	CIwFVec2 m_LastPosition;
+	CIwFVec2 m_LastMovementVal;
 	CIwFVec2 m_MovSpeed;
 
 	iwangle m_Angle;

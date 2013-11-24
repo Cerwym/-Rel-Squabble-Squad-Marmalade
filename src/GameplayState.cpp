@@ -143,24 +143,7 @@ void GameplayState::SpawnCharacters()
 
 void GameplayState::HandleEvent(StateEngine* state)
 {
-
-	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN) && m_SpacePressed == false)
-	{
-		std::cout << "Space pressed" << std::endl;
-		if (m_CharacterIndex == MANDY){
-			characters[MANDY]->TEMP_JUSTJUMPED = true;}
-		m_SpacePressed = true;
-	}
-
-
-	if ( (s3eKeyboardGetState(s3eKeyUp) & S3E_POINTER_STATE_DOWN) && m_UpPressed == false)
-	{
-		std::cout << "Up pressed" << std::endl;
-		m_UpPressed = true;
-	}
-
-	
-    if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
+	if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
     {
 		for (int i = 0; i < 3; i++)
 		{
@@ -176,13 +159,16 @@ void GameplayState::HandleEvent(StateEngine* state)
 			}
 		}
 
-		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))// && (characters[m_CharacterIndex]->GetPosition().x > 32)) // Left Arrow Button
+		if (n_guiButtons[0]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))
 		{
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_RIGHT)
 				characters[m_CharacterIndex]->SetDirection(FACING_LEFT);
 
-			CIwFVec2 val = CIwFVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0);
-			characters[m_CharacterIndex]->MoveBy(val, state->m_deltaTime);
+			std::cout << "My Position was : "; characters[m_CharacterIndex]->Debug_PrintPos();
+			characters[m_CharacterIndex]->MoveBy(CIwFVec2(-5,0),0);
+			CheckCollisions(m_CharacterIndex);
+
+			std::cout << "It is now : "; characters[m_CharacterIndex]->Debug_PrintPos();
 		}
 
 		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))
@@ -190,9 +176,8 @@ void GameplayState::HandleEvent(StateEngine* state)
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_LEFT)
 				characters[m_CharacterIndex]->SetDirection(FACING_RIGHT);
 
-			CIwFVec2 val = CIwFVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x, 0);
-			characters[m_CharacterIndex]->MoveBy(val, state->m_deltaTime);
-			//ScrollBackground(val);
+			characters[m_CharacterIndex]->MoveBy(CIwFVec2(5,0),0);
+			CheckCollisions(m_CharacterIndex);
 		}
 
 		if (characters[DAVE]->isColliding(characters[NIGEL]->GetPosition()) && (m_canThrow == false) && m_CharacterIndex == DAVE)
@@ -220,14 +205,15 @@ void GameplayState::HandleEvent(StateEngine* state)
 
 		m_MouseClicked = true;
 	}
+
 	if (s3ePointerGetState(S3E_POINTER_BUTTON_LEFTMOUSE) == 4)
 		m_MouseClicked = false;
 
 	if (m_isThrowing)
+
 	{
 		characters[NIGEL]->LerpTo(CIwFVec2(m_throwingTarget->GetPosition().x, m_throwingTarget->GetPosition().y), 0.05f);
 		characters[NIGEL]->UpdateCollider();
-		// nigel hack
 		//characters[NIGEL]->MoveBy(CIwFVec2(0,0),0);
 		//hack
 		characters[NIGEL]->CollisionLocation.Bottom = false;
@@ -245,18 +231,19 @@ void GameplayState::HandleEvent(StateEngine* state)
 
 void GameplayState::Update(StateEngine* state, double dt)
 {
-	for (int i = 0; i <3; i++)
-	{
-		CheckCollisions(i);
-		CheckObjects(i);
-	}
-
-	//CheckInterations(state);
-
 	characters[DAVE]->Update(dt);
 	characters[MANDY]->Update(dt);
 	if (!m_isThrowing)
 		characters[NIGEL]->Update(dt);
+
+	CheckInterations(state);
+
+	for (int i = 0; i <3; i++)
+	{
+		CheckObjects(i);
+		CheckCollisions(i);
+		
+	}
 
 	// Set the camera's position to the currently controlled player, at the bottom and (roughly) towards the center of the screen.
 	m_Cam->SetPosition(
@@ -277,15 +264,15 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 		GameObject *t = m_Level->GetMap().at(m);
 		if (characters[pCharacter]->isColliding(t))
 		{
-			CIwFVec2 collBy = characters[pCharacter]->isCollidingC(t);
-			std::cout << "Collision happened at " << collBy.x << "," << collBy.y << std::endl; 
 			characters[pCharacter]->SetPosition(characters[pCharacter]->GetLastPosition());
 
-			//hack
 			if (pCharacter == NIGEL)
 			{
-				m_canThrow = false;
-				m_isThrowing = false;
+				if (m_isThrowing)
+				{
+					m_canThrow = false;
+					m_isThrowing = false;
+				}
 			}
 		}
 	}
@@ -314,7 +301,7 @@ void GameplayState::CheckObjects(const int &pCharacter)
 								doorSound->Play();
 						}
 
-						characters[pCharacter]->SetPosition(characters[pCharacter]->GetLastPosition());
+						characters[pCharacter]->MoveBy(-characters[pCharacter]->GetLastMovement(),0);
 					}
 				}
 			}
@@ -328,48 +315,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 	int exitCount = 0;
 
 	int debug_ele = 0;
-	// Check if the characters are colliding with any floor tiles, if they are set their collision value to true and break, if not continue to poll the remaining tiles.
-	for (int c = 0; c < 3; c++)
-	{
-		// Check to see if any of the characters are colliding with 
-		for (size_t o = 0; o < m_Level->GetObjects().size(); o++)
-		{
-			GameObject *t = m_Level->GetObjects().at(o);
-			// Check to see if someone is colliding with an active door, if so, deny access
-			if (characters[c]->isColliding(t))
-			{
-				if (t->GetType() == Door)
-				{
-					if (t->IsActive)
-					{
-						if (characters[c]->CollisionLocation.Right == false && characters[c]->CollisionLocation.Left == false)
-						{
-							if (doorSoundInst == NULL)
-							{
-								doorSoundInst = doorSound->Play();
-							}
-							else
-							{
-								if (!doorSoundInst->IsPlaying())
-									doorSound->Play();
-							}
-						}
-
-						if (characters[c]->GetPosition().x < t->GetPosition().x)
-							characters[c]->CollisionLocation.Right = true; //characters[c]->SetPosition(CIwFVec2(characters[c]->GetPosition().x - (5.2 * state->m_deltaTime), characters[c]->GetPosition().y));
-						else
-							characters[c]->CollisionLocation.Left = true;
-					}
-				}
-				c++;
-			}
-			else
-			{
-				characters[c]->CollisionLocation.Right = false;
-				characters[c]->CollisionLocation.Left = false;
-			}
-		}
-	}
 
 	for (size_t s = 0; s < m_Level->GetObjects().size(); s++)
 	{

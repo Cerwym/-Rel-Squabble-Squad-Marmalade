@@ -17,12 +17,8 @@ Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),m_A
 	TEMP_ISCOLLIDING = false;
 	ShowColliderPos = false;
 	m_hasCollider = flag;
-	if (flag)
-	{
-		m_Collider = new Collider(m_Position, m_Width, m_Height);
-	}
+	if (flag){ m_Collider = new Collider(m_Position, m_Width, m_Height);}
 	m_facingDir = FACING_RIGHT;
-	m_onCam = false;
 }
 
 Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0),m_MovSpeed(0,0),m_Angle(0),m_Animated(true)
@@ -38,7 +34,6 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 	ShowColliderPos = false;
 	m_hasCollider = flag;
 	m_facingDir = FACING_RIGHT;
-	m_onCam = false;
 
 	// 1/2 frame every game second
 	SetAnimated(true, 0.5, frameCount);
@@ -91,7 +86,7 @@ void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 	if (m_hasCollider){m_Collider = new Collider(m_Position, m_Width, m_Height);}
 }
 
-//Simple bounding box detection, no left right top or bottom.
+// Collision detection for bounding box, commonly used to detect if a player has clicked on a UI element or character.
 bool Sprite::isColliding(const CIwFVec2& other)
 {
 	IW_CALLSTACK("Sprite::isColliding");
@@ -127,39 +122,10 @@ bool Sprite::isColliding(Sprite* other)
 		return false;
 }
 
-bool Sprite::isCollidingOnStep(Sprite* other, const CIwFVec2& step)
-{
-	IW_CALLSTACK("Sprite::isCollidingOnStep");
-
-	if (m_hasCollider && other->hasCollider())
-	{
-		Collider* stepCollider = m_Collider;
-		stepCollider->SetPosition(stepCollider->GetPosition() + step);
-		bool v = stepCollider->isColliding(other->m_Collider);
-		return v;
-	}
-
-	return false;
-}
-
-CIwFVec2 Sprite::isCollidingC(Sprite* other)
-{
-	if (m_hasCollider && other->hasCollider())
-	{
-		CollisionLocation.Left = m_Collider->GetLeft();
-		CollisionLocation.Right = m_Collider->GetRight();
-		CollisionLocation.Bottom = m_Collider->GetBottom();
-		CollisionLocation.Top = m_Collider->GetTop();
-		return m_Collider->isCollidingC(other->m_Collider);
-	}
-
-	//return CIwFVec2(0,0);
-}
-
-void Sprite::MoveBy(const CIwFVec2& position, double dt) 
+void Sprite::MoveBy(const CIwFVec2& val, double dt) 
 {
 	m_LastPosition = m_Position;
-	m_Position += CIwFVec2(static_cast<float>(position.x), static_cast<float>((position.y)));
+	m_Position += CIwFVec2(static_cast<float>(val.x), static_cast<float>((val.y)));
 	if (m_Animated)
 	{
 		m_CurrentFrame += m_AnimSpeed * dt;
@@ -167,38 +133,17 @@ void Sprite::MoveBy(const CIwFVec2& position, double dt)
 			m_CurrentFrame = 0;
 	}
 
+	if (val.x != 0) m_LastMovementVal.x = val.x;
+	if (val.y != 0) m_LastMovementVal.y = val.y;
+
 	// Play walking sound
 	//Playwalkingsound() Disabled because it constantly fires
 }
 
 void Sprite::Update(float deltaTime)
 {
-	m_LastPosition = m_Position;
-	// Update gravity
-	//m_yVel += GRAVITY;
-	if (!CollisionLocation.Bottom)// top / bottom are currently incorrect
-		m_Position.y += (GRAVITY);// / 8);
-
-	if (TEMP_JUSTJUMPED == true && TEMP_LANDEDJUMP == true)
-	{
-		TEMP_BEFOREJUMPY = m_Position.y;
-		TEMP_LANDEDJUMP = false;
-	}
-
-	if (TEMP_JUSTJUMPED == true)
-	{
-		m_Position.y -= (GRAVITY * 2);
-		if (m_Position.y <= (TEMP_BEFOREJUMPY - JUMP_HEIGHT))
-		{
-			TEMP_JUSTJUMPED = false;
-/*
-			TEMP_ISFALLING = true;
-			TEMP_LANDEDJUMP = true;
-			TEMP_ISCOLLIDING = false;
-*/
-		}
-	}
-	
+	// Make the character fall each frame
+	MoveBy(CIwFVec2(0, 2), 0);
 	UpdateCollider();
 }
 

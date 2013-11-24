@@ -60,41 +60,36 @@ CIwFVec2 Collider::isCollidingC(Collider* other) // add in force it's moving by
 	if(!((TopLeft1.x > BottomRight2.x)||(BottomRight1.x < TopLeft2.x)||(TopLeft1.y > BottomRight2.y)||(BottomRight1.y < TopLeft2.y)))
 	{
 
-		if(m_OldTL.x < TopLeft2.x && TopLeft2.x < m_OldBR.x && m_OldBR.x < BottomRight2.x){   
-			Result.x += (TopLeft1.x - m_OldTL.x - 0.5);
+		if ( (m_OldTL.x >= TopLeft2.x) && ( m_OldTL.x <= BottomRight2.x)  )
+		{
+			// Left
+			Result = CIwFVec2(TopLeft1.x - m_OldTL.x,0);
+		}
+
+		if ( (m_OldBR.x <= BottomRight2.x) && m_OldBR.x >= BottomRight2.x)
+		{
+			// Right
+			Result = CIwFVec2(BottomRight1.x - m_OldBR.x,0);
+		}
+
+		if ( (m_OldTL.y >= BottomRight2.y) && m_OldBR.y <= BottomRight2.y)
+		{
+			// Top
+			Result = CIwFVec2(TopLeft1.y - m_OldBR.y,0);
+		}
+
+		if ( (m_OldBR.y <= BottomRight2.y) && m_OldBR.y >= BottomRight2.y)
+		{
+			// Bottom
+			Result = CIwFVec2(BottomRight1.x - m_OldBR.x,0);
+		}
+/*
+		if(m_OldTL.x < TopLeft2.x && m_OldBR.x < BottomRight2.x){   
+			Result.x = (TopLeft1.x - m_OldTL.x);
 			m_CollisionLocation.Left = true;
 			h = true;
 		}
-
-		if(TopLeft2.x < m_OldTL.x && m_OldTL.x < BottomRight2.x && BottomRight2.x < m_OldBR.x){
-			// right
-			//Result = CIwFVec2( BottomRight1.x - m_OldBR.x, 0.0f);
-			Result.x += (BottomRight1.x - m_OldBR.x);
-			m_CollisionLocation.Right = true;
-			h = true;
-		}
-
-		if(m_OldTL.y < TopLeft2.y && TopLeft2.y < m_OldBR.y && m_OldBR.y < BottomRight2.y){
-			// top
-			//Result = CIwFVec2(0.0f,TopLeft1.y - m_OldTL.y);
-			Result.y += (TopLeft1.y - m_OldTL.y);
-			m_CollisionLocation.Bottom = true;
-			h = true;
-		}else
-		{
-			m_CollisionLocation.Bottom = false;
-		}
-
-		if(TopLeft2.y < m_OldTL.y && m_OldTL.y < BottomRight2.y && BottomRight2.y < m_OldBR.y){
-			// bottom
-			//Result = CIwFVec2(0.0f, BottomRight1.y - m_OldBR.y);
-			Result.y += (BottomRight1.y - m_OldBR.y);
-			m_CollisionLocation.Top = true;
-			h = true;
-		}else
-		{
-			m_CollisionLocation.Top = false;
-		}
+*/
 	}
 	else
 	{
