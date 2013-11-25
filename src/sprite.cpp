@@ -144,6 +144,20 @@ void Sprite::Update(float deltaTime)
 {
 	// Make the character fall each frame
 	MoveBy(CIwFVec2(0, 2), 0);
+
+	if (TEMP_JUSTJUMPED)
+	{
+		if (TEMP_LANDEDJUMP == false)
+			if(GetPosition().y >= TEMP_BEFOREJUMPY)
+				MoveBy(CIwFVec2(0, -8), 0);
+
+		if (GetPosition().y <= TEMP_BEFOREJUMPY)
+		{
+			TEMP_JUSTJUMPED = false;
+			TEMP_LANDEDJUMP = true;
+		}
+	}
+
 	UpdateCollider();
 }
 
@@ -151,6 +165,16 @@ void Sprite::UpdateCollider()
 {
 	if (m_hasCollider)
 		m_Collider->Update(m_Position);
+}
+
+void Sprite::Jump()
+{
+	if (TEMP_LANDEDJUMP == true)
+	{
+		TEMP_JUSTJUMPED = true;
+		TEMP_BEFOREJUMPY = m_Position.y - JUMP_HEIGHT;
+		TEMP_LANDEDJUMP = false;
+	}
 }
 
 void Sprite::Draw() 

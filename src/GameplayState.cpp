@@ -47,7 +47,6 @@ void GameplayState::Init()
 	m_isTermActive = false;
 	m_canThrow = false;
 	m_SpacePressed = false;
-	m_UpPressed = false;
 	m_gameOver = false;
 	m_MouseClicked = false;
 	TEMP_HASPLAYED = false;
@@ -143,16 +142,17 @@ void GameplayState::SpawnCharacters()
 
 void GameplayState::HandleEvent(StateEngine* state)
 {
-
-	if ( (s3eKeyboardGetState(s3eKeyUp) & S3E_POINTER_STATE_DOWN) && m_UpPressed == false)
+	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN) && m_SpacePressed == false)
 	{
-		std::cout << "Up pressed" << std::endl;
-		m_UpPressed = true;
+		if (m_CharacterIndex == MANDY)
+		{
+			characters[MANDY]->Jump();
+		}
+		m_SpacePressed = true;
 	}
 
 	if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
     {
-
 		m_ClickLocation = (CIwFVec2((s3ePointerGetX() - (float)m_Cam->GetPosition().x) , (s3ePointerGetY() - (float)m_Cam->GetPosition().y )));
 		for (int i = 0; i < 3; i++)
 		{
@@ -254,8 +254,6 @@ void GameplayState::Update(StateEngine* state, double dt)
 		CIwSVec2(static_cast<int16>(-characters[m_CharacterIndex]->GetPosition().x + (screenWidth /2)),
 		static_cast<int16>(-characters[m_CharacterIndex]->GetPosition().y + (screenHeight - characters[m_CharacterIndex]->GetHeight() - 32))));
 
-	if (s3eKeyboardGetState(s3eKeyUp) == 4)
-		m_UpPressed = false;
 	if (s3eKeyboardGetState(s3eKeySpace) == 4)
 		m_SpacePressed = false;
 
@@ -407,15 +405,12 @@ void GameplayState::CheckInterations(StateEngine* state)
 		// move the elevator effected by a terminal
 		if (t->GetType() == Terminal)
 		{
-			// test mandy collision
-			// if mandy has toggled the terminal, position = mandy.bottom else position = 0,0
-
 			if (m_CharacterIndex == MANDY)
 			{
 				if (characters[MANDY]->isColliding(t))
 				{
 					//CIwFVec2 fag = CIwFVec2((s3ePointerGetX() - (float)m_Cam->GetPosition().x)  - ( characters[MANDY]->GetWidth() /2) , (s3ePointerGetY() - (float)m_Cam->GetPosition().y ) - (characters[MANDY]->GetHeight() /2))
-					if (m_UpPressed == true || characters[MANDY]->isColliding(m_ClickLocation))
+					if (characters[MANDY]->isColliding(m_ClickLocation))
 					{
 						terminalSound->Play();
 
@@ -441,10 +436,14 @@ void GameplayState::CheckInterations(StateEngine* state)
 
 			if (t->Child()->GetType() == Elevator)
 			{
+				for (int s = 0; s < 3; s++)
+				{
+					if (characters[s]->isColliding(t->Child()))
+						characters[s]->MoveBy(CIwFVec2(0, -4),0);
+				}
 				t->Child()->DoAbility(t->Child()->GetTarget(), state->m_deltaTime);
 			}
 
-			m_UpPressed = false;
 			m_MouseClicked = false;
 			m_ClickLocation = CIwFVec2(0,0);
 		}

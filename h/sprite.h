@@ -71,6 +71,8 @@ public:
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other);
 
+	void Jump();
+
 	void Debug_PrintPos();
 	bool ShowColliderPos;
 

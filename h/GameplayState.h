@@ -61,7 +61,6 @@ private:
 
 	bool m_MouseClicked;
 	bool m_SpacePressed;
-	bool m_UpPressed;
 
 	Sprite* m_throwingTarget;
 	Sprite* n_guiButtons[2];
