@@ -28,6 +28,7 @@ public:
 	inline void SetPosition(const CIwFVec2& position) { m_Position = position; }
 	inline float GetBottom(){return m_Position.y + m_Height;}
 	inline void SetMovSpeed(const CIwFVec2& speed) { m_MovSpeed = speed; }
+	CIwFVec2 GetScreenPosition(Camera* cam){}
 	inline void ResetPosition() { m_Position = m_LastPosition;}
 	inline CIwFVec2 GetMovSpeed() {return m_MovSpeed;}
 	// past in a const reference to CIWVec2 instead of the class itself

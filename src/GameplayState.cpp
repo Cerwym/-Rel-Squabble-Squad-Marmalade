@@ -34,7 +34,6 @@ void GameplayState::Init()
 	n_guiButtons[1]->SetPosition(CIwFVec2(414, 260));
 	n_guiButtons[1]->BuildCollision("textures\\touchScreenMoveR.bmp");
 
-
 	m_throwingTarget = new Sprite("target_sprite", true);
 
 	screenHeight = Iw2DGetSurfaceHeight();
@@ -53,6 +52,7 @@ void GameplayState::Init()
 	m_MouseClicked = false;
 	TEMP_HASPLAYED = false;
 
+	m_ClickLocation = CIwFVec2(0,0);
 
 	m_Cam = new Camera;
 	m_Cam->SetPosition(CIwSVec2(0, 0));
@@ -143,8 +143,17 @@ void GameplayState::SpawnCharacters()
 
 void GameplayState::HandleEvent(StateEngine* state)
 {
+
+	if ( (s3eKeyboardGetState(s3eKeyUp) & S3E_POINTER_STATE_DOWN) && m_UpPressed == false)
+	{
+		std::cout << "Up pressed" << std::endl;
+		m_UpPressed = true;
+	}
+
 	if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
     {
+
+		m_ClickLocation = (CIwFVec2((s3ePointerGetX() - (float)m_Cam->GetPosition().x) , (s3ePointerGetY() - (float)m_Cam->GetPosition().y )));
 		for (int i = 0; i < 3; i++)
 		{
 			// Check collision with the character portraits
@@ -204,9 +213,6 @@ void GameplayState::HandleEvent(StateEngine* state)
 		m_MouseClicked = true;
 	}
 
-	if (s3ePointerGetState(S3E_POINTER_BUTTON_LEFTMOUSE) == 4)
-		m_MouseClicked = false;
-
 	if (m_isThrowing)
 
 	{
@@ -252,6 +258,12 @@ void GameplayState::Update(StateEngine* state, double dt)
 		m_UpPressed = false;
 	if (s3eKeyboardGetState(s3eKeySpace) == 4)
 		m_SpacePressed = false;
+
+	if (s3ePointerGetState(S3E_POINTER_BUTTON_LEFTMOUSE) == 4)
+	{
+		m_MouseClicked = false;
+		m_ClickLocation = CIwFVec2(0,0);
+	}
 }
 
 void GameplayState::CheckCollisions(const int &pCharacter)
@@ -391,34 +403,54 @@ void GameplayState::CheckInterations(StateEngine* state)
 				}
 			}
 		}
-	}
 
-	if (m_CharacterIndex == MANDY)
-	{
-		if (m_isTermActive)
+		// move the elevator effected by a terminal
+		if (t->GetType() == Terminal)
 		{
-			if (m_UpPressed == true)
+			// test mandy collision
+			// if mandy has toggled the terminal, position = mandy.bottom else position = 0,0
+
+			if (m_CharacterIndex == MANDY)
 			{
-
-				if (m_activeTerminal->Child()->GetType() == Elevator)
+				if (characters[MANDY]->isColliding(t))
 				{
-					terminalSound->Play();
+					//CIwFVec2 fag = CIwFVec2((s3ePointerGetX() - (float)m_Cam->GetPosition().x)  - ( characters[MANDY]->GetWidth() /2) , (s3ePointerGetY() - (float)m_Cam->GetPosition().y ) - (characters[MANDY]->GetHeight() /2))
+					if (m_UpPressed == true || characters[MANDY]->isColliding(m_ClickLocation))
+					{
+						terminalSound->Play();
 
-					if (characters[DAVE]->isColliding(m_activeTerminal->Child()))
-						characters[DAVE]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[DAVE]->GetPosition().y - 150));
+						if (t->Child()->GetType() == Elevator)
+						{
+							std::cout << "Elevator was " << t->IsActive << std::endl;
+							if (t->IsActive == false)
+							{
 
-					if (characters[NIGEL]->isColliding(m_activeTerminal->Child()))
-						characters[NIGEL]->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 110));
-
-					m_activeTerminal->Child()->SetPosition(CIwFVec2(m_activeTerminal->Child()->GetPosition().x, characters[MANDY]->GetPosition().y + 54));
+								t->Child()->SetTarget(CIwFVec2(characters[MANDY]->GetPosition().x, characters[MANDY]->GetBottom()));
+								t->IsActive = true;
+							}
+							else
+							{
+								t->Child()->SetTarget(CIwFVec2(0,0));
+								t->IsActive = false;
+							}
+							std::cout << "Elevator is now " << t->IsActive << std::endl;
+						}
+					}
 				}
-
-				if (m_activeTerminal->Child()->GetType() == Door)
-					m_activeTerminal->Child()->IsActive = false;
 			}
+
+			if (t->Child()->GetType() == Elevator)
+			{
+				t->Child()->DoAbility(t->Child()->GetTarget(), state->m_deltaTime);
+			}
+
+			m_UpPressed = false;
+			m_MouseClicked = false;
+			m_ClickLocation = CIwFVec2(0,0);
 		}
 	}
 }
+
 
 void GameplayState::Draw(StateEngine* state)
 {

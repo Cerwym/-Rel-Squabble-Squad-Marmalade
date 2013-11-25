@@ -5,6 +5,7 @@ GameObject::GameObject(const char* name, ObjectType t, bool flag) : Sprite (name
 	m_Type = t;
 	IsActive = true;
 	m_AbilityUsed = false;
+	m_targetPosition = CIwFVec2(0,0);
 }
 
 void GameObject::DoAbility(const CIwFVec2& target, const double dt)

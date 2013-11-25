@@ -93,6 +93,7 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					{
 						GameObject* t = new GameObject("terminal", Terminal, true);
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
+						t->IsActive = false;
 						m_Objects.push_back(t);
 					}
 
@@ -298,7 +299,12 @@ void TileMap::Draw(Camera* cam) // make it aware of cam, if not on screen, don't
 
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
-		if ((*it)->IsActive == true)
+		if ((*it)->GetType() == Door)
+		{
+			if ((*it)->IsActive)
+				(*it)->Draw();
+		}
+		else
 			(*it)->Draw();	
 	}
 }

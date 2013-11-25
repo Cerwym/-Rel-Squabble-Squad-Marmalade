@@ -41,11 +41,6 @@ bool Collider::isColliding(Collider* other)
 
 CIwFVec2 Collider::isCollidingC(Collider* other) // add in force it's moving by
 {
-	// declare top left bottom right of rects for collision calculations
-	//std::cout << "Old TL" << m_OldTL.x << "," << m_OldTL.y << std::endl;
-	//m_OldTL = CIwFVec2(m_Position.x, m_Position.y);        
-	//m_OldBR = CIwFVec2(m_Position.x + m_size.x, m_Position.y + m_size.y);
-
 	CIwFVec2 TopLeft1 = CIwFVec2(m_Position.x, m_Position.y);
 	CIwFVec2 TopLeft2 = CIwFVec2(other->GetPosition().x, other->GetPosition().y);
 	CIwFVec2 BottomRight1 = CIwFVec2(m_Position.x + m_size.x, m_Position.y + m_size.y);
@@ -55,7 +50,6 @@ CIwFVec2 Collider::isCollidingC(Collider* other) // add in force it's moving by
 
 	// default as last collision incase there was no change
 	//Result = OldCollision;
-	bool h = false;
 	// check all sides for a collision
 	if(!((TopLeft1.x > BottomRight2.x)||(BottomRight1.x < TopLeft2.x)||(TopLeft1.y > BottomRight2.y)||(BottomRight1.y < TopLeft2.y)))
 	{
@@ -83,24 +77,12 @@ CIwFVec2 Collider::isCollidingC(Collider* other) // add in force it's moving by
 			// Bottom
 			Result = CIwFVec2(BottomRight1.x - m_OldBR.x,0);
 		}
-/*
-		if(m_OldTL.x < TopLeft2.x && m_OldBR.x < BottomRight2.x){   
-			Result.x = (TopLeft1.x - m_OldTL.x);
-			m_CollisionLocation.Left = true;
-			h = true;
-		}
-*/
 	}
 	else
 	{
 		// update the old bounds if no collision has happened these are "Safe" coordinates
 		m_OldTL = CIwFVec2(m_Position.x, m_Position.y);        
 		m_OldBR = CIwFVec2(m_Position.x + m_size.x, m_Position.y + m_size.y);
-		m_CollisionLocation.Top = false;
-		m_CollisionLocation.Bottom = false;
-		m_CollisionLocation.Left = false;
-		m_CollisionLocation.Right = false;
-		h = false;
 	}
 
 	// return the collision        data

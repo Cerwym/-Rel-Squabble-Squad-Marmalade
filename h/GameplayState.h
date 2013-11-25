@@ -91,6 +91,8 @@ private:
 
 	std::vector<Sprite*> m_Layers;
 
+	CIwFVec2 m_ClickLocation;
+
 	Camera* m_Cam;
 	TileMap* m_Level;
 };
