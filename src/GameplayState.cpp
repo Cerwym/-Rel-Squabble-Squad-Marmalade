@@ -164,11 +164,9 @@ void GameplayState::HandleEvent(StateEngine* state)
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_RIGHT)
 				characters[m_CharacterIndex]->SetDirection(FACING_LEFT);
 
-			std::cout << "My Position was : "; characters[m_CharacterIndex]->Debug_PrintPos();
-			characters[m_CharacterIndex]->MoveBy(CIwFVec2(-5,0),0);
+			characters[m_CharacterIndex]->MoveBy(CIwFVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0),state->m_deltaTime);
 			CheckCollisions(m_CharacterIndex);
 
-			std::cout << "It is now : "; characters[m_CharacterIndex]->Debug_PrintPos();
 		}
 
 		if (n_guiButtons[1]->isColliding((CIwFVec2((float)s3ePointerGetX(), (float)s3ePointerGetY()))))
@@ -176,7 +174,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_LEFT)
 				characters[m_CharacterIndex]->SetDirection(FACING_RIGHT);
 
-			characters[m_CharacterIndex]->MoveBy(CIwFVec2(5,0),0);
+			characters[m_CharacterIndex]->MoveBy(CIwFVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x, 0),state->m_deltaTime);
 			CheckCollisions(m_CharacterIndex);
 		}
 
@@ -312,6 +310,7 @@ void GameplayState::CheckObjects(const int &pCharacter)
 void GameplayState::CheckInterations(StateEngine* state)
 {
 	int count = 0;
+	int eCount = 0;
 	int exitCount = 0;
 
 	int debug_ele = 0;
@@ -334,22 +333,22 @@ void GameplayState::CheckInterations(StateEngine* state)
 					{
 						t->Child()->IsActive = false;
 						count++;
-						//if (TEMP_HASPLAYED == false)
-						//{
 						buttonSound->Play();
-						//EMP_HASPLAYED = true;
-						//}
 					}
 
-					if ((i == NIGEL) && (t->Child()->GetType() == Elevator))
+					if (t->Child()->GetType() == Elevator)
 					{
-						if (characters[DAVE]->isColliding(t->Child()))
-							characters[DAVE]->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 182));
+						for (int s = 0; s < 3; s++)
+						{
+							if (s != i)
+							{
+								if (characters[s]->isColliding(t->Child()))
+									characters[s]->MoveBy(CIwFVec2(0, -4),0);
+								eCount++;
+							}
+						}
 
-						if (characters[MANDY]->isColliding(t->Child()))
-							characters[MANDY]->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y - 142));
-
-						t->Child()->SetPosition(CIwFVec2(t->Child()->GetPosition().x, characters[NIGEL]->GetPosition().y + 54));
+						t->Child()->DoAbility(CIwFVec2(0,characters[i]->GetBottom()),state->m_deltaTime);
 					}
 				}
 				else
@@ -358,6 +357,10 @@ void GameplayState::CheckInterations(StateEngine* state)
 					{
 						t->Child()->IsActive = true;
 					}
+
+					if (eCount == 0)
+						if (t->Child()->GetType() == Elevator)
+							t->Child()->DoAbility(CIwFVec2(0,0),state->m_deltaTime);
 				}
 			}
 		}

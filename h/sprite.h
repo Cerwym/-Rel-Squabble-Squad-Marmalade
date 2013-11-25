@@ -26,6 +26,7 @@ public:
 	inline void SetCenter(const CIwSVec2& center) { m_Center = center; }
 	inline CIwFVec2 GetPosition() { return m_Position; }
 	inline void SetPosition(const CIwFVec2& position) { m_Position = position; }
+	inline float GetBottom(){return m_Position.y + m_Height;}
 	inline void SetMovSpeed(const CIwFVec2& speed) { m_MovSpeed = speed; }
 	inline void ResetPosition() { m_Position = m_LastPosition;}
 	inline CIwFVec2 GetMovSpeed() {return m_MovSpeed;}

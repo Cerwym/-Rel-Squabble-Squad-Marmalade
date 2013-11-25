@@ -69,7 +69,9 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					if (buff[x] == 'E')
 					{
 						GameObject* t = new GameObject("elevator", Elevator, true);
-						t->SetPosition(CIwFVec2(((x * 32)), (y * 32))); // its width
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32) + 32)); // its width
+						// For the elevator we will need to store the location where it spawns because of logic that makes it raise and lower.
+						t->SetStartPosition(t->GetPosition());
 						m_Objects.push_back(t);
 					}
 
