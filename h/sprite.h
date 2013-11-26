@@ -96,7 +96,8 @@ private:
 	float m_yVel;
 	float m_Width, m_Height;
 	const char* m_Name;
-	float TEMP_BEFOREJUMPY;
+	float m_JumpTarget_y;
+	float posBeforeJump;
 	int TEMP_BOUNCECOUNT;
 	CIwSVec2 TEMP_colliderPos;
 	/* 

@@ -149,12 +149,21 @@ void Sprite::Update(float deltaTime)
 	if (TEMP_JUSTJUMPED)
 	{
 		if (TEMP_LANDEDJUMP == false)
-			if(GetPosition().y >= TEMP_BEFOREJUMPY)
+		{
+			if(GetPosition().y >= m_JumpTarget_y)
 				MoveBy(CIwFVec2(0, -8), 0);
+		}
 
-		if (GetPosition().y <= TEMP_BEFOREJUMPY)
+		if (GetPosition().y <= m_JumpTarget_y)
 		{
 			TEMP_JUSTJUMPED = false;
+		}
+
+	}
+	if (TEMP_JUSTJUMPED == false && TEMP_LANDEDJUMP == false)
+	{
+		if (GetPosition().y >= posBeforeJump)
+		{
 			TEMP_LANDEDJUMP = true;
 		}
 	}
@@ -172,8 +181,9 @@ void Sprite::Jump()
 {
 	if (TEMP_LANDEDJUMP == true)
 	{
+		posBeforeJump = GetPosition().y;
 		TEMP_JUSTJUMPED = true;
-		TEMP_BEFOREJUMPY = m_Position.y - JUMP_HEIGHT;
+		m_JumpTarget_y = m_Position.y - JUMP_HEIGHT;
 		TEMP_LANDEDJUMP = false;
 	}
 }
