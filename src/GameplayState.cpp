@@ -345,7 +345,9 @@ void GameplayState::CheckInterations(StateEngine* state)
 							}
 						}
 
+						std::cout << "Position was "; t->Child()->Debug_PrintPos();
 						t->Child()->DoAbility(CIwFVec2(0,characters[i]->GetBottom()),state->m_deltaTime);
+						std::cout << "Position is "; t->Child()->Debug_PrintPos();
 					}
 				}
 				else
@@ -360,18 +362,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 							t->Child()->DoAbility(CIwFVec2(0,0),state->m_deltaTime);
 				}
 			}
-		}
-
-
-		if (t->GetType() == Terminal)
-		{
-			if (characters[MANDY]->isColliding(t))
-			{
-				m_isTermActive = true;
-				m_activeTerminal = t;
-			}
-			else
-				m_isTermActive = false;
 		}
 
 		// Check to see if all the characters have reached the exit, if this is true, load the game over screen
