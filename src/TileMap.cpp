@@ -205,6 +205,9 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					if (buff[x] == 'm')
 						m_SpawnPos.at(2) = CIwFVec2(x * 32,(y * 32) - 69); // offset by sprite's height
 				}
+
+				if (x == line.length() - 1)
+					m_LevelMaxBounds.x = (x * 32);
 			}
 			y++;
 			line.clear();
@@ -212,6 +215,8 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 		infile.close();
 	}
 
+	m_LevelMaxBounds.y = (y * 32);
+	std::cout << "Size of the level is " << m_LevelMaxBounds.x << "," << m_LevelMaxBounds.y << std::endl;
 	// Link up the GameObjects
 	printf("Level %s loaded\n", lvlFile);
 	AddRelationships(rFile);

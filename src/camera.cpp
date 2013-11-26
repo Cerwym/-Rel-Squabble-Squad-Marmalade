@@ -3,10 +3,12 @@
 #include "IwGx.h"
 #include <iostream>
 
-Camera::Camera()
+Camera::Camera(int w, int h)
 {
 	m_Position = CIwFVec2(0,0);
 	Position = CIwSVec2(0,0);
+	screenHeight = h;
+	screenWidth = w;
 }
 
 Camera::~Camera()
@@ -14,48 +16,24 @@ Camera::~Camera()
 	Iw2DSetTransformMatrix(CIwMat2D::g_Identity);
 }
 
-void Camera::Update()
+void Camera::SetPosition(const CIwSVec2& p)
 {
-	//Iw2DSetTransformMatrix(CIwMat2D::g_Identity);
-	//	Iw2DSetTransformMatrix(m_Transform);
+	CIwSVec2 tempP = p;
+	if (p.x > 0)
+		tempP.x = 0;
 
-	/*
-	//stub, maybe use to rebuild transforms
-	
-	//keep a track of the function callstack at runtime
-	IW_CALLSTACK("Camera::Update");
+	if (p.x < -m_LevelBounds.x - 32 + screenWidth)
+		tempP.x = -m_LevelBounds.x - 32 + screenWidth;
 
-	IwAssertMsg(APP, m_CamTarget, ("Update was called, but the camera has no target"));
-
-	CIwFMat viewMatrix = CIwFMat::g_Identity;
-
-	if (m_CamTarget)
-	{
-		//
-		m_Position.x = m_CamTarget->GetPosition().x;
-		m_Position.y = m_CamTarget->GetPosition().y + (m_CamTarget->GetHeight() / 2);
-
-		CIwFVec3 lookPos = m_Position;
-		lookPos.y = 0.0f;
-
-		viewMatrix.LookAt(m_Position, lookPos, CIwFVec3::g_AxisZ);
-		viewMatrix.t = m_Position;
-		std::cout << "Tracking @ " << m_Position.x << "," << m_Position.y << std::endl; 
-		std::cout << "vMatrix @: " << viewMatrix.GetTrans().x << "," << viewMatrix.GetTrans().y << "," << viewMatrix.GetTrans().z << std::endl;
-	}
-
-	IwGxSetPerspMul((float) IwGxGetScreenWidth() * 0.5f);
-	IwGxSetFarZNearZ(6000.0f, 10.0f);
-	IwGxSetViewMatrix(&viewMatrix);
-
-	m_VMatrix = viewMatrix;
-
-	std::cout << "Update Finished" << std::endl;
-
-	*/
+	m_Position = tempP;
+	CIwMat2D test = CIwMat2D::g_Identity;
+	test.SetTrans(m_Position);
+	Iw2DSetTransformMatrix(test);
+	m_Transform = test;
 }
 
-void Camera::Debug_PrintPosition()
+void Camera::MoveBy(const CIwSVec2& m)
 {
-	std::cout << "Camera's Position -> " << m_Position.x << "," << m_Position.y;
+	m_Position += m;
+	SetPosition(m_Position);
 }

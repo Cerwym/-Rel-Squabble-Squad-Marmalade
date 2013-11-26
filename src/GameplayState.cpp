@@ -48,11 +48,11 @@ void GameplayState::Init()
 	m_MouseClicked = false;
 	TEMP_HASPLAYED = false;
 	m_ClickLocation = CIwFVec2(0,0);
-	m_Cam = new Camera;
+	m_Level = new TileMap("levels\\levelproto1.txt", "levels\\levelrelationships1.txt");
+	m_Cam = new Camera(screenWidth, screenHeight);
 	m_Cam->SetPosition(CIwSVec2(0, 0));
 	m_Cam->Position = CIwSVec2(0, 0);
-
-	m_Level = new TileMap("levels\\levelproto1.txt", "levels\\levelrelationships1.txt");
+	m_Cam->SetLevelBounds(m_Level->GetLevelBounds());
 	SpawnCharacters();
 
 	m_Layers.push_back(new Sprite("layer1", false));
@@ -237,7 +237,6 @@ void GameplayState::Update(StateEngine* state, double dt)
 		
 	}
 
-	// Set the camera's position to the currently controlled player, at the bottom and (roughly) towards the center of the screen.
 	m_Cam->SetPosition(
 		CIwSVec2(static_cast<int16>(-characters[m_CharacterIndex]->GetPosition().x + (screenWidth /2)),
 		static_cast<int16>(-characters[m_CharacterIndex]->GetPosition().y + (screenHeight - characters[m_CharacterIndex]->GetHeight() - 32))));

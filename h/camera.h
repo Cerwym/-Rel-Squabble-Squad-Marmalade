@@ -7,38 +7,27 @@ class Camera
 {
 public:
 
-	Camera();
+	Camera(int,int);
 	~Camera();
 	
 	CIwSVec2 GetPosition(){return m_Position;}
-	void SetPosition(const CIwSVec2& p)
-	{
-		m_Position = p;
-		CIwMat2D test = CIwMat2D::g_Identity;
-		test.SetTrans(m_Position);
-		Iw2DSetTransformMatrix(test);
-		m_Transform = test;
-	}
+	void SetPosition(const CIwSVec2& p);
 
-	void MoveBy(const CIwSVec2& m)
-	{
-		m_Position += m;
-		SetPosition(m_Position);
-	}
+	void Camera::MoveBy(const CIwSVec2& m);
+
+	void SetLevelBounds(CIwFVec2& b) {m_LevelBounds = b;}
 
 	inline CIwMat2D GetTranslation(){return m_Transform;}
-	
-	void Debug_PrintPosition();
 
-	void Update();
 	CIwSVec2 Position;
 private:
 
 	// The position of the camera in relation to the world view
 	CIwSVec2 m_Position;
-	CIwFVec2 viewPort;
+	CIwFVec2 m_LevelBounds;
 	float camSpeed;
 	CIwMat2D m_Transform;
+	int screenWidth, screenHeight;
 
 };
 
