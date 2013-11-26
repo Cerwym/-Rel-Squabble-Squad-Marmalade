@@ -34,6 +34,8 @@ public:
 public:
 	// New functions
 	void CheckInterations(StateEngine* state);
+	void CheckCollisions(const int &pCharacter);
+	void CheckObjects(const int &pCharacter);
 	void SpawnCharacters();
 	void ScrollBackground(CIwFVec2& scrollBy);
 	void PlayEff(CIwSoundSpec* spec, CIwSoundInst* inst);
@@ -52,13 +54,13 @@ private:
 	int m_TimeToOneSec;
 	int m_CountUpdates;
 	int m_UpdatesPerSec;
+	int buttonSoundCount;
 
 	int screenWidth;
 	int screenHeight;
 
 	bool m_MouseClicked;
 	bool m_SpacePressed;
-	bool m_UpPressed;
 
 	Sprite* m_throwingTarget;
 	Sprite* n_guiButtons[2];
@@ -85,6 +87,8 @@ private:
 	bool TEMP_HASPLAYED;
 
 	std::vector<Sprite*> m_Layers;
+
+	CIwFVec2 m_ClickLocation;
 
 	Camera* m_Cam;
 	TileMap* m_Level;

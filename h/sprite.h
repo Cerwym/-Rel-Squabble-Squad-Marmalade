@@ -7,7 +7,7 @@
 #include "camera.h"
 #include "Collider.h"
 
-#define GRAVITY 0.278f
+#define GRAVITY 6.78f
 #define JUMP_HEIGHT 128
 
 enum FACING{FACING_RIGHT = 0, FACING_LEFT = 1}; 
@@ -22,7 +22,9 @@ public:
 	inline void SetCenter(const CIwSVec2& center) { m_Center = center; }
 	inline CIwFVec2 GetPosition() { return m_Position; }
 	inline void SetPosition(const CIwFVec2& position) { m_Position = position; }
+	inline float GetBottom(){return m_Position.y + m_Height;}
 	inline void SetMovSpeed(const CIwFVec2& speed) { m_MovSpeed = speed; }
+	CIwFVec2 GetScreenPosition(Camera* cam){}
 	inline void ResetPosition() { m_Position = m_LastPosition;}
 	inline CIwFVec2 GetMovSpeed() {return m_MovSpeed;}
 	// past in a const reference to CIWVec2 instead of the class itself
@@ -41,13 +43,16 @@ public:
 	CIwImage GetCollisionMap() const {return m_CollisionMap;}
 	CIw2DImage* GetImage() const {return m_Image;}
 	void SetMaterial();
-	void MoveBy(const CIwFVec2& position, double dt);
+	void MoveBy(const CIwFVec2& val, double dt);
 
 	inline iwangle GetRotation() { return m_Angle; }
 	inline void SetRotation(const iwangle& angle) { m_Angle = angle; }
 
 	inline float GetHeight(){return m_Height;}
 	inline float GetWidth(){return m_Width;}
+
+	CIwFVec2 GetLastPosition(){return m_LastPosition;}
+	CIwFVec2 GetLastMovement(){return m_LastMovementVal;}
 
 	bool hasCollider(){ return m_hasCollider;}
 
@@ -63,10 +68,11 @@ public:
 	bool isColliding(Sprite* other);
 	void Animate(double dt);
 
+	void Jump();
+
 	void Debug_PrintPos();
 	bool ShowColliderPos;
 
-	bool TEMP_ISFALLING;
 	bool TEMP_JUSTJUMPED;
 	bool TEMP_LANDEDJUMP;
 	bool TEMP_ISCOLLIDING;
@@ -74,9 +80,12 @@ public:
 protected:
 
 private:
+	void SetLastX(float x){ m_LastMovementVal.x = x;}
+	void SetLastY(float y){ m_LastMovementVal.y = y;}
 	CIwSVec2 m_Center; // The center of the image to rotate around
 	CIwFVec2 m_Position; // Screen position
 	CIwFVec2 m_LastPosition;
+	CIwFVec2 m_LastMovementVal;
 	CIwFVec2 m_MovSpeed;
 	
 	iwangle m_Angle;
