@@ -288,9 +288,7 @@ void GameplayState::CheckObjects(const int &pCharacter)
 					if (t->IsActive)
 					{
 						if (doorSoundInst == NULL)
-						{
 							doorSoundInst = doorSound->Play();
-						}
 						else
 						{
 							if (!doorSoundInst->IsPlaying())
@@ -298,7 +296,7 @@ void GameplayState::CheckObjects(const int &pCharacter)
 						}
 
 						characters[pCharacter]->MoveBy(-characters[pCharacter]->GetLastMovement(),0);
-						if (pCharacter == NIGEL)
+						if (pCharacter == NIGEL) // If nigel is being thrown, he needs to stop as the force of the throw will be greater than the inverse movement value
 						{
 							if (m_isThrowing)
 							{
@@ -306,6 +304,9 @@ void GameplayState::CheckObjects(const int &pCharacter)
 								m_isThrowing = false;
 							}
 						}
+
+						if (pCharacter == MANDY) // If mandy is jumping and colliding with a door, she should not be allowed to jump again until she lands on the floor
+							characters[MANDY]->TEMP_JUSTJUMPED = false;
 					}
 				}
 			}
