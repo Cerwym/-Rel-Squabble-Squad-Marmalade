@@ -320,9 +320,48 @@ void GameplayState::CheckInterations(StateEngine* state)
 		GameObject *t = m_Level->GetObjects().at(s);
 		t->UpdateCollider();
 		// Test if any of the characters hit this object
+		if (t->GetType() == Button)
+		{
+			if (t->Child()->GetType() == Elevator)
+			{
+				CIwFVec2 target = CIwFVec2(0,0);
+
+				for (int i = 0; i < 3; i++)
+				{
+					if (characters[i]->isColliding(t))
+					{
+						target = CIwFVec2(0, characters[i]->GetBottom());
+					}
+					else if (characters[i]->isColliding(t->Child()))
+					{
+						characters[i]->MoveBy(CIwFVec2(0, -4),0);
+					}
+				}
+
+				t->Child()->DoAbility(target, state->m_deltaTime);
+			}
+
+			/* I want to fix this to work correctly do the code is easier to read.
+			if (t->Child()->GetType() == Door)
+			{
+				int collideCount = 0;
+				for (int i = 0; i < 3; i++)
+				{
+					if (characters[i]->isColliding(t))
+					{
+						collideCount +=1;
+						std::cout << "Standing on a button " <<std::endl; 
+					}
+				}
+				if (collideCount <= 0)
+					t->Child()->IsActive = true; 
+				else 
+					t->Child()->IsActive = false;
+			}*/
+		}
+		// ToDo: remove this object specific logic.
 		for (int i = 0; i < 3; i++)
 		{
-			// First of all, test to see if a character hits something.
 			if (t->GetType() == Button)
 			{
 				if (characters[i]->isColliding(t))
@@ -333,33 +372,11 @@ void GameplayState::CheckInterations(StateEngine* state)
 						count++;
 						buttonSound->Play();
 					}
-
-					if (t->Child()->GetType() == Elevator)
-					{
-						for (int s = 0; s < 3; s++)
-						{
-							if (s != i)
-							{
-								if (characters[s]->isColliding(t->Child()))
-									characters[s]->MoveBy(CIwFVec2(0, -4),0);
-								eCount++;
-							}
-						}
-
-						std::cout << "Character " << i << "is on the button" << std::endl;
-						t->Child()->DoAbility(CIwFVec2(0,characters[i]->GetBottom()),state->m_deltaTime);
-					}
 				}
 				else
 				{
 					if (count == 0)
-					{
 						t->Child()->IsActive = true;
-					}
-
-					if (eCount == 0)
-						if (t->Child()->GetType() == Elevator)
-							t->Child()->DoAbility(CIwFVec2(0,0),state->m_deltaTime);
 				}
 			}
 		}
@@ -386,7 +403,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 			{
 				if (characters[MANDY]->isColliding(t))
 				{
-					//CIwFVec2 fag = CIwFVec2((s3ePointerGetX() - (float)m_Cam->GetPosition().x)  - ( characters[MANDY]->GetWidth() /2) , (s3ePointerGetY() - (float)m_Cam->GetPosition().y ) - (characters[MANDY]->GetHeight() /2))
 					if (characters[MANDY]->isColliding(m_ClickLocation))
 					{
 						terminalSound->Play();
