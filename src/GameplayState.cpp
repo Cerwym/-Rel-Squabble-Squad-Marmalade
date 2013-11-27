@@ -127,7 +127,7 @@ void GameplayState::SpawnCharacters()
 
 	for (int i = 0; i < 3; i++)
 	{
-		characters[i]->ShowColliderPos = true;
+		//characters[i]->ShowColliderPos = true;
 	}
 
 }
@@ -298,6 +298,14 @@ void GameplayState::CheckObjects(const int &pCharacter)
 						}
 
 						characters[pCharacter]->MoveBy(-characters[pCharacter]->GetLastMovement(),0);
+						if (pCharacter == NIGEL)
+						{
+							if (m_isThrowing)
+							{
+								m_canThrow = false;
+								m_isThrowing = false;
+							}
+						}
 					}
 				}
 			}
