@@ -233,8 +233,7 @@ void GameplayState::Update(StateEngine* state, double dt)
 	for (int i = 0; i <3; i++)
 	{
 		CheckObjects(i);
-		CheckCollisions(i);
-		
+		CheckCollisions(i);	
 	}
 
 	m_Cam->SetPosition(
@@ -268,6 +267,9 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 					m_isThrowing = false;
 				}
 			}
+			// If the colliding object is lower (on screen higher) than the character, set the jumping flag to be false
+			if (t->GetBottom() < characters[pCharacter]->GetBottom())
+				characters[pCharacter]->TEMP_JUSTJUMPED = false;
 		}
 	}
 }
@@ -344,9 +346,8 @@ void GameplayState::CheckInterations(StateEngine* state)
 							}
 						}
 
-						std::cout << "Position was "; t->Child()->Debug_PrintPos();
+						std::cout << "Character " << i << "is on the button" << std::endl;
 						t->Child()->DoAbility(CIwFVec2(0,characters[i]->GetBottom()),state->m_deltaTime);
-						std::cout << "Position is "; t->Child()->Debug_PrintPos();
 					}
 				}
 				else

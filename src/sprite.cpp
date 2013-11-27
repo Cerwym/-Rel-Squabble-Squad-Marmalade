@@ -146,7 +146,7 @@ void Sprite::Update(float deltaTime)
 	// Make the character fall each frame
 	MoveBy(CIwFVec2(0, 2), 0);
 
-	if (TEMP_JUSTJUMPED)
+	if (TEMP_JUSTJUMPED) // If the jump button has been process, enter this loop until the height of the jump has been reached
 	{
 		if (TEMP_LANDEDJUMP == false)
 		{
@@ -179,11 +179,17 @@ void Sprite::UpdateCollider()
 
 void Sprite::Jump()
 {
+	if (TEMP_LANDEDJUMP == false && m_Position.y <= m_JumpTarget_y && TEMP_JUSTJUMPED == false)
+	{
+		TEMP_LANDEDJUMP = true;
+	}
+
 	if (TEMP_LANDEDJUMP == true)
 	{
 		posBeforeJump = GetPosition().y;
 		TEMP_JUSTJUMPED = true;
 		m_JumpTarget_y = m_Position.y - JUMP_HEIGHT;
+		std::cout << "Jump height has been set to " << m_JumpTarget_y << std::endl;
 		TEMP_LANDEDJUMP = false;
 	}
 }
