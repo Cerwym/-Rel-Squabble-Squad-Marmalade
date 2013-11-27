@@ -30,6 +30,7 @@ public:
 	// past in a const reference to CIWVec2 instead of the class itself
 	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar)
 	{
+		m_LastPosition = m_Position;
 		CIwFVec2 t = (m_Position + (end - m_Position) * scalar);
 		m_Position = t;
 		return t;
