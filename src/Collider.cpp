@@ -15,13 +15,13 @@ Collider::~Collider()
 	delete m_Collider;
 }
 
-bool Collider::isColliding(Collider* other)
+bool Collider::isColliding(Collider* other, CIwFVec2& offset)
 {
 	// declare top left bottom right of rects for collision calculations
 	CIwFVec2 TopLeft1 = CIwFVec2(m_Position.x, m_Position.y);
-	CIwFVec2 TopLeft2 = CIwFVec2(other->GetPosition().x, other->GetPosition().y);
+	CIwFVec2 TopLeft2 = CIwFVec2(other->GetPosition().x, other->GetPosition().y) + offset;
 	CIwFVec2 BottomRight1 = CIwFVec2(m_Position.x + m_size.x, m_Position.y + m_size.y);
-	CIwFVec2 BottomRight2 = CIwFVec2(other->GetPosition().x + other->m_size.x, other->GetPosition().y + other->m_size.y);
+	CIwFVec2 BottomRight2 = CIwFVec2(other->GetPosition().x + other->m_size.x, other->GetPosition().y + other->m_size.y) + offset;
 
 	CIwFVec2 Result = CIwFVec2(0.0f, 0.0f);
 
@@ -33,7 +33,7 @@ bool Collider::isColliding(Collider* other)
 		h = true;
 	else
 	{
-		m_OldTL = CIwFVec2(m_Position.x, m_Position.y);        
+		m_OldTL = CIwFVec2(m_Position.x, m_Position.y);
 		m_OldBR = CIwFVec2(m_Position.x + m_size.x, m_Position.y + m_size.y);
 		h = false;
 	}

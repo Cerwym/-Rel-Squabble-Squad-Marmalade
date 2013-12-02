@@ -49,6 +49,7 @@ void GameplayState::Init()
 	screenWidth = Iw2DGetSurfaceWidth();
 
 	m_CharacterIndex = 0;
+	m_ThrowingTargetSide = 0;
 	m_isThrowing = false;
 	m_isTermActive = false;
 	m_canThrow = false;
@@ -119,19 +120,19 @@ void GameplayState::SpawnCharacters()
 	characters[0] = new Sprite("dave_anim", true, CIwFVec2(4,1));
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
 	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
-	characters[0]->SetMovSpeed(CIwFVec2(2,0)); // Moves 2 units fast in the x axis (slow)
+	characters[0]->SetMovSpeed(CIwFVec2(2,5)); // Moves 2 units fast in the x axis (slow)
 	m_PortraitSounds[0] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("dave_selected", "CIwSoundSpec"));
 
 	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(4,1));
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
-	characters[1]->SetMovSpeed(CIwFVec2(5,0)); // Moves 5 units fast in the x axis (fastest)
+	characters[1]->SetMovSpeed(CIwFVec2(5,3)); // Moves 5 units fast in the x axis (fastest)
 	m_PortraitSounds[1] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("nigel_selected", "CIwSoundSpec"));
 
 	characters[2] = new Sprite("mandy_anim", true, CIwFVec2(4,1));
 	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
 	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
-	characters[2]->SetMovSpeed(CIwFVec2(3,0)); // Moves 3 units fast in the x axis (faster than dave, slower than nigel)
+	characters[2]->SetMovSpeed(CIwFVec2(3,2)); // Moves 3 units fast in the x axis (faster than dave, slower than nigel)
 	m_PortraitSounds[2] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("mandy_selected", "CIwSoundSpec"));
 
 	for (int i = 0; i < 3; i++)
@@ -143,6 +144,7 @@ void GameplayState::SpawnCharacters()
 
 void GameplayState::HandleEvent(StateEngine* state)
 {
+	m_Moving = false;
 	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN) && m_SpacePressed == false)
 	{
 		if (m_CharacterIndex == MANDY)
@@ -173,6 +175,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 		{
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_RIGHT)
 				characters[m_CharacterIndex]->SetDirection(FACING_LEFT);
+			m_Moving = true;
 
 			characters[m_CharacterIndex]->MoveBy(CIwFVec2((-5 * state->m_deltaTime) - characters[m_CharacterIndex]->GetMovSpeed().x, 0),state->m_deltaTime);
 			CheckCollisions(m_CharacterIndex);
@@ -182,6 +185,7 @@ void GameplayState::HandleEvent(StateEngine* state)
 		{
 			if (characters[m_CharacterIndex]->GetDirection() == FACING_LEFT)
 				characters[m_CharacterIndex]->SetDirection(FACING_RIGHT);
+			m_Moving = true;
 
 			characters[m_CharacterIndex]->MoveBy(CIwFVec2((5 * state->m_deltaTime) + characters[m_CharacterIndex]->GetMovSpeed().x, 0),state->m_deltaTime);
 			CheckCollisions(m_CharacterIndex);
@@ -213,16 +217,22 @@ void GameplayState::HandleEvent(StateEngine* state)
 	}
 
 	if (m_isThrowing)
-
 	{
-		characters[NIGEL]->LerpTo(CIwFVec2(m_throwingTarget->GetPosition().x, m_throwingTarget->GetPosition().y), 0.05f);
 		characters[NIGEL]->UpdateCollider();
-		//characters[NIGEL]->MoveBy(CIwFVec2(0,0),0);
-		//hack
-		if (characters[NIGEL]->isColliding(m_throwingTarget))
+		if (m_canThrow)
 		{
-			m_canThrow = false;
+			if (!characters[NIGEL]->isColliding(m_throwingTarget, CIwFVec2(m_throwingTarget->GetWidth() /2, -(m_throwingTarget->GetHeight() / 2))) && m_ThrowingTargetSide == 0 && m_Moving == false)
+			{
+				characters[NIGEL]->LerpTo(CIwFVec2(m_throwingTarget->GetPosition().x, m_throwingTarget->GetPosition().y), 0.05f);
+			}
+
+			else
+				m_canThrow = false;
+		}
+		else
+		{
 			m_isThrowing = false;
+			characters[NIGEL]->MoveBy(CIwFVec2(m_ThrowingTargetSide * 2,2),state->m_deltaTime);
 		}
 	}
 
@@ -265,7 +275,7 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 	for (size_t m = 0; m < m_Level->GetMap().size(); m++)
 	{
 		GameObject *t = m_Level->GetMap().at(m);
-		if (characters[pCharacter]->isColliding(t))
+		if (characters[pCharacter]->isColliding(t, CIwFVec2(0,0)))
 		{
 			characters[pCharacter]->SetPosition(characters[pCharacter]->GetLastPosition());
 			if (pCharacter == NIGEL)
@@ -274,6 +284,7 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 				{
 					m_canThrow = false;
 					m_isThrowing = false;
+					m_ThrowingTargetSide = 0;
 				}
 			}
 			// If the colliding object is lower (on screen higher) than the character, set the jumping flag to be false
@@ -288,9 +299,9 @@ void GameplayState::CheckObjects(const int &pCharacter)
 	for (size_t m = 0; m < m_Level->GetObjects().size(); m++)
 	{
 		GameObject *t = m_Level->GetObjects().at(m);
-		if (characters[pCharacter]->isColliding(t))
+		if (characters[pCharacter]->isColliding(t, CIwFVec2(0,0)))
 		{
-			if (characters[pCharacter]->isColliding(t))
+			if (characters[pCharacter]->isColliding(t, CIwFVec2(0,0)))
 			{
 				if (t->GetType() == Door)
 				{
@@ -346,13 +357,13 @@ void GameplayState::CheckInterations(StateEngine* state)
 
 				for (int i = 0; i < 3; i++)
 				{
-					if (characters[i]->isColliding(t))
+					if ( characters[i]->isColliding(t, CIwFVec2(0,0)) )
 					{
 						target = CIwFVec2(0, characters[i]->GetBottom());
 					}
-					else if (characters[i]->isColliding(t->Child()))
+					else if ( characters[i]->isColliding(t->Child(), CIwFVec2(0,0)) )
 					{
-						characters[i]->MoveBy(CIwFVec2(0, -4),0);
+						characters[i]->MoveBy(CIwFVec2(0, -4 - characters[i]->GetMovSpeed().y),0);
 					}
 				}
 
@@ -382,7 +393,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 		{
 			if (t->GetType() == Button)
 			{
-				if (characters[i]->isColliding(t))
+				if (characters[i]->isColliding(t,CIwFVec2(0,0)))
 				{
 					if (t->Child()->GetType() == Door)
 					{
@@ -404,7 +415,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 		{
 			if (t->GetType() == Exit)
 			{
-				if (characters[i]->isColliding(t) && exitCount !=3)
+				if (characters[i]->isColliding(t,CIwFVec2(0,0)) && exitCount !=3)
 					exitCount++;
 				if (exitCount == 3)
 				{
@@ -419,7 +430,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 		{
 			if (m_CharacterIndex == MANDY)
 			{
-				if (characters[MANDY]->isColliding(t))
+				if (characters[MANDY]->isColliding(t,CIwFVec2(0,0)))
 				{
 					if (characters[MANDY]->isColliding(m_ClickLocation))
 					{
@@ -449,7 +460,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 			{
 				for (int s = 0; s < 3; s++)
 				{
-					if (characters[s]->isColliding(t->Child()))
+					if (characters[s]->isColliding(t->Child(),CIwFVec2(0,0)))
 						characters[s]->MoveBy(CIwFVec2(0, -4),0);
 				}
 				t->Child()->DoAbility(t->Child()->GetTarget(), state->m_deltaTime);
@@ -466,9 +477,8 @@ void GameplayState::Draw(StateEngine* state)
 {
 
 	for (int i = 0; i < 4; i++)
-	{
 		m_Layers.at(i)->Draw(m_Cam->GetPosition());
-	}
+
 	m_Level->Draw(state->m_deltaTime);
 
 	for (int i = 0; i <3; i++)

@@ -108,12 +108,12 @@ bool Sprite::isColliding(const CIwFVec2& other)
 	return true;
 }
 
-bool Sprite::isColliding(Sprite* other)
+bool Sprite::isColliding(Sprite* other, CIwFVec2& offset)
 {
 	IW_CALLSTACK("Sprite::isColliding");
 
 	if (m_hasCollider && other->hasCollider())
-		return(m_Collider->isColliding(other->m_Collider));
+		return(m_Collider->isColliding(other->m_Collider, offset));
 	else
 		return false;
 }
@@ -144,7 +144,7 @@ void Sprite::Animate(double dt)
 void Sprite::Update(float deltaTime)
 {
 	// Make the character fall each frame
-	MoveBy(CIwFVec2(0, 2), 0);
+	MoveBy(CIwFVec2(0, m_MovSpeed.y), 0);
 
 	if (TEMP_JUSTJUMPED) // If the jump button has been process, enter this loop until the height of the jump has been reached
 	{

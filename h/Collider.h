@@ -16,7 +16,7 @@ public:
 	void Update(CIwFVec2 nPos);
 	void Draw();
 
-	bool isColliding(Collider* other);
+	bool isColliding(Collider* other, CIwFVec2& offset);
 	CIwFVec2 isCollidingC(Collider* other);
 	bool CollidingOnStep(Collider* other, CIwFVec2& step);
 

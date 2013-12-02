@@ -66,7 +66,7 @@ public:
 	void Draw(CIwSVec2& camPos);
 	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
-	bool isColliding(Sprite* other);
+	bool isColliding(Sprite* other, CIwFVec2& offset);
 	void Animate(double dt);
 
 	void Jump();

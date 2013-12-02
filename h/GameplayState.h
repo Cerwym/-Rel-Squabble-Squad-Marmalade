@@ -63,6 +63,7 @@ private:
 	bool m_SpacePressed;
 
 	Sprite* m_throwingTarget;
+	float m_ThrowingTargetSide;
 	Sprite* n_guiButtons[2];
 	Sprite* characters[3];
 	Sprite* m_Portraits[3];
@@ -77,6 +78,7 @@ private:
 	bool m_isThrowing;
 	bool m_canThrow;
 	bool m_gameOver;
+	bool m_Moving;
 
 	CIwSoundSpec* buttonSound;
 	CIwSoundInst* buttonSoundInst;
