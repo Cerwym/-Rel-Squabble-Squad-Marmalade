@@ -151,6 +151,8 @@ bool TransitionManager::TransitionIn(CIw2DImage* start, double transitionSpeed)
 
 	if (!f)
 		Fade(transitionSpeed);
+	else
+		Iw2DDrawImage(start, CIwSVec2(0,0)); // The image has fully faded in so draw it with its full alpha value
 
 	return f;
 }
@@ -171,6 +173,8 @@ bool TransitionManager::TransitionBetween(CIw2DImage* start, CIw2DImage* end, do
 
 	if (!f)
 		Fade(speed);
+	else
+		Iw2DDrawImage(end, CIwSVec2(0,0)); // The transition has fully occured so draw the target image with its full alpha value
 
 	return f;
 }

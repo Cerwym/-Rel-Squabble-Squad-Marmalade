@@ -66,6 +66,7 @@ private:
 	Sprite* n_guiButtons[2];
 	Sprite* characters[3];
 	Sprite* m_Portraits[3];
+	Sprite* m_PortraitsNot[3];
 	CIwSoundSpec* m_PortraitSounds[3];
 	CIwSoundInst* m_PortraitSoundInsts[3];
 	GameObject* m_activeTerminal;

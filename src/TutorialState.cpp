@@ -13,6 +13,7 @@ void TutorialState::Init()
 	m_TransManager.Init();
 	m_Splash1 = new Sprite("tutorial_page_1", false);
 	m_Splash2 = new Sprite("tutorial_page_2", false);
+	m_mouseClicked = false;
 	printf("TutorialState initialized\n");
 }
 
@@ -42,6 +43,11 @@ void TutorialState::HandleEvent(StateEngine* state)
 		SleepFor(2);
 		state->ChangeState(GameplayState::Instance());
 	}
+
+	if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
+		m_mouseClicked = true;
+	else
+		m_mouseClicked = false;
 }
 
 void TutorialState::Update(StateEngine* state, double dt)
@@ -55,8 +61,12 @@ void TutorialState::Draw(StateEngine* state)
 	{
 		if (m_TransManager.TransitionIn(m_Splash1->GetImage(), state->m_deltaTime + 1.5))
 		{
-			m_TransitionState = BETWEEN;
-			m_TransManager.Init();
+			if (m_mouseClicked)
+			{
+				m_TransitionState = BETWEEN;
+				m_TransManager.Init();
+			}
+			
 		}
 	}
 
@@ -64,17 +74,21 @@ void TutorialState::Draw(StateEngine* state)
 	{
 		if (m_TransManager.TransitionBetween(m_Splash1->GetImage(), m_Splash2->GetImage(), state->m_deltaTime + 1.5))
 		{
-			m_TransitionState = FADE_OUT;
-			m_TransManager.Init();
+			if (m_mouseClicked)
+			{
+				m_TransitionState = FADE_OUT;
+				m_TransManager.Init();
+			}
+			
 		}
 	}
 
 	if (m_TransitionState == FADE_OUT)
 	{
-		if (m_TransManager.TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 3.5))
+		if (m_TransManager.TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 3.5) )
 		{
 			m_TransManager.Destroy();
-			state->ChangeState(GameplayState::Instance());//std::cout << "Finished transitioning" << std::endl;
+			state->ChangeState(GameplayState::Instance());
 		}
 	}
 }

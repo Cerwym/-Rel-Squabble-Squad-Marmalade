@@ -15,16 +15,25 @@ void GameplayState::Init()
 {
 	IwGetResManager()->LoadGroup("sprites.group");
 	m_Portraits[0] = new Sprite("dave_port", true);
+	m_PortraitsNot[0] = new Sprite("dave_port_b", true);
 	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
+	m_PortraitsNot[0]->SetPosition(CIwFVec2(130,0));
 	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
+	m_PortraitsNot[0]->BuildCollision("portraits\\dave_port.png");
 
 	m_Portraits[1] = new Sprite("nigel_port", true);
+	m_PortraitsNot[1] = new Sprite("nigel_port_b", true);
 	m_Portraits[1]->SetPosition(CIwFVec2(210,0));
+	m_PortraitsNot[1]->SetPosition(CIwFVec2(210,0));
 	m_Portraits[1]->BuildCollision("portraits\\nigel_port.png");
+	m_PortraitsNot[1]->BuildCollision("portraits\\nigel_port.png");
 
 	m_Portraits[2] = new Sprite("mandy_port", true);
+	m_PortraitsNot[2] = new Sprite("mandy_port_b", true);
 	m_Portraits[2]->SetPosition(CIwFVec2(290,0));
+	m_PortraitsNot[2]->SetPosition(CIwFVec2(290, 0));
 	m_Portraits[2]->BuildCollision("portraits\\mandy_port.png");
+	m_PortraitsNot[2]->BuildCollision("portraits\\mandy_port.png");
 
 	n_guiButtons[0] = new Sprite("touchScreenMoveL", true);
 	n_guiButtons[0]->SetPosition(CIwFVec2(0, 260));
@@ -465,7 +474,14 @@ void GameplayState::Draw(StateEngine* state)
 	for (int i = 0; i <3; i++)
 	{
 		characters[i]->Draw();
-		m_Portraits[i]->Draw(m_Cam->GetPosition());		
+		if (i != m_CharacterIndex)
+		{
+			m_Portraits[i]->Draw(m_Cam->GetPosition());
+		}
+		else
+		{
+			m_PortraitsNot[i]->Draw(m_Cam->GetPosition());
+		}
 	}
 
 	if (m_canThrow)

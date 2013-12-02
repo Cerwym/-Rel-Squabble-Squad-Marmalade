@@ -33,8 +33,7 @@ void MainMenuState::Resume()
 
 void MainMenuState::HandleEvent(StateEngine* state)
 {
-
-	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN))
+	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN) || (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
 	{
 		SleepFor(2);
 		state->ChangeState(TutorialState::Instance());

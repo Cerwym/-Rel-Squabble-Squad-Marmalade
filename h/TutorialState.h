@@ -39,6 +39,8 @@ private:
 	Sprite* m_Splash2;
 	TransitionManager m_TransManager;
 
+	bool m_mouseClicked;
+
 	enum TStat{FADE_IN = 0, BETWEEN = 1, FADE_OUT = 2}; TStat m_TransitionState;
 
 };

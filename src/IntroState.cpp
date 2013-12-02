@@ -44,7 +44,7 @@ void IntroState::Resume()
 
 void IntroState::HandleEvent(StateEngine* state)
 {
-	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN))
+	if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
 		state->ChangeState(MainMenuState::Instance());
 }
 
