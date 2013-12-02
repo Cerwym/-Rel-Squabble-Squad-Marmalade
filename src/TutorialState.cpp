@@ -10,6 +10,7 @@ TutorialState TutorialState::m_TutorialState;
 void TutorialState::Init()
 {
 	IwGetResManager()->LoadGroup("tutorialsprites.group");
+	m_TransitionState = FADE_IN;
 	m_TransManager.Init();
 	m_Splash1 = new Sprite("tutorial_page_1", false);
 	m_Splash2 = new Sprite("tutorial_page_2", false);

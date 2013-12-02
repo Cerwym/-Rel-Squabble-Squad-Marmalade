@@ -142,6 +142,7 @@ bool TransitionManager::TransitionIn(CIw2DImage* start, double transitionSpeed)
 	// Clear to black, capture the screen, draw the image to fade IN to and capture, then fade in to it
 	if (m_HasStarted == false)
 	{
+		m_alphaValue = 0;
 		Iw2DSurfaceClear(0xff000000);
 		CaptureStartScreen();
 		Iw2DDrawImage(start, CIwSVec2(0,0));
@@ -164,6 +165,7 @@ bool TransitionManager::TransitionBetween(CIw2DImage* start, CIw2DImage* end, do
 	// Clear to black, capture the screen, draw the image to fade IN to and capture, then fade in to it
 	if (m_HasStarted == false)
 	{
+		m_alphaValue = 0;
 		Iw2DDrawImage(start, CIwSVec2(0,0));
 		CaptureStartScreen();
 		Iw2DDrawImage(end, CIwSVec2(0,0));
@@ -186,6 +188,7 @@ bool TransitionManager::TransitionOut(CIw2DImage* end, double speed)
 	// Clear to black, capture the screen, draw the image to fade IN to and capture, then fade in to it
 	if (m_HasStarted == false)
 	{
+		m_alphaValue = 0;
 		Iw2DDrawImage(end, CIwSVec2(0,0));
 		CaptureStartScreen();
 		Iw2DSurfaceClear(0xff000000);
