@@ -36,6 +36,10 @@ private:
 	CIwResGroup* m_stateGroup;
 	TransitionManager m_Transmanager;
 	Sprite* m_menuImage;
+
+	bool m_mouseClicked;
+
+	enum TStat{FADE_IN = 0, BETWEEN = 1, FADE_OUT = 2}; TStat m_TransitionState;
 };
 
 #endif

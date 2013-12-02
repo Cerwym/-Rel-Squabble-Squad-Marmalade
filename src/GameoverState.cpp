@@ -13,6 +13,8 @@ void GameoverState::Init()
 	IwGetResManager()->LoadGroup("gameoversprites.group");
 	m_menuImage = new Sprite("game_over", false);
 	m_Transmanager.Init();
+	m_TransitionState = FADE_IN;
+	m_mouseClicked = false;
 	printf("GameoverState initialized\n");
 }
 
@@ -36,11 +38,10 @@ void GameoverState::Resume()
 void GameoverState::HandleEvent(StateEngine* state)
 {
 
-	if ( (s3eKeyboardGetState(s3eKeySpace) & S3E_POINTER_STATE_DOWN))
-	{
-		SleepFor(1.5);
-		state->ChangeState(MainMenuState::Instance());
-	}
+	if( (s3ePointerGetState(S3E_POINTER_BUTTON_SELECT) & S3E_POINTER_STATE_DOWN))
+		m_mouseClicked = true;
+	else
+		m_mouseClicked = false;
 }
 
 void GameoverState::Update(StateEngine* state, double dt)
@@ -49,6 +50,24 @@ void GameoverState::Update(StateEngine* state, double dt)
 
 void GameoverState::Draw(StateEngine* state)
 {
-	if (m_Transmanager.TransitionIn(m_menuImage->GetImage(), state->m_deltaTime + 3.5))
-		m_menuImage->Draw();
+	if (m_TransitionState == FADE_IN)
+	{
+		m_Transmanager.TransitionIn(m_menuImage->GetImage(), state->m_deltaTime + 3.5);
+		{
+			if (m_mouseClicked)
+			{
+				m_Transmanager.Init();
+				m_TransitionState = FADE_OUT;
+			}
+		}
+	}
+
+	if (m_TransitionState == FADE_OUT)
+	{
+		if (m_Transmanager.TransitionOut(m_menuImage->GetImage(), state->m_deltaTime + 3.5))
+		{
+			m_Transmanager.Destroy();
+			state->ChangeState(MainMenuState::Instance());
+		}
+	}
 }
