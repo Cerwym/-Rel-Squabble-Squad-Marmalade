@@ -467,7 +467,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 				for (int s = 0; s < 3; s++)
 				{
 					if (characters[s]->isColliding(t->Child(),CIwFVec2(0,0)))
-						characters[s]->MoveBy(CIwFVec2(0, -4),0);
+						characters[s]->MoveBy(CIwFVec2(0, -4 - characters[s]->GetMovSpeed().y),0);
 				}
 				t->Child()->DoAbility(t->Child()->GetTarget(), state->m_deltaTime);
 			}
