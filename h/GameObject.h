@@ -13,7 +13,8 @@ public:
 	GameObject(const char* name, ObjectType t, bool collisionFlag);
 	GameObject(const char* name, ObjectType t, bool collisionFlag, CIwFVec2 frames);
 	GameObject(const char* name, ObjectType t, bool collisionFlag, CIwSoundSpec* spec);
-
+	GameObject::~GameObject();
+	
 	void AddChildObject(GameObject* obj) {m_Child = obj;}
 	void AddTag(std::string tag) {m_Tag = tag;}
 	void SetStartPosition(CIwFVec2& pos) {if (m_Type == Elevator) m_startPosition = pos;}

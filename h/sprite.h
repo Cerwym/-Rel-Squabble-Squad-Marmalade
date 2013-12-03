@@ -99,8 +99,6 @@ private:
 	const char* m_Name;
 	float m_JumpTarget_y;
 	float posBeforeJump;
-	int TEMP_BOUNCECOUNT;
-	CIwSVec2 TEMP_colliderPos;
 	/* 
 		The difference between CIWsVec2 and CIwFVec2
 		CIwSvec2 takes in a 16bit bit signed integer (int16)

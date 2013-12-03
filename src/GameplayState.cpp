@@ -74,6 +74,8 @@ void GameplayState::Init()
 		s3eAudioPlay("audio\\bgmusic.mp3", 0);
 
 	buttonSound = new SoundEffect(static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec")));
+	m_ThrowingSound = new SoundEffect("dave_throw");
+	m_ThrowingNigelSound = new SoundEffect("nigel_throw");
 
 	terminalSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("terminal_selected", "CIwSoundSpec"));
 	terminalInst = NULL;
@@ -208,9 +210,11 @@ void GameplayState::HandleEvent(StateEngine* state)
 					
 					// Draw the current state or else we'll be in a loop that will show no updated frame
 					state->Draw();
+					m_ThrowingSound->ResetCounter();
 				}
 
 				m_isThrowing = true;
+				m_ThrowingSound->Play();
 				m_CharacterIndex = NIGEL;
 			}
 		}
@@ -225,11 +229,15 @@ void GameplayState::HandleEvent(StateEngine* state)
 		{
 			if (!characters[NIGEL]->isColliding(m_throwingTarget, CIwFVec2(m_throwingTarget->GetWidth() /2, -(m_throwingTarget->GetHeight() / 2))) && m_ThrowingTargetSide == 0 && m_Moving == false)
 			{
+				m_ThrowingNigelSound->Play();
 				characters[NIGEL]->LerpTo(CIwFVec2(m_throwingTarget->GetPosition().x, m_throwingTarget->GetPosition().y), 0.05f);
 			}
 
 			else
+			{
 				m_canThrow = false;
+				m_ThrowingNigelSound->ResetCounter();
+			}
 		}
 		else
 		{
@@ -286,7 +294,7 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 				{
 					m_canThrow = false;
 					m_isThrowing = false;
-					m_ThrowingTargetSide = 0;
+					m_ThrowingNigelSound->ResetCounter();
 				}
 			}
 			// If the colliding object is lower (on screen higher) than the character, set the jumping flag to be false

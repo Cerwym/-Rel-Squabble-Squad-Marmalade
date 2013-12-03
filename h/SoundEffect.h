@@ -6,6 +6,7 @@ class SoundEffect
 {
 public:
 	SoundEffect(CIwSoundSpec* file);
+	SoundEffect(const char* file);
 	~SoundEffect();
 
 	void Play();

@@ -26,6 +26,12 @@ GameObject::GameObject(const char* name, ObjectType t, bool flag, CIwSoundSpec* 
 	m_SoundEffect = new SoundEffect(spec);
 }
 
+GameObject::~GameObject()
+{
+	if (m_SoundEffect)
+		delete m_SoundEffect;
+}
+
 void GameObject::DoAbility(const CIwFVec2& target, const double dt)
 {
 	if (m_Type == Elevator)

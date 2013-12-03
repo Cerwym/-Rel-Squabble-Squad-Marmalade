@@ -8,6 +8,14 @@ SoundEffect::SoundEffect(CIwSoundSpec* file)
 	m_hasPlayed = false;
 }
 
+SoundEffect::SoundEffect(const char* file)
+{
+	m_spec = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed(file, "CIwSoundSpec"));
+	m_Instance = m_spec->Play(0);
+	m_Instance->Stop();
+	m_hasPlayed = false;
+}
+
 SoundEffect::~SoundEffect()
 {
 	m_Instance = NULL;

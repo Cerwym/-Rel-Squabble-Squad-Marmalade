@@ -147,20 +147,26 @@ ResGroupResources:
 		Size: 18986
 	CIwSoundData (0xd5610dab)
 		"dave_select" (0x177510a4)
-		Size: 95004
+		Size: 97946
 	CIwSoundData (0xd5610dab)
 		"mandy_select" (0x4524bdfd)
-		Size: 94718
+		Size: 90096
 	CIwSoundData (0xd5610dab)
 		"nigel_select" (0xf9d86f13)
-		Size: 50364
+		Size: 66096
 	CIwSoundData (0xd5610dab)
 		"terminal_select" (0x8c666e0)
 		Size: 19362
 	CIwSoundData (0xd5610dab)
 		"door_locked" (0x1055bbca)
 		Size: 77684
-	ResList 'CIwSoundData' pos:7351368 size:356128
+	CIwSoundData (0xd5610dab)
+		"dave_thrown" (0x1a03fa26)
+		Size: 83404
+	CIwSoundData (0xd5610dab)
+		"nigel_thrown" (0xfc675895)
+		Size: 107474
+	ResList 'CIwSoundData' pos:7351368 size:561058
 
 	CIwSoundSpec (0xd569853c)
 		"button_clicked" (0xe0861b8f)
@@ -180,12 +186,18 @@ ResGroupResources:
 	CIwSoundSpec (0xd569853c)
 		"locked_door" (0x9ac85ca)
 		Size: 30
-	ResList 'CIwSoundSpec' pos:7707496 size:190
+	CIwSoundSpec (0xd569853c)
+		"dave_throw" (0x180fa2b8)
+		Size: 30
+	CIwSoundSpec (0xd569853c)
+		"nigel_throw" (0x55396f47)
+		Size: 30
+	ResList 'CIwSoundSpec' pos:7912426 size:250
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:7707686 size:18063
+	ResList 'CIwGxFont' pos:7912676 size:18063
 
-ResGroupResources: Wrote 7725715 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 7930705 bytes to CIwResGroup "Sprites"
 

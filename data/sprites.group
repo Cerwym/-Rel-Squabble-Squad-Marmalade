@@ -101,6 +101,24 @@ CIwResGroup
 			vol 1.0
 		}
 
+		"./audio/dave_thrown.wav"
+		CIwSoundSpec
+		{
+			name "dave_throw"
+			data "dave_thrown"
+			loop false
+			vol 1.0
+		}
+
+		"./audio/nigel_thrown.wav"
+		CIwSoundSpec
+		{
+			name "nigel_throw"
+			data "nigel_thrown"
+			loop false
+			vol 1.0
+		}
+
 		
 		"./tiles/portal_anim.png"
 		"./textures/touchscreenMoveL.bmp"

@@ -87,6 +87,8 @@ private:
 	CIwSoundInst* doorSoundInst;
 
 	SoundEffect* buttonSound;
+	SoundEffect* m_ThrowingSound;
+	SoundEffect* m_ThrowingNigelSound;
 
 	bool TEMP_HASPLAYED;
 
