@@ -77,7 +77,7 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 
 					if (buff[x] == 'B')
 					{
-						GameObject* t = new GameObject("button", Button, true);
+						GameObject* t = new GameObject("button", Button, true,static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec")));
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32) + 20));
 						m_Objects.push_back(t);
 					}

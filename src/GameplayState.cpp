@@ -73,12 +73,14 @@ void GameplayState::Init()
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("audio\\bgmusic.mp3", 0);
 
-	buttonSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec"));
-	buttonSoundInst = NULL;
+	buttonSound = new SoundEffect(static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec")));
+
 	terminalSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("terminal_selected", "CIwSoundSpec"));
 	terminalInst = NULL;
 	doorSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("locked_door", "CIwSoundSpec"));
 	doorSoundInst = NULL;
+
+
 
 	buttonSoundCount = 0;
 	printf("GameplayState initialized\n");
@@ -399,13 +401,17 @@ void GameplayState::CheckInterations(StateEngine* state)
 					{
 						t->Child()->IsActive = false;
 						count++;
-						buttonSound->Play();
+						t->PlayEffect();
 					}
 				}
 				else
 				{
-					if (count == 0)
+					// Move this out
+					if (count == 0 && i == 2)
+					{
 						t->Child()->IsActive = true;
+						t->ResetEffect();
+					}
 				}
 			}
 		}

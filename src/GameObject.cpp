@@ -17,6 +17,15 @@ GameObject::GameObject(const char* name, ObjectType t, bool flag, CIwFVec2 frame
 	m_targetPosition = CIwFVec2(0,0);
 }
 
+GameObject::GameObject(const char* name, ObjectType t, bool flag, CIwSoundSpec* spec) : Sprite (name, flag)
+{
+	m_Type = t;
+	IsActive = true;
+	m_AbilityUsed = false;
+	m_targetPosition = CIwFVec2(0,0);
+	m_SoundEffect = new SoundEffect(spec);
+}
+
 void GameObject::DoAbility(const CIwFVec2& target, const double dt)
 {
 	if (m_Type == Elevator)
@@ -33,4 +42,14 @@ void GameObject::DoAbility(const CIwFVec2& target, const double dt)
 				MoveBy(CIwFVec2(0, 2 * dt), 0);
 		}
 	}
+}
+
+void GameObject::PlayEffect()
+{
+	m_SoundEffect->Play();
+}
+
+void GameObject::ResetEffect()
+{
+	m_SoundEffect->ResetCounter();
 }

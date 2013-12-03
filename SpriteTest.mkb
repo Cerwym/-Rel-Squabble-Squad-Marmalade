@@ -19,6 +19,7 @@ files
 	GameoverState.cpp
 	TutorialState.cpp
 	TransitionManager.cpp
+	SoundEffect.cpp
     (h)
     sprite.h
 	camera.h
@@ -34,6 +35,7 @@ files
 	GameoverState.h
 	TutorialState.h
 	TransitionManager.h
+	SoundEffect.h
 }
 
 assets

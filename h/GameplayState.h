@@ -7,6 +7,7 @@
 #include "Iw2D.h"
 #include "IwResManager.h"
 #include "IwSound.h"
+#include "SoundEffect.h"
 #include "sprite.h"
 #include "GameObject.h"
 #include "camera.h"
@@ -80,12 +81,12 @@ private:
 	bool m_gameOver;
 	bool m_Moving;
 
-	CIwSoundSpec* buttonSound;
-	CIwSoundInst* buttonSoundInst;
 	CIwSoundSpec* terminalSound;
 	CIwSoundInst* terminalInst;
 	CIwSoundSpec* doorSound;
 	CIwSoundInst* doorSoundInst;
+
+	SoundEffect* buttonSound;
 
 	bool TEMP_HASPLAYED;
 

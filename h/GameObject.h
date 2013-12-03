@@ -3,6 +3,7 @@
 
 #include <string>
 #include "sprite.h"
+#include "SoundEffect.h"
 
 enum ObjectType {Elevator, Button, Door, Terminal, Scenerary, Exit};
 
@@ -11,6 +12,7 @@ class GameObject : public Sprite
 public:
 	GameObject(const char* name, ObjectType t, bool collisionFlag);
 	GameObject(const char* name, ObjectType t, bool collisionFlag, CIwFVec2 frames);
+	GameObject(const char* name, ObjectType t, bool collisionFlag, CIwSoundSpec* spec);
 
 	void AddChildObject(GameObject* obj) {m_Child = obj;}
 	void AddTag(std::string tag) {m_Tag = tag;}
@@ -21,6 +23,8 @@ public:
 	bool HasBeenUsed(){return m_AbilityUsed;}
 	GameObject* Child(){return m_Child;}
 	ObjectType GetType(){return m_Type;}
+	void PlayEffect();
+	void ResetEffect();
 
 	bool IsAnimated;
 	bool IsActive;
@@ -34,6 +38,7 @@ private:
 	
 	// Pointer to the child object, so one object can be 'attached' to another
 	GameObject* m_Child;
+	SoundEffect* m_SoundEffect;
 	CIwFVec2 m_startPosition;
 	CIwFVec2 m_targetPosition;
 	std::string m_Tag;
