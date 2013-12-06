@@ -6,6 +6,7 @@ GameObject::GameObject(const char* name, ObjectType t, bool flag) : Sprite (name
 	IsActive = true;
 	m_AbilityUsed = false;
 	m_targetPosition = CIwFVec2(0,0);
+	m_SoundEffect = NULL;
 }
 
 GameObject::GameObject(const char* name, ObjectType t, bool flag, CIwFVec2 frames) : Sprite (name, flag, frames)
@@ -15,9 +16,10 @@ GameObject::GameObject(const char* name, ObjectType t, bool flag, CIwFVec2 frame
 	IsAnimated = true;
 	m_AbilityUsed = false;
 	m_targetPosition = CIwFVec2(0,0);
+	m_SoundEffect = NULL;
 }
 
-GameObject::GameObject(const char* name, ObjectType t, bool flag, CIwSoundSpec* spec) : Sprite (name, flag)
+GameObject::GameObject(const char* name, ObjectType t, bool flag, char* spec) : Sprite (name, flag)
 {
 	m_Type = t;
 	IsActive = true;

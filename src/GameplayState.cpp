@@ -51,14 +51,12 @@ void GameplayState::Init()
 	m_CharacterIndex = 0;
 	m_ThrowingTargetSide = 0;
 	m_isThrowing = false;
-	m_isTermActive = false;
 	m_canThrow = false;
 	m_SpacePressed = false;
 	m_gameOver = false;
 	m_MouseClicked = false;
-	TEMP_HASPLAYED = false;
 	m_ClickLocation = CIwFVec2(0,0);
-	m_Level = new TileMap("levels\\levelproto1.txt", "levels\\levelrelationships1.txt");
+	m_Level = new TileMap("levelproto1.txt", "levelrelationships1.txt");
 	m_Cam = new Camera(screenWidth, screenHeight);
 	m_Cam->SetPosition(CIwSVec2(0, 0));
 	m_Cam->Position = CIwSVec2(0, 0);
@@ -71,9 +69,8 @@ void GameplayState::Init()
 	m_Layers.push_back(new Sprite("layer4", false));
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
-		s3eAudioPlay("audio\\bgmusic.mp3", 0);
+		s3eAudioPlay("bgmusic.mp3", 0);
 
-	buttonSound = new SoundEffect(static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec")));
 	m_ThrowingSound = new SoundEffect("dave_throw");
 	m_ThrowingNigelSound = new SoundEffect("nigel_throw");
 
@@ -81,8 +78,6 @@ void GameplayState::Init()
 	terminalInst = NULL;
 	doorSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("locked_door", "CIwSoundSpec"));
 	doorSoundInst = NULL;
-
-
 
 	buttonSoundCount = 0;
 	printf("GameplayState initialized\n");
@@ -94,7 +89,6 @@ void GameplayState::Destroy()
 	{
 		delete characters[i];
 		delete m_Portraits[i];
-		//delete m_PortraitSounds[i];
 	}
 
 	for (int i = 0; i < 2; i++)
@@ -102,6 +96,11 @@ void GameplayState::Destroy()
 
 	delete m_Cam;
 	delete m_Level;
+
+	if (m_ThrowingSound)
+		delete m_ThrowingSound;
+	if (m_ThrowingNigelSound)
+		delete m_ThrowingNigelSound;
 
 	//IwGetResManager()->DestroyGroup("Sprites");
 	printf("GameplayState Destroyed\n");
@@ -493,7 +492,7 @@ void GameplayState::Draw(StateEngine* state)
 	for (int i = 0; i < 4; i++)
 		m_Layers.at(i)->Draw(m_Cam->GetPosition());
 
-	m_Level->Draw(state->m_deltaTime);
+	m_Level->Draw(state->m_deltaTime, m_Cam);
 
 	for (int i = 0; i <3; i++)
 	{

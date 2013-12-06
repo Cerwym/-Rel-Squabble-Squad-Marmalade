@@ -18,9 +18,9 @@ SoundEffect::SoundEffect(const char* file)
 
 SoundEffect::~SoundEffect()
 {
-	m_Instance = NULL;
-	if (m_spec)
-		delete m_spec;
+	m_Instance = NULL; // The instance does not need to be deleted as it is handled by the termination of the sound engine
+	//if (m_spec)
+		//delete m_spec;
 	m_spec = NULL;
 }
 

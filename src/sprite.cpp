@@ -194,6 +194,13 @@ void Sprite::Jump()
 	}
 }
 
+bool Sprite::isOnCamera(Camera* cam)
+{
+	if ( (m_Position.x + m_Width < -cam->GetPosition().x) || m_Position.x > -cam->GetPosition().x + Iw2DGetSurfaceWidth())
+		return false;
+	return true;
+}
+
 void Sprite::Draw() 
 {
 	CIwSVec2 drawPos((int16)m_Position.x, (int16)m_Position.y);

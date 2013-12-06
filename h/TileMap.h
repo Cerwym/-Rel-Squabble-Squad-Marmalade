@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "GameObject.h"
+#include "camera.h"
 
 class TileMap
 {
@@ -11,7 +12,7 @@ public:
 	~TileMap();
 
 	void Update();
-	void Draw(double dt);
+	void Draw(double dt, Camera* cam);
 	std::vector<GameObject*> GetMap(){return m_Map;}
 	std::vector<GameObject*> GetObjects(){return m_Objects;}
 	CIwFVec2 GetLevelBounds(){return m_LevelMaxBounds;}

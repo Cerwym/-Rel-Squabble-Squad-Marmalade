@@ -67,6 +67,7 @@ public:
 	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other, CIwFVec2& offset);
+	bool isOnCamera(Camera* cam);
 	void Animate(double dt);
 
 	void Jump();

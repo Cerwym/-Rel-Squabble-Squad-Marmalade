@@ -41,6 +41,12 @@ files
 assets
 {
 	(data)
+	bgmusic.mp3
+	music.mp3
+
+	(data/levels)
+	levelproto1.txt
+	levelrelationships1.txt
 
 	(data-ram/data-gles1, data)
 	introsprites.group.bin
@@ -48,6 +54,9 @@ assets
 	tutorialsprites.group.bin
 	sprites.group.bin
 	gameoversprites.group.bin
+
+	
+
 }
 
 includepaths

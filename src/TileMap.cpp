@@ -77,7 +77,7 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 
 					if (buff[x] == 'B')
 					{
-						GameObject* t = new GameObject("button", Button, true,static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("button_clicked", "CIwSoundSpec")));
+						GameObject* t = new GameObject("button", Button, true,"button_clicked");
 						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32) + 20));
 						m_Objects.push_back(t);
 					}
@@ -300,29 +300,39 @@ void TileMap::AddRelationships(const char* rFile)
 	std::cout << "Relationships added" << std::endl;
 }
 
-void TileMap::Draw(double dt) // make it aware of cam, if not on screen, don't draw
+void TileMap::Draw(double dt, Camera* cam) // make it aware of cam, if not on screen, don't draw
 {
 	IW_CALLSTACK("TileMap::Draw");
 	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
 	{
-		(*it)->Draw();
-		if ((*it)->IsAnimated)
+		// Check to see if the object is on screen BEFORE animating / drawing it
+		if ( (*it)->isOnCamera(cam))
+		{
+			(*it)->Draw();
+
+			if ((*it)->IsAnimated)
 			(*it)->Animate(dt);
+		}
 	}
 	
 
 	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
-		if ((*it)->GetType() == Door)
+		if ( (*it)->isOnCamera(cam))
 		{
-			if ((*it)->IsActive)
-				(*it)->Draw();
+			if ((*it)->GetType() == Door)
+			{
+				if ((*it)->IsActive)
+					(*it)->Draw();
+			}
+			else
+			{
+				(*it)->Draw();	
+				if ((*it)->IsAnimated)
+					(*it)->Animate(dt);
+			}
 		}
 		else
-		{
-			(*it)->Draw();	
-			if ((*it)->IsAnimated)
-				(*it)->Animate(dt);
-		}
+			std::cout << "Not drawing object" << std::endl;
 	}
 }

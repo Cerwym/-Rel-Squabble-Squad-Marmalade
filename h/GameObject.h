@@ -12,7 +12,7 @@ class GameObject : public Sprite
 public:
 	GameObject(const char* name, ObjectType t, bool collisionFlag);
 	GameObject(const char* name, ObjectType t, bool collisionFlag, CIwFVec2 frames);
-	GameObject(const char* name, ObjectType t, bool collisionFlag, CIwSoundSpec* spec);
+	GameObject(const char* name, ObjectType t, bool collisionFlag, char* spec);
 	GameObject::~GameObject();
 	
 	void AddChildObject(GameObject* obj) {m_Child = obj;}

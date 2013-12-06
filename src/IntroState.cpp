@@ -19,7 +19,7 @@ void IntroState::Init()
 	m_TransitionState = FADE_IN;
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
-		s3eAudioPlay("audio\\music.mp3", 1);
+		s3eAudioPlay("music.mp3", 1);
 
 	printf("IntroState initialized\n");
 }
