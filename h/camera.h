@@ -13,9 +13,9 @@ public:
 	CIwSVec2 GetPosition(){return m_Position;}
 	void SetPosition(const CIwSVec2& p);
 
-	void Camera::MoveBy(const CIwSVec2& m);
+	void MoveBy(const CIwSVec2& m);
 
-	void SetLevelBounds(CIwFVec2& b) {m_LevelBounds = b;}
+	void SetLevelBounds(const CIwFVec2 &b) {m_LevelBounds = b;}
 
 	inline CIwMat2D GetTranslation(){return m_Transform;}
 

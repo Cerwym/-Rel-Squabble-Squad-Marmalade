@@ -129,7 +129,7 @@ void GameplayState::SpawnCharacters()
 	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(4,1));
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
-	characters[1]->SetMovSpeed(CIwFVec2(5,3)); // Moves 5 units fast in the x axis (fastest)
+	characters[1]->SetMovSpeed(CIwFVec2(4.25,3)); // Moves 5 units fast in the x axis (fastest)
 	m_PortraitSounds[1] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("nigel_selected", "CIwSoundSpec"));
 
 	characters[2] = new Sprite("mandy_anim", true, CIwFVec2(4,1));

@@ -30,4 +30,4 @@ private:
 	bool m_HasStarted;
 };
 
-#endif TRANSITIONMANAGER_H_
+#endif 

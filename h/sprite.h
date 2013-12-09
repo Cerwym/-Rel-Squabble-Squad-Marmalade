@@ -16,7 +16,7 @@ class Sprite
 {
 public:
 	Sprite(const char*, bool);
-	Sprite::Sprite(const char*, bool, CIwFVec2);
+	Sprite(const char*, bool, CIwFVec2);
 	~Sprite();
 	
 	inline void SetCenter(const CIwSVec2& center) { m_Center = center; }
@@ -24,11 +24,10 @@ public:
 	inline void SetPosition(const CIwFVec2& position) { m_Position = position; }
 	inline float GetBottom(){return m_Position.y + m_Height;}
 	inline void SetMovSpeed(const CIwFVec2& speed) { m_MovSpeed = speed; }
-	CIwFVec2 GetScreenPosition(Camera* cam){}
 	inline void ResetPosition() { m_Position = m_LastPosition;}
 	inline CIwFVec2 GetMovSpeed() {return m_MovSpeed;}
 	// past in a const reference to CIWVec2 instead of the class itself
-	inline CIwFVec2 Sprite::LerpTo(const CIwFVec2& end, float scalar)
+	inline CIwFVec2 LerpTo(const CIwFVec2& end, float scalar)
 	{
 		m_LastPosition = m_Position;
 		CIwFVec2 t = (m_Position + (end - m_Position) * scalar);
@@ -63,10 +62,10 @@ public:
 	void SetAnimated(const bool animated, float speed, CIwFVec2 frameCount = CIwFVec2());
 	void Update(const float deltaTime);
 	void Draw();
-	void Draw(CIwSVec2& camPos);
+	void Draw(const CIwSVec2& camPos);
 	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
-	bool isColliding(Sprite* other, CIwFVec2& offset);
+	bool isColliding(Sprite* other, const CIwFVec2& offset);
 	bool isOnCamera(Camera* cam);
 	void Animate(double dt);
 

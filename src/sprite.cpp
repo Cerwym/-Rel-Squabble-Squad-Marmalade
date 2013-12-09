@@ -108,7 +108,7 @@ bool Sprite::isColliding(const CIwFVec2& other)
 	return true;
 }
 
-bool Sprite::isColliding(Sprite* other, CIwFVec2& offset)
+bool Sprite::isColliding(Sprite* other, const CIwFVec2& offset)
 {
 	IW_CALLSTACK("Sprite::isColliding");
 
@@ -228,7 +228,7 @@ void Sprite::Draw()
 }
 
 // Give the camera's position to keep the sprites on screen
-void Sprite::Draw(CIwSVec2& camPos) 
+void Sprite::Draw(const CIwSVec2& camPos) 
 {
 	if (m_facingDir == FACING_RIGHT)
 		Iw2DSetImageTransform(IW_2D_IMAGE_TRANSFORM_NONE);

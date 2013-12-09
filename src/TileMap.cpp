@@ -224,12 +224,12 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 
 TileMap::~TileMap()
 {
-	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it)
 		delete (*it);
 
 	m_Map.clear();
 
-	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_Objects.begin(); it != m_Objects.end(); ++it)
 		delete (*it);
 
 	m_Objects.clear();
@@ -276,10 +276,21 @@ void TileMap::AddRelationships(const char* rFile)
 		infile.close();
 	}
 
-	for (auto it = relationships.begin(); it != relationships.end(); ++it)
-		m_Objects.at(it->x)->AddChildObject(m_Objects.at(it->y));
+	// The following commented functions will not compile correctly under ARM as the version of GCC in use does not support implicit 
+	/*for (auto &it : relationships)
+	{
+		m_Objects.at(it.x)->AddChildObject(m_Objects.at((it.y)));
+	}
 
-	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
+	for (auto it = relationships.begin(); it != relationships.end(); ++it)
+		m_Objects.at(it->x)->AddChildObject(m_Objects.at(it->y));*/
+
+	for (std::vector<CIwSVec2>::iterator it = relationships.begin(); it != relationships.end(); ++it)
+	{
+		m_Objects.at(it->x)->AddChildObject(m_Objects.at(it->y));
+	}
+
+	for (std::vector<GameObject*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it)
 	{
 		if ( (*it)->hasCollider())
 		{
@@ -288,7 +299,7 @@ void TileMap::AddRelationships(const char* rFile)
 		//(*it)->ShowColliderPos = true;
 	}
 
-	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
 		if ( (*it)->hasCollider())
 		{
@@ -303,7 +314,7 @@ void TileMap::AddRelationships(const char* rFile)
 void TileMap::Draw(double dt, Camera* cam) // make it aware of cam, if not on screen, don't draw
 {
 	IW_CALLSTACK("TileMap::Draw");
-	for (auto it = m_Map.begin(); it != m_Map.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it)
 	{
 		// Check to see if the object is on screen BEFORE animating / drawing it
 		if ( (*it)->isOnCamera(cam))
@@ -316,7 +327,7 @@ void TileMap::Draw(double dt, Camera* cam) // make it aware of cam, if not on sc
 	}
 	
 
-	for (auto it = m_Objects.begin(); it != m_Objects.end(); ++it)
+	for (std::vector<GameObject*>::iterator it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
 		if ( (*it)->isOnCamera(cam))
 		{

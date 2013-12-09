@@ -22,12 +22,16 @@ MemSizeDebug=50485760
 MemSize6 = 10485760 
 WinWidth = 480
 WinHeight = 320
+DispFixRot=FixedLandscape
 
 [GX]
 DataCacheSize=500000
-DisplayFramerate=1
+#DisplayFramerate=1
+
+[GL]
+VirtualWidth=480
+VirtualHeight=320
+VirtualLetterbox=0
 
 #[Util]
-#MemoryBreakpoint=148
-
-	
+#MemoryBreakpoint=140

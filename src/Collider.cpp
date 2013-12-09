@@ -15,7 +15,7 @@ Collider::~Collider()
 	delete m_Collider;
 }
 
-bool Collider::isColliding(Collider* other, CIwFVec2& offset)
+bool Collider::isColliding(Collider* other, const CIwFVec2& offset)
 {
 	// declare top left bottom right of rects for collision calculations
 	CIwFVec2 TopLeft1 = CIwFVec2(m_Position.x, m_Position.y);
