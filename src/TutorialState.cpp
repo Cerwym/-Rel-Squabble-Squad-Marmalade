@@ -11,7 +11,7 @@ void TutorialState::Init()
 {
 	IwGetResManager()->LoadGroup("tutorialsprites.group");
 	m_TransitionState = FADE_IN;
-	m_TransManager.Init();
+	m_TransManager = new TransitionManager();
 	m_Splash1 = new Sprite("tutorial_page_1", false);
 	m_Splash2 = new Sprite("tutorial_page_2", false);
 	m_mouseClicked = false;
@@ -20,6 +20,7 @@ void TutorialState::Init()
 
 void TutorialState::Destroy()
 {
+	delete m_TransManager;
 	delete m_Splash1;
 	delete m_Splash2;
 	IwGetResManager()->DestroyGroup("TutorialScreen");
@@ -60,12 +61,12 @@ void TutorialState::Draw(StateEngine* state)
 {
 	if (m_TransitionState == FADE_IN)
 	{
-		if (m_TransManager.TransitionIn(m_Splash1->GetImage(), state->m_deltaTime + 1.5))
+		if (m_TransManager->TransitionIn(m_Splash1->GetImage(), state->m_deltaTime + 1.5))
 		{
 			if (m_mouseClicked)
 			{
 				m_TransitionState = BETWEEN;
-				m_TransManager.Init();
+				m_TransManager->Init();
 			}
 			
 		}
@@ -73,12 +74,12 @@ void TutorialState::Draw(StateEngine* state)
 
 	if (m_TransitionState == BETWEEN)
 	{
-		if (m_TransManager.TransitionBetween(m_Splash1->GetImage(), m_Splash2->GetImage(), state->m_deltaTime + 1.5))
+		if (m_TransManager->TransitionBetween(m_Splash1->GetImage(), m_Splash2->GetImage(), state->m_deltaTime + 1.5))
 		{
 			if (m_mouseClicked)
 			{
 				m_TransitionState = FADE_OUT;
-				m_TransManager.Init();
+				m_TransManager->Init();
 			}
 			
 		}
@@ -86,9 +87,9 @@ void TutorialState::Draw(StateEngine* state)
 
 	if (m_TransitionState == FADE_OUT)
 	{
-		if (m_TransManager.TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 3.5) )
+		if (m_TransManager->TransitionOut(m_Splash2->GetImage(), state->m_deltaTime + 3.5) )
 		{
-			m_TransManager.Destroy();
+			m_TransManager->Destroy();
 			state->ChangeState(GameplayState::Instance());
 		}
 	}

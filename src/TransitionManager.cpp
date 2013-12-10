@@ -2,16 +2,47 @@
 #include "TransitionManager.h"
 #include <iostream>
 
+TransitionManager::TransitionManager()
+{
+	IW_CALLSTACK("TransitionManager::TransitionManager");
+	Init();
+}
+
+TransitionManager::~TransitionManager()
+{
+	IW_CALLSTACK("TransitionManager::~TransitionManager");
+	IwGxClear();
+	IwGxFlush();
+	Destroy();
+}
+
 void TransitionManager::Init()
 {
+	IW_CALLSTACK("TransitionManager::Init");
 	m_StartTexture = NULL;
 	m_EndTexture = NULL;
-	startMat = new CIwMaterial;
-	endMat = new CIwMaterial;
+
 	IwGxSetColClear(0, 0, 0, 0);
 	IwGxScreenOrient orient = IwGxGetScreenOrient();
 	m_HasStarted = false;
 	m_alphaValue = 0;
+}
+
+void TransitionManager::Destroy()
+{
+	IW_CALLSTACK("TransitionManager::Destroy");
+	if (m_StartTexture != NULL)
+	{
+		delete m_StartTexture;
+		m_StartTexture = NULL;
+	}
+
+	if (m_EndTexture != NULL)
+	{
+		delete m_EndTexture;
+		m_EndTexture = NULL;
+	}
+	printf("Transition Manager cleaned up\n");
 }
 
 CIwTexture* TransitionManager::CaptureScreen()
@@ -22,7 +53,7 @@ CIwTexture* TransitionManager::CaptureScreen()
 	int length = w * h * 4;
 
 	uint8* buffer = new uint8[length];
-
+							//RGBA,	//Unsigned byte
 	glReadPixels(0, 0, w, h, 0x1908, 0x1401, buffer);
 
 	uint8* buffer2 = new uint8[length];
@@ -73,6 +104,8 @@ void TransitionManager::CaptureEndScreen()
 
 void TransitionManager::Fade(double transitionSpeed)
 {
+	CIwMaterial* startMat;
+	CIwMaterial* endMat;
 	if (m_alphaValue <= 255)
 	{
 		IwGxClear();
@@ -97,20 +130,6 @@ void TransitionManager::Fade(double transitionSpeed)
 	}
 }
 
-void TransitionManager::Destroy()
-{
-	IW_CALLSTACK("TransitionManager::FinishTransition");
-	IwGxClear();
-	IwGxFlush();
-
-	if (m_StartTexture != NULL)
-		delete m_StartTexture;
-	if (m_EndTexture != NULL)
-		delete m_EndTexture;
-	m_StartTexture = NULL;
-	m_EndTexture = NULL;
-}
-
 void TransitionManager::Fade(CIwTexture* start, CIwTexture* end, double transitionSpeed)
 {
 	CIwTexture* tempStart = m_StartTexture;
@@ -128,8 +147,6 @@ bool TransitionManager::isFinished()
 {
 	if (m_alphaValue >= 255)
 	{
-		//delete m_StartTexture;
-		//delete m_EndTexture;
 		return true;
 	}
 	return false;
@@ -153,7 +170,11 @@ bool TransitionManager::TransitionIn(CIw2DImage* start, double transitionSpeed)
 	if (!f)
 		Fade(transitionSpeed);
 	else
+	{
+		//delete startMat;
+		//delete endMat;
 		Iw2DDrawImage(start, CIwSVec2(0,0)); // The image has fully faded in so draw it with its full alpha value
+	}
 
 	return f;
 }
@@ -176,7 +197,11 @@ bool TransitionManager::TransitionBetween(CIw2DImage* start, CIw2DImage* end, do
 	if (!f)
 		Fade(speed);
 	else
+	{
+		//delete startMat;
+		//delete endMat;
 		Iw2DDrawImage(end, CIwSVec2(0,0)); // The transition has fully occured so draw the target image with its full alpha value
+	}
 
 	return f;
 }
@@ -199,6 +224,11 @@ bool TransitionManager::TransitionOut(CIw2DImage* end, double speed)
 
 	if (!f)
 		Fade(speed);
+	else
+	{
+		//delete startMat;
+		//delete endMat;
+	}
 
 	return f;
 }

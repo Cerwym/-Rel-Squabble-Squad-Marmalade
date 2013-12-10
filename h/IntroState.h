@@ -37,9 +37,7 @@ private:
 
 	Sprite* m_Splash1;
 	Sprite* m_Splash2;
-	//CIw2DImage* m_SplashImg1;
-	//CIw2DImage* m_SplashImg2;
-	TransitionManager m_TransManager;
+	TransitionManager* m_TransManager;
 
 	enum TStat{FADE_IN = 0, BETWEEN = 1, FADE_OUT = 2}; TStat m_TransitionState;
 

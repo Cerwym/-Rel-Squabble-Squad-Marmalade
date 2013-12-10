@@ -6,6 +6,9 @@
 class TransitionManager
 {
 public:
+
+	TransitionManager();
+	~TransitionManager();
 	void Init();
 	void Destroy();
 
@@ -23,8 +26,6 @@ private:
 
 	CIwTexture* m_StartTexture;
 	CIwTexture* m_EndTexture;
-	CIwMaterial* startMat;
-	CIwMaterial* endMat;
 
 	double m_alphaValue;
 	bool m_HasStarted;

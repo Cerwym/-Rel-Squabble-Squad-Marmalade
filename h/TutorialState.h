@@ -37,7 +37,7 @@ private:
 
 	Sprite* m_Splash1;
 	Sprite* m_Splash2;
-	TransitionManager m_TransManager;
+	TransitionManager* m_TransManager;
 
 	bool m_mouseClicked;
 

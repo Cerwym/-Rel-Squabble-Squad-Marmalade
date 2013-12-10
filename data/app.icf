@@ -19,7 +19,6 @@
 [S3E]
 MemSize=50485760
 MemSizeDebug=50485760
-MemSize6 = 10485760 
 WinWidth = 480
 WinHeight = 320
 DispFixRot=FixedLandscape
@@ -33,5 +32,5 @@ VirtualWidth=480
 VirtualHeight=320
 VirtualLetterbox=0
 
-#[Util]
-#MemoryBreakpoint=140
+[Util]
+#MemoryBreakpoint=148

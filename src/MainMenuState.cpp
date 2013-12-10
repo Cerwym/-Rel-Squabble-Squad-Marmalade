@@ -9,7 +9,6 @@ MainMenuState MainMenuState::m_MainMenuState;
 
 void MainMenuState::Init()
 {
-	printf("Loading resource group\n");
 	IwGetResManager()->LoadGroup("mainmenusprites.group");
 	m_menuImage = new Sprite("menu_image", false);
 	printf("MainMenuState initialized\n");

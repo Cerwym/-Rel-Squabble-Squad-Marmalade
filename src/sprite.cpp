@@ -17,8 +17,11 @@ Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),m_A
 	TEMP_ISCOLLIDING = false;
 	ShowColliderPos = false;
 	m_hasCollider = flag;
+	m_Collider = NULL;
 	if (flag){ m_Collider = new Collider(m_Position, m_Width, m_Height);}
 	m_facingDir = FACING_RIGHT;
+
+	
 }
 
 Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0),m_MovSpeed(0,0),m_Angle(0),m_Animated(true)
@@ -34,6 +37,8 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 	ShowColliderPos = false;
 	m_hasCollider = flag;
 	m_facingDir = FACING_RIGHT;
+	if (flag){ m_Collider = new Collider(m_Position, m_Width, m_Height);}
+	m_Collider = NULL;
 
 	// 1/2 frame every game second
 	SetAnimated(true, 0.5, frameCount);
@@ -43,7 +48,8 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 Sprite::~Sprite()
 {
 	delete m_Image;
-	//delete m_Collider;
+	//if (m_Collider)
+		//delete m_Collider;
 }
 
 void Sprite::BuildCollision(const char* fname)

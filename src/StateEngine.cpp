@@ -11,6 +11,7 @@
 
 void StateEngine::Init(const char* title)
 {
+	IW_CALLSTACK("StateEngine::Init");
 	m_isRunning = true;
 
 	Iw2DInit();
@@ -26,22 +27,24 @@ void StateEngine::Init(const char* title)
 
 void StateEngine::Destroy()
 {
-	
+	IW_CALLSTACK("StateEngine::Destroy");
 	// Cleanup the states on the stack
-	while (!m_States.empty())
+	for (std::vector<GameState*>::iterator itr = m_States.begin(); itr != m_States.end(); itr++)
 	{
-		m_States.back()->Destroy();
-		m_States.pop_back();
+		(*itr)->Destroy();
 	}
+	m_States.clear();
+	m_States.swap(std::vector<GameState*>(m_States)); // Swap the contents of the old vector with a new vector so that the old may forcefully have its deconstructor called.
 
 	IwResManagerTerminate();
+	IwSoundTerminate();	
 	Iw2DTerminate();
-	IwSoundTerminate();
 	printf("Engine cleaned up\n");
 }
 
 void StateEngine::ChangeState(GameState* state)
 {
+	IW_CALLSTACK("StateEngine::ChangeState");
 	// Destroy the CURRENT state
 	if (!m_States.empty())
 	{
@@ -69,7 +72,7 @@ void StateEngine::PushState(GameState* state)
 
 	// Store and init the new state
 	m_States.push_back(state);
-	//m_States.back()->Init();
+	m_States.back()->Init();
 	std::cout << "States existing = " << m_States.size() << std::endl;
 }
 

@@ -12,7 +12,7 @@ void GameoverState::Init()
 {
 	IwGetResManager()->LoadGroup("gameoversprites.group");
 	m_menuImage = new Sprite("game_over", false);
-	m_Transmanager.Init();
+	m_Transmanager = new TransitionManager();
 	m_TransitionState = FADE_IN;
 	m_mouseClicked = false;
 	printf("GameoverState initialized\n");
@@ -52,11 +52,11 @@ void GameoverState::Draw(StateEngine* state)
 {
 	if (m_TransitionState == FADE_IN)
 	{
-		m_Transmanager.TransitionIn(m_menuImage->GetImage(), state->m_deltaTime + 3.5);
+		m_Transmanager->TransitionIn(m_menuImage->GetImage(), state->m_deltaTime + 3.5);
 		{
 			if (m_mouseClicked)
 			{
-				m_Transmanager.Init();
+				m_Transmanager->Init();
 				m_TransitionState = FADE_OUT;
 			}
 		}
@@ -64,9 +64,9 @@ void GameoverState::Draw(StateEngine* state)
 
 	if (m_TransitionState == FADE_OUT)
 	{
-		if (m_Transmanager.TransitionOut(m_menuImage->GetImage(), state->m_deltaTime + 3.5))
+		if (m_Transmanager->TransitionOut(m_menuImage->GetImage(), state->m_deltaTime + 3.5))
 		{
-			m_Transmanager.Destroy();
+			m_Transmanager->Destroy();
 			state->ChangeState(MainMenuState::Instance());
 		}
 	}

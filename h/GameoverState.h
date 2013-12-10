@@ -34,7 +34,7 @@ private:
 	CIwFVec2 m_Position;
 	CIwSVec2 m_Size;
 	CIwResGroup* m_stateGroup;
-	TransitionManager m_Transmanager;
+	TransitionManager* m_Transmanager;
 	Sprite* m_menuImage;
 
 	bool m_mouseClicked;
