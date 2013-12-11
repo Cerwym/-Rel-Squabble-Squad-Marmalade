@@ -463,11 +463,10 @@ void GameplayState::CheckInterations(StateEngine* state)
 				}
 				t->Child()->DoAbility(t->Child()->GetTarget(), state->m_deltaTime);
 			}
-
-			m_MouseClicked = false;
-			m_ClickLocation = CIwFVec2(0,0);
 		}
 	}
+	m_MouseClicked = false;
+	m_ClickLocation = CIwFVec2(0,0);
 }
 
 
