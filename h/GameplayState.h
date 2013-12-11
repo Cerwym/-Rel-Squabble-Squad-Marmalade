@@ -69,6 +69,7 @@ private:
 	Sprite* characters[3];
 	Sprite* m_Portraits[3];
 	Sprite* m_PortraitsNot[3];
+	Sprite* m_Layers[4];
 	CIwSoundSpec* m_PortraitSounds[3];
 	CIwSoundInst* m_PortraitSoundInsts[3];
 	GameObject* m_activeTerminal;
@@ -91,8 +92,6 @@ private:
 	SoundEffect* m_ThrowingNigelSound;
 
 	bool TEMP_HASPLAYED;
-
-	std::vector<Sprite*> m_Layers;
 
 	CIwFVec2 m_ClickLocation;
 

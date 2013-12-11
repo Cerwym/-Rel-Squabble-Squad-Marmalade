@@ -20,7 +20,6 @@ Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),m_A
 	m_Collider = NULL;
 	if (flag){ m_Collider = new Collider(m_Position, m_Width, m_Height);}
 	m_facingDir = FACING_RIGHT;
-
 	
 }
 
@@ -37,9 +36,9 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 	ShowColliderPos = false;
 	m_hasCollider = flag;
 	m_facingDir = FACING_RIGHT;
-	if (flag){ m_Collider = new Collider(m_Position, m_Width, m_Height);}
 	m_Collider = NULL;
-
+	if (flag){ m_Collider = new Collider(m_Position, m_Width, m_Height);}
+	
 	// 1/2 frame every game second
 	SetAnimated(true, 0.5, frameCount);
 }
@@ -48,25 +47,8 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 Sprite::~Sprite()
 {
 	delete m_Image;
-	//if (m_Collider)
-		//delete m_Collider;
-}
-
-void Sprite::BuildCollision(const char* fname)
-{
-	CIwImage img;
-	img.LoadFromFile(fname);
-	// Build the collision data from the image's alpha channel in 8bit format.
-	m_CollisionMap.SetFormat(CIwImage::A_8);
-	m_CollisionMap.SetWidth(img.GetWidth());
-	m_CollisionMap.SetHeight(img.GetHeight());
-	img.ConvertToImage(&m_CollisionMap);
-}
-
-// 
-void Sprite::BuildCollision(CIwImage img)
-{
-	m_CollisionMap = img;
+	if (m_Collider)
+		delete m_Collider;
 }
 
 void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
@@ -89,7 +71,12 @@ void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 
 	m_Center = CIwSVec2(static_cast<int16>(m_Width) / 2, static_cast<int16>(m_Height) / 2);
 
-	if (m_hasCollider){m_Collider = new Collider(m_Position, m_Width, m_Height);}
+	if (m_hasCollider)
+	{
+		delete m_Collider;
+		m_Collider = NULL;
+		m_Collider = new Collider(m_Position, m_Width, m_Height);
+	}
 }
 
 // Collision detection for bounding box, commonly used to detect if a player has clicked on a UI element or character.

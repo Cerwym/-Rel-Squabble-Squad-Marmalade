@@ -16,13 +16,13 @@ ResGroupResources:
 		Size: 11352
 	CIwTexture (0x3521f539)
 		"mandy_anim" (0xc88c0e62)
-		Size: 43332
+		Size: 64980
 	CIwTexture (0x3521f539)
 		"nigel" (0x1000def4)
 		Size: 7580
 	CIwTexture (0x3521f539)
 		"nigel_anim" (0x295481f8)
-		Size: 25620
+		Size: 38412
 	CIwTexture (0x3521f539)
 		"dave_port" (0x6591ca69)
 		Size: 14436
@@ -124,10 +124,10 @@ ResGroupResources:
 		Size: 131108
 	CIwTexture (0x3521f539)
 		"touchscreenMoveL" (0xb035cb6b)
-		Size: 2132
+		Size: 16420
 	CIwTexture (0x3521f539)
 		"touchscreenMoveR" (0xb035cb71)
-		Size: 2132
+		Size: 16420
 	CIwTexture (0x3521f539)
 		"layer1" (0xaeb87f3)
 		Size: 489636
@@ -140,7 +140,7 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
 		Size: 652836
-	ResList 'CIwTexture' pos:38 size:7351330
+	ResList 'CIwTexture' pos:38 size:7414346
 
 	CIwSoundData (0xd5610dab)
 		"Button01" (0x324cc822)
@@ -166,7 +166,7 @@ ResGroupResources:
 	CIwSoundData (0xd5610dab)
 		"nigel_thrown" (0xfc675895)
 		Size: 107474
-	ResList 'CIwSoundData' pos:7351368 size:561058
+	ResList 'CIwSoundData' pos:7414384 size:561058
 
 	CIwSoundSpec (0xd569853c)
 		"button_clicked" (0xe0861b8f)
@@ -192,12 +192,12 @@ ResGroupResources:
 	CIwSoundSpec (0xd569853c)
 		"nigel_throw" (0x55396f47)
 		Size: 30
-	ResList 'CIwSoundSpec' pos:7912426 size:250
+	ResList 'CIwSoundSpec' pos:7975442 size:250
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:7912676 size:18063
+	ResList 'CIwGxFont' pos:7975692 size:18063
 
-ResGroupResources: Wrote 7930705 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 7993721 bytes to CIwResGroup "Sprites"
 

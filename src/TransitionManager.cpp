@@ -5,6 +5,7 @@
 TransitionManager::TransitionManager()
 {
 	IW_CALLSTACK("TransitionManager::TransitionManager");
+	m_HasStarted = false;
 	Init();
 }
 
@@ -19,13 +20,19 @@ TransitionManager::~TransitionManager()
 void TransitionManager::Init()
 {
 	IW_CALLSTACK("TransitionManager::Init");
+	if (m_HasStarted == true)
+	{
+		delete m_StartTexture;
+		delete m_EndTexture;
+	}
 	m_StartTexture = NULL;
 	m_EndTexture = NULL;
+	m_HasStarted = false;
+	m_alphaValue = 0;
 
 	IwGxSetColClear(0, 0, 0, 0);
 	IwGxScreenOrient orient = IwGxGetScreenOrient();
-	m_HasStarted = false;
-	m_alphaValue = 0;
+	
 }
 
 void TransitionManager::Destroy()
@@ -42,6 +49,7 @@ void TransitionManager::Destroy()
 		delete m_EndTexture;
 		m_EndTexture = NULL;
 	}
+	
 	printf("Transition Manager cleaned up\n");
 }
 
@@ -112,8 +120,9 @@ void TransitionManager::Fade(double transitionSpeed)
 
 		startMat = IW_GX_ALLOC_MATERIAL();
 		startMat->SetTexture(m_StartTexture);
+
 		IwGxSetMaterial(startMat);
-		IwGxDrawRectScreenSpace(&CIwSVec2(0, 0), &CIwSVec2(IwGxGetDeviceWidth(), IwGxGetDeviceHeight())); // Change this back to m_StartTextrue->GetWidth / GetHeight
+		IwGxDrawRectScreenSpace(&CIwSVec2(0, 0), &CIwSVec2(m_StartTexture->GetWidth(), m_StartTexture->GetHeight()));
 
 		endMat = IW_GX_ALLOC_MATERIAL();
 		endMat->SetTexture(m_EndTexture);

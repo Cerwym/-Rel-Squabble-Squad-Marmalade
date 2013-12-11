@@ -28,7 +28,7 @@ private:
 
 	CIwFVec2 m_size;
 	
-	CIw2DImage* m_Collider;
+	//CIw2DImage* m_Image;
 
 	CIwFVec2 m_OldTL;
 	CIwFVec2 m_OldBR;

@@ -37,10 +37,6 @@ public:
 
 	inline int GetDirection(){return m_facingDir;}
 	inline void SetDirection(FACING f) {m_facingDir = f;}
-
-	void BuildCollision(const char* fname);
-	void BuildCollision(CIwImage img);
-	CIwImage GetCollisionMap() const {return m_CollisionMap;}
 	CIw2DImage* GetImage() const {return m_Image;}
 	void SetMaterial();
 	void MoveBy(const CIwFVec2& val, double dt);
@@ -108,7 +104,6 @@ private:
 	CIwSVec2 m_FrameCount;
 	CIw2DImage* m_Image;
 	Collider* m_Collider;
-	CIwImage m_CollisionMap; // 8bit version of the image's alpha channel.
 
 	FACING m_facingDir;
 

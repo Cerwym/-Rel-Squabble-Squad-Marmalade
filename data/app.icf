@@ -31,6 +31,3 @@ DataCacheSize=500000
 VirtualWidth=480
 VirtualHeight=320
 VirtualLetterbox=0
-
-[Util]
-#MemoryBreakpoint=148

@@ -29,6 +29,7 @@ private:
 
 	double m_alphaValue;
 	bool m_HasStarted;
+
 };
 
 #endif 

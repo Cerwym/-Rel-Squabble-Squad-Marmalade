@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "GameplayState.h" // The current state
-#include "MainMenuState.h" // The state to load (1)
-#include "GameoverState.h" // The state to load (2)
-
+#include "GameoverState.h" // The state to load
 // For me
 #define DAVE 0
 #define NIGEL 1
@@ -18,30 +16,22 @@ void GameplayState::Init()
 	m_PortraitsNot[0] = new Sprite("dave_port_b", true);
 	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
 	m_PortraitsNot[0]->SetPosition(CIwFVec2(130,0));
-	m_Portraits[0]->BuildCollision("portraits\\dave_port.png");
-	m_PortraitsNot[0]->BuildCollision("portraits\\dave_port.png");
 
 	m_Portraits[1] = new Sprite("nigel_port", true);
 	m_PortraitsNot[1] = new Sprite("nigel_port_b", true);
 	m_Portraits[1]->SetPosition(CIwFVec2(210,0));
 	m_PortraitsNot[1]->SetPosition(CIwFVec2(210,0));
-	m_Portraits[1]->BuildCollision("portraits\\nigel_port.png");
-	m_PortraitsNot[1]->BuildCollision("portraits\\nigel_port.png");
 
 	m_Portraits[2] = new Sprite("mandy_port", true);
 	m_PortraitsNot[2] = new Sprite("mandy_port_b", true);
 	m_Portraits[2]->SetPosition(CIwFVec2(290,0));
 	m_PortraitsNot[2]->SetPosition(CIwFVec2(290, 0));
-	m_Portraits[2]->BuildCollision("portraits\\mandy_port.png");
-	m_PortraitsNot[2]->BuildCollision("portraits\\mandy_port.png");
 
 	n_guiButtons[0] = new Sprite("touchScreenMoveL", true);
 	n_guiButtons[0]->SetPosition(CIwFVec2(0, 260));
-	n_guiButtons[0]->BuildCollision("textures\\touchScreenMoveL.bmp");
 
 	n_guiButtons[1] = new Sprite("touchScreenMoveR", true);
 	n_guiButtons[1]->SetPosition(CIwFVec2(414, 260));
-	n_guiButtons[1]->BuildCollision("textures\\touchScreenMoveR.bmp");
 
 	m_throwingTarget = new Sprite("target_sprite", true);
 
@@ -63,10 +53,10 @@ void GameplayState::Init()
 	m_Cam->SetLevelBounds(m_Level->GetLevelBounds());
 	SpawnCharacters();
 
-	m_Layers.push_back(new Sprite("layer1", false));
-	m_Layers.push_back(new Sprite("layer2", false));
-	m_Layers.push_back(new Sprite("layer3", false));
-	m_Layers.push_back(new Sprite("layer4", false));
+	m_Layers[0] = new Sprite("layer1", false);
+	m_Layers[1] = new Sprite("layer2", false);
+	m_Layers[2] = new Sprite("layer3", false);
+	m_Layers[3] = new Sprite("layer4", false);
 
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("bgmusic.mp3", 0);
@@ -89,10 +79,17 @@ void GameplayState::Destroy()
 	{
 		delete characters[i];
 		delete m_Portraits[i];
+		delete m_PortraitsNot[i];
 	}
 
 	for (int i = 0; i < 2; i++)
 		delete n_guiButtons[i];
+
+
+	for (int i = 0; i <4; i++)
+	{
+		delete m_Layers[i];
+	}
 
 	delete m_Cam;
 	delete m_Level;
@@ -101,6 +98,8 @@ void GameplayState::Destroy()
 		delete m_ThrowingSound;
 	if (m_ThrowingNigelSound)
 		delete m_ThrowingNigelSound;
+
+	delete m_throwingTarget;
 
 	//IwGetResManager()->DestroyGroup("Sprites");
 	printf("GameplayState Destroyed\n");
@@ -126,13 +125,13 @@ void GameplayState::SpawnCharacters()
 	characters[0]->SetMovSpeed(CIwFVec2(2,5)); // Moves 2 units fast in the x axis (slow)
 	m_PortraitSounds[0] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("dave_selected", "CIwSoundSpec"));
 
-	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(4,1));
+	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(6,1));
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
 	characters[1]->SetMovSpeed(CIwFVec2(4.25,3)); // Moves 5 units fast in the x axis (fastest)
 	m_PortraitSounds[1] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("nigel_selected", "CIwSoundSpec"));
 
-	characters[2] = new Sprite("mandy_anim", true, CIwFVec2(4,1));
+	characters[2] = new Sprite("mandy_anim", true, CIwFVec2(6,1));
 	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
 	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
 	characters[2]->SetMovSpeed(CIwFVec2(3,2)); // Moves 3 units fast in the x axis (faster than dave, slower than nigel)
@@ -490,7 +489,7 @@ void GameplayState::Draw(StateEngine* state)
 {
 
 	for (int i = 0; i < 4; i++)
-		m_Layers.at(i)->Draw(m_Cam->GetPosition());
+		m_Layers[i]->Draw(m_Cam->GetPosition());
 
 	m_Level->Draw(state->m_deltaTime, m_Cam);
 
@@ -516,9 +515,9 @@ void GameplayState::Draw(StateEngine* state)
 
 void GameplayState::ScrollBackground(CIwFVec2& scrollBy)
 {
-	for (int i = 0; i < m_Layers.size(); i++)
+	/*for (int i = 0; i < m_Layers.size(); i++)
 	{
 		m_Layers.at(i)->MoveBy(
 			CIwFVec2(scrollBy.x - (i * 1.5), (0 * i) - scrollBy.y), 0);
-	}
+	}*/
 }

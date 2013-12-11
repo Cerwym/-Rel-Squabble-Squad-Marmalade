@@ -21,6 +21,7 @@ void GameoverState::Init()
 void GameoverState::Destroy()
 {
 	delete m_menuImage;
+	delete m_Transmanager;
 	IwGetResManager()->DestroyGroup("gameover");
 	printf("GameoverState Destroyed\n");
 }

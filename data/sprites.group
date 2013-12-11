@@ -121,8 +121,8 @@ CIwResGroup
 
 		
 		"./tiles/portal_anim.png"
-		"./textures/touchscreenMoveL.bmp"
-		"./textures/touchscreenMoveR.bmp"
+		"./textures/touchscreenMoveL.png"
+		"./textures/touchscreenMoveR.png"
 		"./background/layer1.png"
 		"./background/layer2.png"
 		"./background/layer3.png"

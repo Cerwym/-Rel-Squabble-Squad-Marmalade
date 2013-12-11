@@ -54,9 +54,6 @@ assets
 	tutorialsprites.group.bin
 	sprites.group.bin
 	gameoversprites.group.bin
-
-	
-
 }
 
 includepaths
