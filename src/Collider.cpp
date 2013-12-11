@@ -3,7 +3,7 @@
 
 Collider::Collider(CIwFVec2 pos, float w, float h)
 {
-	//m_Image = Iw2DCreateImageResource("collisionRect");
+	m_Image = Iw2DCreateImageResource("collisionRect");
 	m_size = CIwFVec2(w, h);
 	m_Center = CIwSVec2(m_size.x /2.0f, m_size.y / 2.0f);
 	m_Position = pos;
@@ -12,7 +12,7 @@ Collider::Collider(CIwFVec2 pos, float w, float h)
 
 Collider::~Collider()
 {
-	//delete m_Image;
+	delete m_Image;
 }
 
 bool Collider::isColliding(Collider* other, const CIwFVec2& offset)
@@ -53,7 +53,7 @@ void Collider::Update(CIwFVec2 pos)
 
 void Collider::Draw()
 {
-	//Iw2DDrawImage(m_Image, m_DrawPos, CIwSVec2(m_size.x, m_size.y));
+	Iw2DDrawImage(m_Image, m_DrawPos, CIwSVec2(m_size.x, m_size.y));
 }
 
 void Collider::DEBUG_PRINTPOS()

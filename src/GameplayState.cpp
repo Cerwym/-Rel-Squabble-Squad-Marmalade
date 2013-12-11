@@ -285,6 +285,7 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 		GameObject *t = m_Level->GetMap().at(m);
 		if (characters[pCharacter]->isColliding(t, CIwFVec2(0,0)))
 		{
+			// if colliding with surface and bottom > t-height enable jumping
 			characters[pCharacter]->SetPosition(characters[pCharacter]->GetLastPosition());
 			if (pCharacter == NIGEL)
 			{
@@ -296,8 +297,12 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 				}
 			}
 			// If the colliding object is lower (on screen higher) than the character, set the jumping flag to be false
-			if (t->GetBottom() < characters[pCharacter]->GetBottom())
+			if (characters[pCharacter]->GetBottom() < t->GetBottom())
+			{
+				characters[pCharacter]->TEMP_LANDEDJUMP = true;
 				characters[pCharacter]->TEMP_JUSTJUMPED = false;
+			}
+			
 		}
 	}
 }
@@ -356,7 +361,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 
 		GameObject *t = m_Level->GetObjects().at(s);
 		t->UpdateCollider();
-		// Test if any of the characters hit this object
 		if (t->GetType() == Button)
 		{
 			if (t->Child()->GetType() == Elevator)
@@ -377,24 +381,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 
 				t->Child()->DoAbility(target, state->m_deltaTime);
 			}
-
-			/* I want to fix this to work correctly do the code is easier to read.
-			if (t->Child()->GetType() == Door)
-			{
-				int collideCount = 0;
-				for (int i = 0; i < 3; i++)
-				{
-					if (characters[i]->isColliding(t))
-					{
-						collideCount +=1;
-						std::cout << "Standing on a button " <<std::endl; 
-					}
-				}
-				if (collideCount <= 0)
-					t->Child()->IsActive = true; 
-				else 
-					t->Child()->IsActive = false;
-			}*/
 		}
 		// ToDo: remove this object specific logic.
 		for (int i = 0; i < 3; i++)
