@@ -300,9 +300,9 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 			if (characters[pCharacter]->GetBottom() < t->GetBottom())
 			{
 				characters[pCharacter]->TEMP_LANDEDJUMP = true;
-				characters[pCharacter]->TEMP_JUSTJUMPED = false;
+				
 			}
-			
+			characters[pCharacter]->TEMP_JUSTJUMPED = false;
 		}
 	}
 }

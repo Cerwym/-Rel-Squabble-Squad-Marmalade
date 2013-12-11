@@ -343,7 +343,5 @@ void TileMap::Draw(double dt, Camera* cam) // make it aware of cam, if not on sc
 					(*it)->Animate(dt);
 			}
 		}
-		else
-			std::cout << "Not drawing object" << std::endl;
 	}
 }
