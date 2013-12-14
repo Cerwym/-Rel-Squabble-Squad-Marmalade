@@ -15,6 +15,7 @@ void GameoverState::Init()
 	m_Transmanager = new TransitionManager();
 	m_TransitionState = FADE_IN;
 	m_mouseClicked = false;
+	endTime = clock() + 2000;
 	printf("GameoverState initialized\n");
 }
 
@@ -47,6 +48,7 @@ void GameoverState::HandleEvent(StateEngine* state)
 
 void GameoverState::Update(StateEngine* state, double dt)
 {
+	
 }
 
 void GameoverState::Draw(StateEngine* state)
@@ -55,10 +57,14 @@ void GameoverState::Draw(StateEngine* state)
 	{
 		m_Transmanager->TransitionIn(m_menuImage->GetImage(), state->m_deltaTime + 3.5);
 		{
-			if (m_mouseClicked)
+			// Do not allow the transition to change unless the correct amount of time has passed
+			if (clock() >= endTime)
 			{
-				m_Transmanager->Init();
-				m_TransitionState = FADE_OUT;
+				if (m_mouseClicked)
+				{
+					m_Transmanager->Init();
+					m_TransitionState = FADE_OUT;
+				}
 			}
 		}
 	}

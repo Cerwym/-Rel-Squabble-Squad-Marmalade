@@ -29,6 +29,7 @@ public:
 
 	bool IsAnimated;
 	bool IsActive;
+	bool TargetReached;
 private:
 	ObjectType m_Type;
 

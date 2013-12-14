@@ -39,6 +39,10 @@ CIwResGroup
 		"./tiles/wall_bottom_6.png"
 		"./tiles/wall_repeatable_5.png"
 		"./tiles/wall_top_4.png"
+		
+		"./tiles/lift_wall.png"
+		"./tiles/wall.png"
+		"./tiles/filler_f.png"
 
 		"./objects/button.png"
 		"./objects/door.png"

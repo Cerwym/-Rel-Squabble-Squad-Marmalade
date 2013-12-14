@@ -3,6 +3,7 @@
 
 #include "StateEngine.h"
 #include "GameState.h"
+#include "utils.h"
 #include "IwGx.h"
 #include "Iw2D.h"
 #include "IwResManager.h"

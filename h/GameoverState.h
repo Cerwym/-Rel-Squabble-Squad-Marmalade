@@ -1,6 +1,7 @@
 #ifndef _GAMEOVERSTATE_H
 #define _GAMEOVERSTATE_H
 
+#include <ctime>
 #include "GameState.h"
 #include "Iw2D.h"
 #include "s3e.h"
@@ -37,6 +38,7 @@ private:
 	TransitionManager* m_Transmanager;
 	Sprite* m_menuImage;
 
+	clock_t endTime;
 	bool m_mouseClicked;
 
 	enum TStat{FADE_IN = 0, BETWEEN = 1, FADE_OUT = 2}; TStat m_TransitionState;

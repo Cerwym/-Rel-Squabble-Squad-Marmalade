@@ -119,27 +119,27 @@ void GameplayState::Resume()
 void GameplayState::SpawnCharacters()
 {
 	// Dave (big), Nigel (small), Mandy (girl)
-	characters[0] = new Sprite("dave_anim", true, CIwFVec2(4,1));
+	characters[0] = new Sprite("dave_anim", true, CIwFVec2(6,1));
 	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
 	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
-	characters[0]->SetMovSpeed(CIwFVec2(2,5)); // Moves 2 units fast in the x axis (slow)
+	characters[0]->SetMovSpeed(CIwFVec2(1.5,5)); // Moves 1.5 units fast in the x axis (slow)
 	m_PortraitSounds[0] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("dave_selected", "CIwSoundSpec"));
 
 	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(6,1));
 	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
 	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
-	characters[1]->SetMovSpeed(CIwFVec2(4.25,3)); // Moves 5 units fast in the x axis (fastest)
+	characters[1]->SetMovSpeed(CIwFVec2(3,3)); // Moves 3 units fast in the x axis (fastest)
 	m_PortraitSounds[1] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("nigel_selected", "CIwSoundSpec"));
 
 	characters[2] = new Sprite("mandy_anim", true, CIwFVec2(6,1));
 	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
 	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
-	characters[2]->SetMovSpeed(CIwFVec2(3,2)); // Moves 3 units fast in the x axis (faster than dave, slower than nigel)
+	characters[2]->SetMovSpeed(CIwFVec2(2,2)); // Moves 2 units fast in the x axis (faster than dave, slower than nigel)
 	m_PortraitSounds[2] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("mandy_selected", "CIwSoundSpec"));
 
 	for (int i = 0; i < 3; i++)
 	{
-		//characters[i]->ShowColliderPos = true;
+//		characters[i]->ShowColliderPos = true;
 	}
 
 }
@@ -245,7 +245,9 @@ void GameplayState::HandleEvent(StateEngine* state)
 	}
 
 	if (m_gameOver)
+	{
 		state->ChangeState(GameoverState::Instance());
+	}
 }
 
 void GameplayState::Update(StateEngine* state, double dt)
@@ -458,8 +460,32 @@ void GameplayState::CheckInterations(StateEngine* state)
 			{
 				for (int s = 0; s < 3; s++)
 				{
-					if (characters[s]->isColliding(t->Child(),CIwFVec2(0,0)))
-						characters[s]->MoveBy(CIwFVec2(0, -4 - characters[s]->GetMovSpeed().y),0);
+					if (t->IsActive == true)
+					{
+						if (t->Child()->TargetReached == false)
+						{
+							if (characters[s]->isColliding(t->Child(),CIwFVec2(0,0)))
+								characters[s]->MoveBy(CIwFVec2(0,  -2 - characters[s]->GetMovSpeed().y),0);
+						}
+						else
+						{
+							if (characters[s]->isColliding(t->Child(),CIwFVec2(0,0)))
+							{
+								// If the elvator has stopped and the characters are NOT on top of the elevator, continue to move the, if they are, negate the force of gravity
+								if (characters[s]->GetBottom() >= t->Child()->GetTarget().y)
+									characters[s]->MoveBy(CIwFVec2(0,  -1 -characters[s]->GetMovSpeed().y),0);
+								else
+									characters[s]->MoveBy(CIwFVec2(0,  -characters[s]->GetMovSpeed().y),0);
+							}
+						}
+					}
+
+					else
+					{
+						if (characters[s]->isColliding(t->Child(),CIwFVec2(0,0)))
+								characters[s]->MoveBy(CIwFVec2(0,  -2 - characters[s]->GetMovSpeed().y),0);
+					}
+					
 				}
 				t->Child()->DoAbility(t->Child()->GetTarget(), state->m_deltaTime);
 			}

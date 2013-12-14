@@ -42,12 +42,27 @@ void GameObject::DoAbility(const CIwFVec2& target, const double dt)
 		{
 			// get the difference between the start position and the target and move the elevator up by that amount / X every gameSecond
 			if (GetPosition().y >= target.y)
+			{
+				TargetReached = false;
 				MoveBy(CIwFVec2(0, -3 * dt), 0);
+			}
+			else
+			{
+				TargetReached = true;
+			}
+				
 		}
 		else
 		{
 			if (GetPosition().y < m_startPosition.y)
+			{
+				TargetReached = false;
 				MoveBy(CIwFVec2(0, 2 * dt), 0);
+			}
+			else
+			{
+				TargetReached = true;
+			}
 		}
 	}
 }

@@ -33,11 +33,23 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					// graffiti tiles
 					if (buff[x] == 'g')
 					{
-						GameObject* t = new GameObject("graff1_anim", Scenerary, false, CIwFVec2(8,1));
+						GameObject* t = new GameObject("graff1_anim", Scenerary, false, CIwFVec2(4,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
-
+					if (buff[x] == 'q')
+					{
+						GameObject* t = new GameObject("lift_wall", Scenerary, true);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
+						m_Map.push_back(t);
+					}
+					if (buff[x] == 'w')
+					{
+						GameObject* t = new GameObject("wall", Scenerary, true);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
+						m_Map.push_back(t);
+					}
+					
 					if (buff[x] == 'h')
 					{
 						GameObject* t = new GameObject("graff2_anim", Scenerary, false, CIwFVec2(8,1));
@@ -194,6 +206,13 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					{
 						GameObject* t = new GameObject("vent_p", Scenerary, false);
 						t->SetPosition(CIwFVec2(t->GetWidth() * x, t->GetHeight() * y));
+						m_Map.push_back(t);
+					}
+
+					if (buff[x] == 'f')
+					{
+						GameObject* t = new GameObject("filler_f", Scenerary, true);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
 

@@ -10,7 +10,7 @@ ResGroupResources:
 		Size: 40036
 	CIwTexture (0x3521f539)
 		"dave_anim" (0x65898b49)
-		Size: 102436
+		Size: 240036
 	CIwTexture (0x3521f539)
 		"mandy" (0xfea811e)
 		Size: 11352
@@ -93,6 +93,15 @@ ResGroupResources:
 		"wall_top_4" (0x45218c7a)
 		Size: 4132
 	CIwTexture (0x3521f539)
+		"lift_wall" (0xbee12923)
+		Size: 4132
+	CIwTexture (0x3521f539)
+		"wall" (0x7c9ffb95)
+		Size: 4132
+	CIwTexture (0x3521f539)
+		"filler_f" (0x3459d508)
+		Size: 61476
+	CIwTexture (0x3521f539)
 		"button" (0xf4ff5d81)
 		Size: 4132
 	CIwTexture (0x3521f539)
@@ -106,7 +115,7 @@ ResGroupResources:
 		Size: 8228
 	CIwTexture (0x3521f539)
 		"graff1_anim" (0xcabc1f00)
-		Size: 393252
+		Size: 98340
 	CIwTexture (0x3521f539)
 		"graff2_anim" (0xcd1147a1)
 		Size: 393252
@@ -140,7 +149,7 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
 		Size: 652836
-	ResList 'CIwTexture' pos:38 size:7414346
+	ResList 'CIwTexture' pos:38 size:7326774
 
 	CIwSoundData (0xd5610dab)
 		"Button01" (0x324cc822)
@@ -150,7 +159,7 @@ ResGroupResources:
 		Size: 97946
 	CIwSoundData (0xd5610dab)
 		"mandy_select" (0x4524bdfd)
-		Size: 90096
+		Size: 101870
 	CIwSoundData (0xd5610dab)
 		"nigel_select" (0xf9d86f13)
 		Size: 66096
@@ -159,14 +168,14 @@ ResGroupResources:
 		Size: 19362
 	CIwSoundData (0xd5610dab)
 		"door_locked" (0x1055bbca)
-		Size: 77684
+		Size: 33830
 	CIwSoundData (0xd5610dab)
 		"dave_thrown" (0x1a03fa26)
 		Size: 83404
 	CIwSoundData (0xd5610dab)
 		"nigel_thrown" (0xfc675895)
 		Size: 107474
-	ResList 'CIwSoundData' pos:7414384 size:561058
+	ResList 'CIwSoundData' pos:7326812 size:528978
 
 	CIwSoundSpec (0xd569853c)
 		"button_clicked" (0xe0861b8f)
@@ -192,12 +201,12 @@ ResGroupResources:
 	CIwSoundSpec (0xd569853c)
 		"nigel_throw" (0x55396f47)
 		Size: 30
-	ResList 'CIwSoundSpec' pos:7975442 size:250
+	ResList 'CIwSoundSpec' pos:7855790 size:250
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:7975692 size:18063
+	ResList 'CIwGxFont' pos:7856040 size:18063
 
-ResGroupResources: Wrote 7993721 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 7874069 bytes to CIwResGroup "Sprites"
 
