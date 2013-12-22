@@ -16,8 +16,6 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 	int y = 0;
 	char buff[1024];
 
-	// Throw an assert if the texture is NOT equal to TILE_WIDTH or TILE_HEIGHT
-
 	if ((!infile.bad()) || (infile != NULL))
 	{
 		while(std::getline(infile, line) != NULL)
@@ -29,6 +27,51 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 			{
 				if( (buff[x] != '\r') || (buff[x] != '*'))
 				{
+					// Object (interactables) data
+					if (buff[x] == 'D')
+					{
+						GameObject* t = new GameObject("door", Door, true);
+						t->IsActive = true;
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
+						m_Objects.push_back(t);
+					}
+
+					if (buff[x] == 'E')
+					{
+						GameObject* t = new GameObject("elevator", Elevator, true);
+						t->SetPosition(CIwFVec2(((x * 32)), (y * 32) + 34)); // its width
+						// For the elevator we will need to store the location where it spawns because of logic that makes it raise and lower.
+						t->SetStartPosition(t->GetPosition());
+						m_Objects.push_back(t);
+					}
+
+					if (buff[x] == 'B')
+					{
+						GameObject* t = new GameObject("button", Button, false,"button_clicked");
+						t->AddCollider(t->GetWidth() / 2, t->GetHeight());
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32) + 5));
+						t->ShowColliderPos = true;
+						m_Objects.push_back(t);
+					}				
+
+					if (buff[x] == 'T')
+					{
+						GameObject* t = new GameObject("terminal", Terminal, false);
+						t->AddCollider(t->GetWidth() /2, t->GetHeight());
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
+						t->IsActive = false;
+						t->ShowColliderPos = true;
+						m_Objects.push_back(t);
+					}
+
+					if (buff[x] == 'X')
+					{
+						GameObject* t = new GameObject("portal_anim", Exit, true, CIwFVec2(8,1));
+						t->SetPosition(CIwFVec2(((x * 32) - 32), (y * 32) - 32));
+						m_Objects.push_back(t);
+					}
+
+					// Map Data
 
 					if (buff[x] == 'q')
 					{
@@ -36,13 +79,14 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
+
 					if (buff[x] == 'w')
 					{
 						GameObject* t = new GameObject("wall", Scenerary, true);
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
-					
+
 					if (buff[x] == 'j')
 					{
 						GameObject* t = new GameObject("graff3_anim", Scenerary, false, CIwFVec2(4,1));
@@ -63,45 +107,6 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
-					if (buff[x] == 'D')
-					{
-						GameObject* t = new GameObject("door", Door, true);
-						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
-						m_Objects.push_back(t);
-					}
-
-					if (buff[x] == 'E')
-					{
-						GameObject* t = new GameObject("elevator", Elevator, true);
-						t->SetPosition(CIwFVec2(((x * 32)), (y * 32) + 34)); // its width
-						// For the elevator we will need to store the location where it spawns because of logic that makes it raise and lower.
-						t->SetStartPosition(t->GetPosition());
-						m_Objects.push_back(t);
-					}
-
-					if (buff[x] == 'B')
-					{
-						GameObject* t = new GameObject("button", Button, true,"button_clicked");
-						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32) + 5));
-						m_Objects.push_back(t);
-					}				
-
-					if (buff[x] == 'T')
-					{
-						GameObject* t = new GameObject("terminal", Terminal, true);
-						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
-						t->IsActive = false;
-						m_Objects.push_back(t);
-					}
-
-					if (buff[x] == 'X')
-					{
-						GameObject* t = new GameObject("portal_anim", Exit, true, CIwFVec2(8,1));
-						t->SetPosition(CIwFVec2(((x * 32) - 32), (y * 32) - 32));
-						m_Objects.push_back(t);
-					}
-
-					// Map Data
 
 					if (buff[x] == '1')
 					{
@@ -200,7 +205,6 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
-
 
 					// Characters
 					if (buff[x] == 'd')
@@ -322,24 +326,6 @@ void TileMap::Draw(double dt, Camera* cam) // make it aware of cam, if not on sc
 {
 	IW_CALLSTACK("TileMap::Draw");
 	
-	for (std::vector<GameObject*>::iterator it = m_Objects.begin(); it != m_Objects.end(); ++it)
-	{
-		if ( (*it)->isOnCamera(cam))
-		{
-			if ((*it)->GetType() == Door)
-			{
-				if ((*it)->IsActive)
-					(*it)->Draw();
-			}
-			else
-			{
-				(*it)->Draw();	
-				if ((*it)->IsAnimated)
-					(*it)->Animate(dt);
-			}
-		}
-	}
-	
 	for (std::vector<GameObject*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it)
 	{
 		// Check to see if the object is on screen BEFORE animating / drawing it
@@ -349,6 +335,28 @@ void TileMap::Draw(double dt, Camera* cam) // make it aware of cam, if not on sc
 
 			if ((*it)->IsAnimated)
 			(*it)->Animate(dt);
+		}
+	}
+
+	for (std::vector<GameObject*>::iterator it = m_Objects.begin(); it != m_Objects.end(); ++it)
+	{
+		if ( (*it)->isOnCamera(cam))
+		{
+			if ((*it)->GetType() == Door)
+			{
+				if ((*it)->IsActive == true)
+					(*it)->Draw();
+			}
+
+			else if ((*it)->GetType() == Button || (*it)->GetType() == Terminal)
+				(*it)->DrawByRegion();
+
+			else
+			{
+				(*it)->Draw();	
+				if ((*it)->IsAnimated)
+					(*it)->Animate(dt);
+			}
 		}
 	}
 }

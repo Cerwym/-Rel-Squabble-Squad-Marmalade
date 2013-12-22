@@ -1,11 +1,5 @@
 ResGroupResources:
 	CIwTexture (0x3521f539)
-		"menu_image" (0x7b310cdc)
-		Size: 614436
-	CIwTexture (0x3521f539)
-		"game_over" (0xe3a8a5a)
-		Size: 460836
-	CIwTexture (0x3521f539)
 		"dave" (0x7c9591a5)
 		Size: 40036
 	CIwTexture (0x3521f539)
@@ -47,12 +41,6 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"target_sprite" (0x9c010182)
 		Size: 10036
-	CIwTexture (0x3521f539)
-		"tutorial_page_1" (0x5231bdc5)
-		Size: 614436
-	CIwTexture (0x3521f539)
-		"tutorial_page_2" (0x5231bdc6)
-		Size: 614436
 	CIwTexture (0x3521f539)
 		"floor_left_1" (0x28b86c81)
 		Size: 4132
@@ -103,7 +91,7 @@ ResGroupResources:
 		Size: 61476
 	CIwTexture (0x3521f539)
 		"button" (0xf4ff5d81)
-		Size: 4132
+		Size: 8228
 	CIwTexture (0x3521f539)
 		"door" (0x7c95cc59)
 		Size: 20516
@@ -112,13 +100,7 @@ ResGroupResources:
 		Size: 12324
 	CIwTexture (0x3521f539)
 		"terminal" (0xfa1db361)
-		Size: 8228
-	CIwTexture (0x3521f539)
-		"graff1_anim" (0xcabc1f00)
-		Size: 98340
-	CIwTexture (0x3521f539)
-		"graff2_anim" (0xcd1147a1)
-		Size: 393252
+		Size: 16420
 	CIwTexture (0x3521f539)
 		"graff3_anim" (0xcf667042)
 		Size: 98340
@@ -149,7 +131,16 @@ ResGroupResources:
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
 		Size: 691236
-	ResList 'CIwTexture' pos:38 size:6791754
+	CIwTexture (0x3521f539)
+		"clamp_front" (0x807264ba)
+		Size: 44180
+	CIwTexture (0x3521f539)
+		"clamp_mid" (0xdb360cab)
+		Size: 16320
+	CIwTexture (0x3521f539)
+		"clamp_back" (0x41f17822)
+		Size: 11600
+	ResList 'CIwTexture' pos:38 size:4080406
 
 	CIwSoundData (0xd5610dab)
 		"Button01" (0x324cc822)
@@ -175,7 +166,7 @@ ResGroupResources:
 	CIwSoundData (0xd5610dab)
 		"nigel_thrown" (0xfc675895)
 		Size: 107474
-	ResList 'CIwSoundData' pos:6791792 size:528978
+	ResList 'CIwSoundData' pos:4080444 size:528978
 
 	CIwSoundSpec (0xd569853c)
 		"button_clicked" (0xe0861b8f)
@@ -201,12 +192,12 @@ ResGroupResources:
 	CIwSoundSpec (0xd569853c)
 		"nigel_throw" (0x55396f47)
 		Size: 30
-	ResList 'CIwSoundSpec' pos:7320770 size:250
+	ResList 'CIwSoundSpec' pos:4609422 size:250
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:7321020 size:18063
+	ResList 'CIwGxFont' pos:4609672 size:18063
 
-ResGroupResources: Wrote 7339049 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 4627701 bytes to CIwResGroup "Sprites"
 

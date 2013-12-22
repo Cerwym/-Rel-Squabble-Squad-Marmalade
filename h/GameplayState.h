@@ -39,7 +39,7 @@ public:
 	void CheckCollisions(const int &pCharacter);
 	void CheckObjects(const int &pCharacter);
 	void SpawnCharacters();
-	void ScrollBackground(bool);
+	void ScrollCranes(const double dt);
 	void PlayEff(CIwSoundSpec* spec, CIwSoundInst* inst);
 
 protected:
@@ -71,6 +71,7 @@ private:
 	Sprite* m_Portraits[3];
 	Sprite* m_PortraitsNot[3];
 	Sprite* m_Layers[4];
+	GameObject* m_Cranes[3];
 	float m_LayerVals[4];
 	CIwSoundSpec* m_PortraitSounds[3];
 	CIwSoundInst* m_PortraitSoundInsts[3];

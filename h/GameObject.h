@@ -24,6 +24,8 @@ public:
 	bool HasBeenUsed(){return m_AbilityUsed;}
 	GameObject* Child(){return m_Child;}
 	ObjectType GetType(){return m_Type;}
+
+	void DrawByRegion();
 	void PlayEffect();
 	void ResetEffect();
 
@@ -43,6 +45,7 @@ private:
 	SoundEffect* m_SoundEffect;
 	CIwFVec2 m_startPosition;
 	CIwFVec2 m_targetPosition;
+	CIwSVec2 m_Offset;
 	std::string m_Tag;
 };
 

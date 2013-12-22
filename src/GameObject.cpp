@@ -3,30 +3,33 @@
 GameObject::GameObject(const char* name, ObjectType t, bool flag) : Sprite (name, flag)
 {
 	m_Type = t;
-	IsActive = true;
+	IsActive = false;
 	IsAnimated = false;
 	m_AbilityUsed = false;
 	m_targetPosition = CIwFVec2(0,0);
 	m_SoundEffect = NULL;
+	m_Offset = CIwSVec2(0,0);
 }
 
 GameObject::GameObject(const char* name, ObjectType t, bool flag, CIwFVec2 frames) : Sprite (name, flag, frames)
 {
 	m_Type = t;
-	IsActive = true;
+	IsActive = false;
 	IsAnimated = true;
 	m_AbilityUsed = false;
 	m_targetPosition = CIwFVec2(0,0);
 	m_SoundEffect = NULL;
+	m_Offset = CIwSVec2(0,0);
 }
 
 GameObject::GameObject(const char* name, ObjectType t, bool flag, char* spec) : Sprite (name, flag)
 {
 	m_Type = t;
-	IsActive = true;
+	IsActive = false;
 	IsAnimated = false;
 	m_AbilityUsed = false;
 	m_targetPosition = CIwFVec2(0,0);
+	m_Offset = CIwSVec2(0,0);
 	m_SoundEffect = new SoundEffect(spec);
 }
 
@@ -67,6 +70,17 @@ void GameObject::DoAbility(const CIwFVec2& target, const double dt)
 			}
 		}
 	}
+}
+
+void GameObject::DrawByRegion()
+{
+	CIwSVec2 drawPos((int16)GetPosition().x, (int16)GetPosition().y);
+	
+	CIwSVec2 offSet(0,0);
+	if (IsActive)
+		offSet = CIwSVec2((int16)GetWidth() /2, (int16)GetHeight());
+
+	Iw2DDrawImageRegion(GetImage(), drawPos, offSet, CIwSVec2( (int16)GetWidth() /2, GetHeight()));
 }
 
 void GameObject::PlayEffect()

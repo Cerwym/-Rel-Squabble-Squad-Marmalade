@@ -2,9 +2,6 @@ CIwResGroup
 { 
 	name "Sprites" 
 
-		"./textures/menu_image.png"
-		"./textures/game_over.png"
-
 		"./characters/dave.png"
 		"./characters/dave_anim.png"
 		"./characters/mandy.png"
@@ -20,8 +17,6 @@ CIwResGroup
 		"./portraits/nigel_port_b.png"
 		"./textures/collisionRect.png"
 		"./textures/target_sprite.png"
-		"./textures/tutorial_page_1.png"
-		"./textures/tutorial_page_2.png"
 
 		"./tiles/floor_left_1.png"
 		"./tiles/floor_repeatable_2.png"
@@ -49,8 +44,6 @@ CIwResGroup
 		"./objects/elevator.png"
 		"./objects/terminal.png"
 		
-		"./objects/graff1_anim.png"
-		"./objects/graff2_anim.png"
 		"./objects/graff3_anim.png"
 		"./objects/graff4_anim.png"
 		"./objects/graff5_anim.png"
@@ -131,6 +124,10 @@ CIwResGroup
 		"./background/layer2.png"
 		"./background/layer3.png"
 		"./background/layer4.png"
+
+		"./background/clamp_front.png"
+		"./background/clamp_mid.png"
+		"./background/clamp_back.png"
 	
 		fonts/font_small.gxfont
 }

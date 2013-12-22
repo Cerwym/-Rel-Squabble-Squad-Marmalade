@@ -59,6 +59,16 @@ void GameplayState::Init()
 	m_Layers[2] = new Sprite("layer3", false);
 	m_Layers[3] = new Sprite("layer4", false);
 
+	m_Cranes[0] = new GameObject("clamp_back", Scenerary, false);
+	m_Cranes[0]->SetPosition(CIwFVec2(100, 0));
+	m_Cranes[0]->SetMovSpeed(CIwFVec2(-0.15, 0));
+	m_Cranes[1] = new GameObject("clamp_mid", Scenerary, false);
+	m_Cranes[1]->SetPosition(CIwFVec2(210, 0));
+	m_Cranes[1]->SetMovSpeed(CIwFVec2(-0.35, 0));
+	m_Cranes[2] = new GameObject("clamp_front", Scenerary, false);
+	m_Cranes[2]->SetPosition(CIwFVec2(m_Cranes[2]->GetWidth() + 10, 0));
+	m_Cranes[2]->SetMovSpeed(CIwFVec2(-1, 0));
+
 	if (s3eAudioIsCodecSupported(S3E_AUDIO_CODEC_MP3))
 		s3eAudioPlay("bgmusic.mp3", 0);
 
@@ -86,6 +96,7 @@ void GameplayState::Destroy()
 		delete characters[i];
 		delete m_Portraits[i];
 		delete m_PortraitsNot[i];
+		delete m_Cranes[i];
 	}
 
 	for (int i = 0; i < 2; i++)
@@ -148,6 +159,8 @@ void GameplayState::SpawnCharacters()
 	{
 //		characters[i]->ShowColliderPos = true;
 	}
+
+	characters[DAVE]->Debug_PrintPos();
 
 }
 
@@ -264,6 +277,8 @@ void GameplayState::Update(StateEngine* state, double dt)
 	if (!m_isThrowing)
 		characters[NIGEL]->Update(dt);
 
+	ScrollCranes(dt);
+
 	CheckInterations(state);
 
 	for (int i = 0; i <3; i++)
@@ -312,7 +327,6 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 				
 			}
 			characters[pCharacter]->TEMP_JUSTJUMPED = false;
-
 			
 		}
 	}
@@ -360,16 +374,11 @@ void GameplayState::CheckObjects(const int &pCharacter)
 
 void GameplayState::CheckInterations(StateEngine* state)
 {
-	int count = 0;
-	int eCount = 0;
 	int exitCount = 0;
-
-	int debug_ele = 0;
+	int doorCount = 0;
 
 	for (size_t s = 0; s < m_Level->GetObjects().size(); s++)
 	{
-		debug_ele++;
-
 		GameObject *t = m_Level->GetObjects().at(s);
 		t->UpdateCollider();
 		if (t->GetType() == Button)
@@ -377,7 +386,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 			if (t->Child()->GetType() == Elevator)
 			{
 				CIwFVec2 target = CIwFVec2(0,0);
-
 				for (int i = 0; i < 3; i++)
 				{
 					if ( characters[i]->isColliding(t, CIwFVec2(0,0)) )
@@ -392,29 +400,31 @@ void GameplayState::CheckInterations(StateEngine* state)
 
 				t->Child()->DoAbility(target, state->m_deltaTime);
 			}
-		}
-		// ToDo: remove this object specific logic.
-		for (int i = 0; i < 3; i++)
-		{
-			if (t->GetType() == Button)
+
+			if (t->Child()->GetType() == Door)
 			{
-				if (characters[i]->isColliding(t,CIwFVec2(0,0)))
+				// Check to see if any character is colliding with the button
+				bool isSteppedOn = false;
+				for (int i = 0; i < 3; i++)
 				{
-					if (t->Child()->GetType() == Door)
+					if (characters[i]->isColliding(t, CIwFVec2(0,0)))
 					{
-						t->Child()->IsActive = false;
-						count++;
-						t->PlayEffect();
+						isSteppedOn = true;
 					}
 				}
-				else
+
+				if (isSteppedOn == true)
 				{
-					// Move this out
-					if (count == 0 && i == 2)
-					{
-						t->Child()->IsActive = true;
-						t->ResetEffect();
-					}
+					t->PlayEffect();
+					t->IsActive = true;
+					t->Child()->IsActive = false;
+					doorCount++;
+				}
+				else if (isSteppedOn == false && doorCount == 0)
+				{
+					t->IsActive = false;
+					t->Child()->IsActive = true;
+					t->ResetEffect();
 				}
 			}
 		}
@@ -509,6 +519,9 @@ void GameplayState::Draw(StateEngine* state)
 	for (int i = 0; i < 4; i++)
 		m_Layers[i]->Draw(m_Cam->GetPosition());
 
+	for (int i = 0; i < 3; i++)
+		m_Cranes[i]->Draw(m_Cam->GetPosition());
+
 	m_Level->Draw(state->m_deltaTime, m_Cam);
 
 	for (int i = 0; i <3; i++)
@@ -529,4 +542,15 @@ void GameplayState::Draw(StateEngine* state)
 
 	for (int i = 0; i < 2; i++)
 		n_guiButtons[i]->Draw(m_Cam->GetPosition());
+}
+
+void GameplayState::ScrollCranes(double dt)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (m_Cranes[i]->GetPosition().x <= 0 || m_Cranes[i]->GetPosition().x >= screenWidth - m_Cranes[i]->GetWidth())
+			m_Cranes[i]->SetMovSpeed(-m_Cranes[i]->GetMovSpeed());
+
+		m_Cranes[i]->MoveBy(CIwFVec2(m_Cranes[i]->GetMovSpeed().x * dt, 0),0);
+	}
 }
