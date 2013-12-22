@@ -30,13 +30,6 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 				if( (buff[x] != '\r') || (buff[x] != '*'))
 				{
 
-					// graffiti tiles
-					if (buff[x] == 'g')
-					{
-						GameObject* t = new GameObject("graff1_anim", Scenerary, false, CIwFVec2(4,1));
-						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
-						m_Map.push_back(t);
-					}
 					if (buff[x] == 'q')
 					{
 						GameObject* t = new GameObject("lift_wall", Scenerary, true);
@@ -50,32 +43,31 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 						m_Map.push_back(t);
 					}
 					
-					if (buff[x] == 'h')
-					{
-						GameObject* t = new GameObject("graff2_anim", Scenerary, false, CIwFVec2(8,1));
-						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
-						m_Map.push_back(t);
-					}
-
 					if (buff[x] == 'j')
 					{
-						GameObject* t = new GameObject("graff3_anim", Scenerary, false, CIwFVec2(8,1));
+						GameObject* t = new GameObject("graff3_anim", Scenerary, false, CIwFVec2(4,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 'k')
 					{
-						GameObject* t = new GameObject("graff4_anim", Scenerary, false, CIwFVec2(8,1));
+						GameObject* t = new GameObject("graff4_anim", Scenerary, false, CIwFVec2(4,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
 					}
 
 					if (buff[x] == 'l')
 					{
-						GameObject* t = new GameObject("graff5_anim", Scenerary, false, CIwFVec2(8,1));
+						GameObject* t = new GameObject("graff5_anim", Scenerary, false, CIwFVec2(4,1));
 						t->SetPosition(CIwFVec2(((x * 32)), (y * 32)));
 						m_Map.push_back(t);
+					}
+					if (buff[x] == 'D')
+					{
+						GameObject* t = new GameObject("door", Door, true);
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
+						m_Objects.push_back(t);
 					}
 
 					if (buff[x] == 'E')
@@ -90,16 +82,9 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 					if (buff[x] == 'B')
 					{
 						GameObject* t = new GameObject("button", Button, true,"button_clicked");
-						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32) + 20));
+						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32) + 5));
 						m_Objects.push_back(t);
-					}
-					
-					if (buff[x] == 'D')
-					{
-						GameObject* t = new GameObject("door", Door, true);
-						t->SetPosition(CIwFVec2(((x * 32) + 32) - t->GetWidth(), (y * 32)));
-						m_Objects.push_back(t);
-					}
+					}				
 
 					if (buff[x] == 'T')
 					{
@@ -216,6 +201,7 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 						m_Map.push_back(t);
 					}
 
+
 					// Characters
 					if (buff[x] == 'd')
 						m_SpawnPos.at(0) = CIwFVec2(x * 32,(y * 32) - 100); // offset by sprite's height
@@ -235,6 +221,8 @@ TileMap::TileMap(const char* lvlFile, const char* rFile)
 	}
 
 	m_LevelMaxBounds.y = (y * 32);
+	m_scrollValue = m_LevelMaxBounds.x * 0.01;
+	std::cout << "scroll value is " << m_scrollValue << std::endl;
 	std::cout << "Size of the level is " << m_LevelMaxBounds.x << "," << m_LevelMaxBounds.y << std::endl;
 	// Link up the GameObjects
 	printf("Level %s loaded\n", lvlFile);
@@ -333,19 +321,7 @@ void TileMap::AddRelationships(const char* rFile)
 void TileMap::Draw(double dt, Camera* cam) // make it aware of cam, if not on screen, don't draw
 {
 	IW_CALLSTACK("TileMap::Draw");
-	for (std::vector<GameObject*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it)
-	{
-		// Check to see if the object is on screen BEFORE animating / drawing it
-		if ( (*it)->isOnCamera(cam))
-		{
-			(*it)->Draw();
-
-			if ((*it)->IsAnimated)
-			(*it)->Animate(dt);
-		}
-	}
 	
-
 	for (std::vector<GameObject*>::iterator it = m_Objects.begin(); it != m_Objects.end(); ++it)
 	{
 		if ( (*it)->isOnCamera(cam))
@@ -361,6 +337,18 @@ void TileMap::Draw(double dt, Camera* cam) // make it aware of cam, if not on sc
 				if ((*it)->IsAnimated)
 					(*it)->Animate(dt);
 			}
+		}
+	}
+	
+	for (std::vector<GameObject*>::iterator it = m_Map.begin(); it != m_Map.end(); ++it)
+	{
+		// Check to see if the object is on screen BEFORE animating / drawing it
+		if ( (*it)->isOnCamera(cam))
+		{
+			(*it)->Draw();
+
+			if ((*it)->IsAnimated)
+			(*it)->Animate(dt);
 		}
 	}
 }

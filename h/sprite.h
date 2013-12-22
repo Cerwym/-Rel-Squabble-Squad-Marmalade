@@ -10,7 +10,8 @@
 #define GRAVITY 6.78f
 #define JUMP_HEIGHT 128
 
-enum FACING{FACING_RIGHT = 0, FACING_LEFT = 1}; 
+enum FACING{FACING_RIGHT = 0, FACING_LEFT = 1};
+enum ANIMSTATE{ANIMATION_NONE = 0, ANIMATION_IDLE = 1, ANIMATION_WALKING = 2, ANIMATION_ACTION = 3};
 
 class Sprite
 {
@@ -38,8 +39,9 @@ public:
 	inline int GetDirection(){return m_facingDir;}
 	inline void SetDirection(FACING f) {m_facingDir = f;}
 	CIw2DImage* GetImage() const {return m_Image;}
-	void SetMaterial();
 	void MoveBy(const CIwFVec2& val, double dt);
+
+	void SetRegion(CIwSVec2& region){m_Region = region;}
 
 	inline iwangle GetRotation() { return m_Angle; }
 	inline void SetRotation(const iwangle& angle) { m_Angle = angle; }
@@ -55,10 +57,11 @@ public:
 	void SetVelocity(float v){m_yVel = v;}
 	float GetVelocity(){return m_yVel;}
 	
-	void SetAnimated(const bool animated, float speed, CIwFVec2 frameCount = CIwFVec2());
+	void SetAnimated(const bool animated, float speed, CIwFVec2& frameCount);
 	void Update(const float deltaTime);
 	void Draw();
 	void Draw(const CIwSVec2& camPos);
+	void AddCollider(float width, float height);
 	void UpdateCollider();
 	bool isColliding(const CIwFVec2& other);
 	bool isColliding(Sprite* other, const CIwFVec2& offset);
@@ -72,7 +75,6 @@ public:
 
 	bool TEMP_JUSTJUMPED;
 	bool TEMP_LANDEDJUMP;
-	bool TEMP_ISCOLLIDING;
 
 protected:
 
@@ -84,6 +86,7 @@ private:
 	CIwFVec2 m_LastPosition;
 	CIwFVec2 m_LastMovementVal;
 	CIwFVec2 m_MovSpeed;
+	CIwSVec2 m_Region;
 	
 	iwangle m_Angle;
 	bool m_Animated;
@@ -106,6 +109,7 @@ private:
 	Collider* m_Collider;
 
 	FACING m_facingDir;
+	ANIMSTATE m_AnimationState;
 
 };
 

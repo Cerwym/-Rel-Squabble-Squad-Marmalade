@@ -4,6 +4,7 @@ GameObject::GameObject(const char* name, ObjectType t, bool flag) : Sprite (name
 {
 	m_Type = t;
 	IsActive = true;
+	IsAnimated = false;
 	m_AbilityUsed = false;
 	m_targetPosition = CIwFVec2(0,0);
 	m_SoundEffect = NULL;
@@ -23,6 +24,7 @@ GameObject::GameObject(const char* name, ObjectType t, bool flag, char* spec) : 
 {
 	m_Type = t;
 	IsActive = true;
+	IsAnimated = false;
 	m_AbilityUsed = false;
 	m_targetPosition = CIwFVec2(0,0);
 	m_SoundEffect = new SoundEffect(spec);

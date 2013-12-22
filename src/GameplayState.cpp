@@ -4,28 +4,29 @@
 #include "GameoverState.h" // The state to load
 // For me
 #define DAVE 0
-#define NIGEL 1
-#define MANDY 2
+#define MANDY 1
+#define NIGEL 2
+
 
 GameplayState GameplayState::m_GameplayState;
 
 void GameplayState::Init()
 {
 	IwGetResManager()->LoadGroup("sprites.group");
-	m_Portraits[0] = new Sprite("dave_port", true);
-	m_PortraitsNot[0] = new Sprite("dave_port_b", true);
-	m_Portraits[0]->SetPosition(CIwFVec2(130,0));
-	m_PortraitsNot[0]->SetPosition(CIwFVec2(130,0));
+	m_Portraits[DAVE] = new Sprite("dave_port", true);
+	m_PortraitsNot[DAVE] = new Sprite("dave_port_b", true);
+	m_Portraits[DAVE]->SetPosition(CIwFVec2(130,0));
+	m_PortraitsNot[DAVE]->SetPosition(CIwFVec2(130,0));
 
-	m_Portraits[1] = new Sprite("nigel_port", true);
-	m_PortraitsNot[1] = new Sprite("nigel_port_b", true);
-	m_Portraits[1]->SetPosition(CIwFVec2(210,0));
-	m_PortraitsNot[1]->SetPosition(CIwFVec2(210,0));
+	m_Portraits[NIGEL] = new Sprite("nigel_port", true);
+	m_PortraitsNot[NIGEL] = new Sprite("nigel_port_b", true);
+	m_Portraits[NIGEL]->SetPosition(CIwFVec2(210,0));
+	m_PortraitsNot[NIGEL]->SetPosition(CIwFVec2(210,0));
 
-	m_Portraits[2] = new Sprite("mandy_port", true);
-	m_PortraitsNot[2] = new Sprite("mandy_port_b", true);
-	m_Portraits[2]->SetPosition(CIwFVec2(290,0));
-	m_PortraitsNot[2]->SetPosition(CIwFVec2(290, 0));
+	m_Portraits[MANDY] = new Sprite("mandy_port", true);
+	m_PortraitsNot[MANDY] = new Sprite("mandy_port_b", true);
+	m_Portraits[MANDY]->SetPosition(CIwFVec2(290,0));
+	m_PortraitsNot[MANDY]->SetPosition(CIwFVec2(290, 0));
 
 	n_guiButtons[0] = new Sprite("touchScreenMoveL", true);
 	n_guiButtons[0]->SetPosition(CIwFVec2(0, 260));
@@ -70,6 +71,11 @@ void GameplayState::Init()
 	doorSoundInst = NULL;
 
 	buttonSoundCount = 0;
+
+	m_LayerVals[0] = 0;
+	m_LayerVals[1] = 0.025;
+	m_LayerVals[2] = 0.05;
+	m_LayerVals[3] = 0.075;
 	printf("GameplayState initialized\n");
 }
 
@@ -119,23 +125,24 @@ void GameplayState::Resume()
 void GameplayState::SpawnCharacters()
 {
 	// Dave (big), Nigel (small), Mandy (girl)
-	characters[0] = new Sprite("dave_anim", true, CIwFVec2(6,1));
-	characters[0]->SetCenter(CIwSVec2((int16)characters[0]->GetWidth() /2 , (int16)characters[0]->GetHeight() /2));
-	characters[0]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
-	characters[0]->SetMovSpeed(CIwFVec2(1.5,5)); // Moves 1.5 units fast in the x axis (slow)
-	m_PortraitSounds[0] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("dave_selected", "CIwSoundSpec"));
+	characters[DAVE] = new Sprite("dave_anim", true, CIwFVec2(6,1));
+	characters[DAVE]->SetCenter(CIwSVec2((int16)characters[DAVE]->GetWidth() /2 , (int16)characters[DAVE]->GetHeight() /2));
+	characters[DAVE]->SetPosition(m_Level->GetSpawnPositions().at(DAVE));
+	characters[DAVE]->SetMovSpeed(CIwFVec2(1.5,5)); // Moves 1.5 units fast in the x axis (slow)
+	
+	characters[NIGEL] = new Sprite("nigel_anim", true, CIwFVec2(6,1));
+	characters[NIGEL]->SetCenter(CIwSVec2((int16)characters[NIGEL]->GetWidth() /2, (int16)characters[NIGEL]->GetHeight() /2));
+	characters[NIGEL]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
+	characters[NIGEL]->SetMovSpeed(CIwFVec2(3,3)); // Moves 3 units fast in the x axis (fastest)
 
-	characters[1] = new Sprite("nigel_anim", true, CIwFVec2(6,1));
-	characters[1]->SetCenter(CIwSVec2((int16)characters[1]->GetWidth() /2, (int16)characters[1]->GetHeight() /2));
-	characters[1]->SetPosition(m_Level->GetSpawnPositions().at(NIGEL));
-	characters[1]->SetMovSpeed(CIwFVec2(3,3)); // Moves 3 units fast in the x axis (fastest)
-	m_PortraitSounds[1] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("nigel_selected", "CIwSoundSpec"));
+	characters[MANDY] = new Sprite("mandy_anim", true, CIwFVec2(6,1));
+	characters[MANDY]->SetCenter(CIwSVec2((int16)characters[MANDY]->GetWidth() /2, (int16)characters[MANDY]->GetHeight() /2));
+	characters[MANDY]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
+	characters[MANDY]->SetMovSpeed(CIwFVec2(2,2)); // Moves 2 units fast in the x axis (faster than dave, slower than nigel)
 
-	characters[2] = new Sprite("mandy_anim", true, CIwFVec2(6,1));
-	characters[2]->SetCenter(CIwSVec2((int16)characters[2]->GetWidth() /2, (int16)characters[2]->GetHeight() /2));
-	characters[2]->SetPosition(m_Level->GetSpawnPositions().at(MANDY));
-	characters[2]->SetMovSpeed(CIwFVec2(2,2)); // Moves 2 units fast in the x axis (faster than dave, slower than nigel)
-	m_PortraitSounds[2] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("mandy_selected", "CIwSoundSpec"));
+	m_PortraitSounds[DAVE] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("dave_selected", "CIwSoundSpec"));
+	m_PortraitSounds[NIGEL] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("nigel_selected", "CIwSoundSpec"));
+	m_PortraitSounds[MANDY] = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("mandy_selected", "CIwSoundSpec"));
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -305,6 +312,8 @@ void GameplayState::CheckCollisions(const int &pCharacter)
 				
 			}
 			characters[pCharacter]->TEMP_JUSTJUMPED = false;
+
+			
 		}
 	}
 }
@@ -420,7 +429,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 				if (exitCount == 3)
 				{
 					m_gameOver = true;
-					//break;
 				}
 			}
 		}
@@ -498,7 +506,6 @@ void GameplayState::CheckInterations(StateEngine* state)
 
 void GameplayState::Draw(StateEngine* state)
 {
-
 	for (int i = 0; i < 4; i++)
 		m_Layers[i]->Draw(m_Cam->GetPosition());
 
@@ -522,13 +529,4 @@ void GameplayState::Draw(StateEngine* state)
 
 	for (int i = 0; i < 2; i++)
 		n_guiButtons[i]->Draw(m_Cam->GetPosition());
-}
-
-void GameplayState::ScrollBackground(CIwFVec2& scrollBy)
-{
-	/*for (int i = 0; i < m_Layers.size(); i++)
-	{
-		m_Layers.at(i)->MoveBy(
-			CIwFVec2(scrollBy.x - (i * 1.5), (0 * i) - scrollBy.y), 0);
-	}*/
 }

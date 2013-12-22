@@ -13,10 +13,10 @@ ResGroupResources:
 		Size: 240036
 	CIwTexture (0x3521f539)
 		"mandy" (0xfea811e)
-		Size: 11352
+		Size: 10860
 	CIwTexture (0x3521f539)
 		"mandy_anim" (0xc88c0e62)
-		Size: 64980
+		Size: 49236
 	CIwTexture (0x3521f539)
 		"nigel" (0x1000def4)
 		Size: 7580
@@ -121,13 +121,13 @@ ResGroupResources:
 		Size: 393252
 	CIwTexture (0x3521f539)
 		"graff3_anim" (0xcf667042)
-		Size: 393252
+		Size: 98340
 	CIwTexture (0x3521f539)
 		"graff4_anim" (0xd1bb98e3)
-		Size: 393252
+		Size: 147492
 	CIwTexture (0x3521f539)
 		"graff5_anim" (0xd410c184)
-		Size: 393252
+		Size: 98340
 	CIwTexture (0x3521f539)
 		"portal_anim" (0x1f791d9b)
 		Size: 131108
@@ -139,17 +139,17 @@ ResGroupResources:
 		Size: 16420
 	CIwTexture (0x3521f539)
 		"layer1" (0xaeb87f3)
-		Size: 489636
+		Size: 691236
 	CIwTexture (0x3521f539)
 		"layer2" (0xaeb87f4)
-		Size: 652836
+		Size: 691236
 	CIwTexture (0x3521f539)
 		"layer3" (0xaeb87f5)
-		Size: 652836
+		Size: 691236
 	CIwTexture (0x3521f539)
 		"layer4" (0xaeb87f6)
-		Size: 652836
-	ResList 'CIwTexture' pos:38 size:7326774
+		Size: 691236
+	ResList 'CIwTexture' pos:38 size:6791754
 
 	CIwSoundData (0xd5610dab)
 		"Button01" (0x324cc822)
@@ -175,7 +175,7 @@ ResGroupResources:
 	CIwSoundData (0xd5610dab)
 		"nigel_thrown" (0xfc675895)
 		Size: 107474
-	ResList 'CIwSoundData' pos:7326812 size:528978
+	ResList 'CIwSoundData' pos:6791792 size:528978
 
 	CIwSoundSpec (0xd569853c)
 		"button_clicked" (0xe0861b8f)
@@ -201,12 +201,12 @@ ResGroupResources:
 	CIwSoundSpec (0xd569853c)
 		"nigel_throw" (0x55396f47)
 		Size: 30
-	ResList 'CIwSoundSpec' pos:7855790 size:250
+	ResList 'CIwSoundSpec' pos:7320770 size:250
 
 	CIwGxFont (0xa68776be)
 		"font_small" (0x9f7e37f4)
 		Size: 18053
-	ResList 'CIwGxFont' pos:7856040 size:18063
+	ResList 'CIwGxFont' pos:7321020 size:18063
 
-ResGroupResources: Wrote 7874069 bytes to CIwResGroup "Sprites"
+ResGroupResources: Wrote 7339049 bytes to CIwResGroup "Sprites"
 

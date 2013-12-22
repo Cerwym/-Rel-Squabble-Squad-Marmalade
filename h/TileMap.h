@@ -16,6 +16,7 @@ public:
 	std::vector<GameObject*> GetMap(){return m_Map;}
 	std::vector<GameObject*> GetObjects(){return m_Objects;}
 	CIwFVec2 GetLevelBounds(){return m_LevelMaxBounds;}
+	float GetScrollValue(){return m_scrollValue;}
 	std::vector<CIwFVec2> GetSpawnPositions(){return m_SpawnPos;}
 
 private:
@@ -26,5 +27,6 @@ private:
 	std::vector<CIwFVec2> m_SpawnPos;
 
 	CIwFVec2 m_LevelMaxBounds;
+	float m_scrollValue;
 };
 #endif

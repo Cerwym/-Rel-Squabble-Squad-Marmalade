@@ -6,21 +6,21 @@ Sprite::Sprite(const char* name, bool flag): m_Position(0,0),m_MovSpeed(0,0),m_A
 {
 	// hashed name for the sprite in IwResourceManager
 	m_Image = Iw2DCreateImageResource(name);
+	// Set the sprite's width and height here as if this constructor is called, it is not animated
 	m_Width = m_Image->GetWidth();
 	m_Height = m_Image->GetHeight();
 	m_yVel = 0;
-	m_Name = name;
+
+	m_AnimationState = ANIMATION_NONE;
 
 	m_Center = CIwSVec2(static_cast<int16>(m_Width) / 2, static_cast<int16>(m_Height) / 2);
 	TEMP_JUSTJUMPED = false;
 	TEMP_LANDEDJUMP = true;
-	TEMP_ISCOLLIDING = false;
 	ShowColliderPos = false;
 	m_hasCollider = flag;
 	m_Collider = NULL;
 	if (flag){ m_Collider = new Collider(m_Position, m_Width, m_Height);}
 	m_facingDir = FACING_RIGHT;
-	
 }
 
 Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0),m_MovSpeed(0,0),m_Angle(0),m_Animated(true)
@@ -32,17 +32,17 @@ Sprite::Sprite(const char* name, bool flag, CIwFVec2 frameCount): m_Position(0,0
 
 	TEMP_JUSTJUMPED = false;
 	TEMP_LANDEDJUMP = true;
-	TEMP_ISCOLLIDING = false;
 	ShowColliderPos = false;
 	m_hasCollider = flag;
 	m_facingDir = FACING_RIGHT;
 	m_Collider = NULL;
 	if (flag){ m_Collider = new Collider(m_Position, m_Width, m_Height);}
+
+	m_AnimationState = ANIMATION_IDLE;
 	
 	// 1/2 frame every game second
 	SetAnimated(true, 0.5, frameCount);
 }
-
 
 Sprite::~Sprite()
 {
@@ -51,7 +51,13 @@ Sprite::~Sprite()
 		delete m_Collider;
 }
 
-void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
+void Sprite::AddCollider(float width, float height)
+{
+	m_Collider = new Collider(m_Position, width, height);
+	m_hasCollider = true;
+}
+
+void Sprite::SetAnimated(bool animated, float speed, CIwFVec2& frameCount)
 {
 	m_Animated = animated;
 	m_AnimSpeed = speed;
@@ -64,6 +70,7 @@ void Sprite::SetAnimated(bool animated, float speed, CIwFVec2 frameCount)
 		m_CurrentFrame = 0;
 		m_FrameCount.x = frameCount.x;
 		m_FrameCount.y = frameCount.y;
+
 	}
 
 	m_Width = m_FrameSize.x;
@@ -97,7 +104,6 @@ bool Sprite::isColliding(const CIwFVec2& other)
 		return false;
 	}
 
-
 	return true;
 }
 
@@ -124,7 +130,7 @@ void Sprite::MoveBy(const CIwFVec2& val, double dt)
 	if (val.y != 0) m_LastMovementVal.y = val.y;
 
 	// Play walking sound
-	//Playwalkingsound() Disabled because it constantly fires
+	// Playwalkingsound() Disabled because it constantly fires
 }
 
 void Sprite::Animate(double dt)
@@ -132,6 +138,7 @@ void Sprite::Animate(double dt)
 	m_CurrentFrame += m_AnimSpeed * dt;
 	if (m_CurrentFrame > (m_FrameCount.x * m_FrameCount.y))
 		m_CurrentFrame = 0;
+	//std::cout << "Current frame is " << m_CurrentFrame << std::endl;
 }
 
 void Sprite::Update(float deltaTime)
