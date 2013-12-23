@@ -43,8 +43,6 @@ assets
 	(data)
 	bgmusic.mp3
 	music.mp3
-
-	(data/levels)
 	levelproto1.txt
 	levelrelationships1.txt
 
@@ -72,6 +70,6 @@ subprojects
 # Settings to configure the deployment process
 deployments
 {
-	name="SpriteTest"
-	caption="Team FireExit - Impact"
+	name="Squabble Squad"
+	caption="Team FireExit - Squabble Squad"
 }

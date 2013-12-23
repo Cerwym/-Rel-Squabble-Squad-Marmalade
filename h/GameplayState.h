@@ -91,6 +91,7 @@ private:
 	CIwSoundInst* doorSoundInst;
 
 	SoundEffect* buttonSound;
+	SoundEffect* m_TerminalSound;
 	SoundEffect* m_ThrowingSound;
 	SoundEffect* m_ThrowingNigelSound;
 

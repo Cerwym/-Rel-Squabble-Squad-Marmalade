@@ -75,8 +75,7 @@ void GameplayState::Init()
 	m_ThrowingSound = new SoundEffect("dave_throw");
 	m_ThrowingNigelSound = new SoundEffect("nigel_throw");
 
-	terminalSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("terminal_selected", "CIwSoundSpec"));
-	terminalInst = NULL;
+	m_TerminalSound = new SoundEffect("terminal_selected");
 	doorSound = static_cast<CIwSoundSpec*>(IwGetResManager()->GetResNamed("locked_door", "CIwSoundSpec"));
 	doorSoundInst = NULL;
 
@@ -116,6 +115,7 @@ void GameplayState::Destroy()
 	if (m_ThrowingNigelSound)
 		delete m_ThrowingNigelSound;
 
+	delete m_TerminalSound;
 	delete m_throwingTarget;
 
 	//IwGetResManager()->DestroyGroup("Sprites");
@@ -298,6 +298,7 @@ void GameplayState::Update(StateEngine* state, double dt)
 	{
 		m_MouseClicked = false;
 		m_ClickLocation = CIwFVec2(0,0);
+		m_TerminalSound->ResetCounter();
 	}
 }
 
@@ -452,7 +453,7 @@ void GameplayState::CheckInterations(StateEngine* state)
 				{
 					if (characters[MANDY]->isColliding(m_ClickLocation))
 					{
-						terminalSound->Play();
+						m_TerminalSound->Play();
 
 						if (t->Child()->GetType() == Elevator)
 						{
